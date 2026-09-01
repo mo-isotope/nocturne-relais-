@@ -1889,7 +1889,7 @@ const CFG = {
 };
 
 /* ==========================================================================
-   3. MUSIQUE — Bande Originale Cinématique (Multi-Univers)
+   3. MUSIQUE — Bande Originale Cinématique & Atmosphérique
    ========================================================================== */
 const GAMMES = {
   eolien:    [0,2,3,5,7,8,10],
@@ -1900,80 +1900,80 @@ const GAMMES = {
 
 const AUDIO={ ctx:null, actif:true, master:null, verb:null, envoi:null, echo:null,
   pas:0, prochain:0, timer:null, M:null, intensite:0,
-  nappe:[], nappeOsc:[], nappeGain:null, themeAllonge:[] };
+  nappe:[], nappeOsc:[], nappeGain:null };
 
 function initAudio(){
   if(AUDIO.ctx) return;
   const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
   const c=new AC(); AUDIO.ctx=c;
 
-  // Compresseur Master "Glue" pour un mix massif
+  // Compresseur Master pour "coller" le mix comme au cinéma
   const comp=c.createDynamicsCompressor();
-  comp.threshold.value=-22; comp.knee.value=20; comp.ratio.value=8;
-  comp.attack.value=0.005; comp.release.value=0.3;
+  comp.threshold.value=-24; comp.knee.value=30; comp.ratio.value=12;
+  comp.attack.value=0.003; comp.release.value=0.25;
   comp.connect(c.destination);
 
   AUDIO.master=c.createGain(); AUDIO.master.gain.value=0; AUDIO.master.connect(comp);
 
-  // Réverbération Gigantesque (5.5 secondes, déclin sombre)
-  const len=Math.floor(c.sampleRate*5.5), ir=c.createBuffer(2,len,c.sampleRate);
+  // Réverbération Cathédrale / Epique (5 secondes)
+  const len=Math.floor(c.sampleRate*5.0), ir=c.createBuffer(2,len,c.sampleRate);
   for(let ch=0;ch<2;ch++){ const d=ir.getChannelData(ch);
-    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len, 3.5); }
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.0); } // Déclin très doux
   AUDIO.verb=c.createConvolver(); AUDIO.verb.buffer=ir;
-
-  const vg=c.createGain(); vg.gain.value=0.8;
+  const vg=c.createGain(); vg.gain.value=0.7; // Fort niveau de réverbération
   AUDIO.verb.connect(vg); vg.connect(AUDIO.master);
-
   AUDIO.envoi=c.createGain(); AUDIO.envoi.gain.value=1; AUDIO.envoi.connect(AUDIO.verb);
 
-  // Délai stéréo long (injecté dans la réverbération)
-  AUDIO.echo=c.createDelay(3.0); AUDIO.echo.delayTime.value=0.8;
-  const echoGain=c.createGain(); echoGain.gain.value=0.4;
-  const echoFiltre=c.createBiquadFilter(); echoFiltre.type='bandpass'; echoFiltre.frequency.value=800; echoFiltre.Q.value=0.5;
+  // Délai stéréo "Ping-Pong" très long pour les arpèges
+  AUDIO.echo=c.createDelay(2.0); AUDIO.echo.delayTime.value=0.75; // 3/4 de seconde
+  const echoGain=c.createGain(); echoGain.gain.value=0.45;
+  const echoFiltre=c.createBiquadFilter(); echoFiltre.type='lowpass'; echoFiltre.frequency.value=1200;
   AUDIO.echo.connect(echoFiltre); echoFiltre.connect(echoGain); echoGain.connect(AUDIO.echo);
-  echoGain.connect(AUDIO.verb);
+  echoGain.connect(AUDIO.verb); // L'écho part dans la réverb
 }
 
 const freq=(base,demi)=>base*Math.pow(2,demi/12);
 
-/* --- GÉNÉRATEURS DE SONS CINÉMATIQUES --- */
-
-// Nappes d'accords qui changent selon l'univers
+/* Orchestrateur Cinématique - Génère de larges nappes de cordes/synthés */
 function lancerNappeCinematique(M){
   const c=AUDIO.ctx; if(!c) return;
   arreterNappe();
 
   const fl=c.createBiquadFilter();
-  fl.type='lowpass'; fl.frequency.value= M.timbre==='cristal' ? 800 : 200;
+  fl.type='lowpass'; fl.frequency.value=250; fl.Q.value=0.5; // Son très sourd et lourd à la base
 
   const g=c.createGain(); g.gain.value=0; fl.connect(g);
   g.connect(AUDIO.master); g.connect(AUDIO.envoi);
-  g.gain.linearRampToValueAtTime(0.09, c.currentTime+8);
+
+  // Fade in très lent de 8 secondes pour l'introduction
+  g.gain.linearRampToValueAtTime(0.08, c.currentTime+8);
   AUDIO.nappeOsc=[];
 
-  const accords = [[-24,2], [-12,4], [-12,-2], [0,1], [0,-1], [7,3]];
+  // On empile 8 oscillateurs pour créer un "Mur de son" (Wall of Sound)
+  const accords = [
+    [-24, 2], [-24, -3], [-12, 4], [-12, -2],
+    [0, 1], [0, -1], [7, 3], [7, -2] // Fondamentale, Octave sup, Quinte
+  ];
 
   for(const [off,det] of accords){
     const o=c.createOscillator();
-    // Signature sonore selon le timbre du niveau
-    if(M.timbre==='cuivre') o.type = 'sawtooth'; // Cuivres lourds
-    else if(M.timbre==='flute') o.type = 'sine'; // Chœurs spectraux
-    else if(M.timbre==='cristal') o.type = (off===-24)? 'triangle' : 'sine'; // Froid
-    else o.type = (off===-24 || off===7) ? 'sine' : 'sawtooth'; // Cordes gothiques (orgue)
-
+    // Mélange Sawtooth (cordes frottées) et Sine (chœurs)
+    o.type= (off===-24 || off===7) ? 'sine' : 'sawtooth';
     o.frequency.value=freq(M.tonique,off); o.detune.value=det;
     o.connect(fl); o.start();
     AUDIO.nappe.push({o, fl}); AUDIO.nappeOsc.push({o,off});
   }
-  AUDIO.nappeGain=g; AUDIO.nappeFiltre=fl;
+  AUDIO.nappeGain=g;
+  AUDIO.nappeFiltre=fl;
 }
+/* Le moteur du jeu appelle lancerNappe : on garde le nom en alias. */
 const lancerNappe=lancerNappeCinematique;
 
 function retunerNappe(base){
   const c=AUDIO.ctx, M=AUDIO.M; if(!c||!M) return;
-  const glisse = M.timbre==='flute' ? 3.0 : 1.2; // La flûte flotte, les cuivres attaquent
+  // Les cordes glissent lentement d'une note à l'autre (Portamento de 1.5s)
   for(const {o,off} of AUDIO.nappeOsc)
-    o.frequency.setTargetAtTime(freq(M.tonique,base+off), c.currentTime, glisse);
+    o.frequency.setTargetAtTime(freq(M.tonique,base+off), c.currentTime, 1.5);
 }
 
 function arreterNappe(){
@@ -1981,76 +1981,77 @@ function arreterNappe(){
   AUDIO.nappe=[]; AUDIO.nappeOsc=[]; AUDIO.nappeGain=null; AUDIO.nappeFiltre=null;
 }
 
-function percuEpique(t, vol, type='impact'){
+/* Percussions Épiques : "Sub-Boom" cinématique */
+function percussionEpique(t, vol){
+  const c=AUDIO.ctx; if(!c) return;
+
+  // 1. L'impact grave qui descend très bas (Sub Drop)
+  const o=c.createOscillator(), g=c.createGain();
+  o.type='sine';
+  o.frequency.setValueAtTime(120, t);
+  o.frequency.exponentialRampToValueAtTime(20, t+0.6); // Glisse vers l'infra-basse
+  g.gain.setValueAtTime(vol*1.5, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t+1.2);
+  o.connect(g); g.connect(AUDIO.master); o.start(t); o.stop(t+1.5);
+
+  // 2. Le "Hit" texturé (bruit blanc filtré)
+  const n=(c.sampleRate*0.5)|0, b=c.createBuffer(1,n,c.sampleRate), d=b.getChannelData(0);
+  for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/n, 3);
+  const s=c.createBufferSource(); s.buffer=b;
+  const f=c.createBiquadFilter(); f.type='lowpass'; f.frequency.value=400; // Sourd
+  const g2=c.createGain(); g2.gain.setValueAtTime(vol*0.3, t);
+  s.connect(f); f.connect(g2); g2.connect(AUDIO.envoi);
+  s.start(t);
+}
+
+/* Ligne de Basse Tension (style analogique moderne) */
+function basseTension(t, f, vol, duree){
+  const c=AUDIO.ctx; if(!c) return;
+  const o=c.createOscillator(), fl=c.createBiquadFilter(), g=c.createGain();
+
+  o.type='sawtooth'; // Son agressif
+  o.frequency.value=f;
+
+  // Filtre qui s'ouvre et se ferme pour l'expression "wah" sombre
+  fl.type='lowpass'; fl.Q.value=2.0;
+  fl.frequency.setValueAtTime(100, t);
+  fl.frequency.linearRampToValueAtTime(800, t+duree*0.2); // S'ouvre sur l'attaque
+  fl.frequency.exponentialRampToValueAtTime(80, t+duree); // Se referme lentement
+
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(vol, t+0.05);
+  g.gain.exponentialRampToValueAtTime(0.001, t+duree);
+
+  o.connect(fl); fl.connect(g); g.connect(AUDIO.master);
+  o.start(t); o.stop(t+duree*1.1);
+}
+
+/* Arpégiateur Célesta / Boîte à musique mystérieuse */
+function celestaMystique(t, f, vol){
   const c=AUDIO.ctx; if(!c) return;
   const o=c.createOscillator(), g=c.createGain();
   o.type='sine';
-  if(type==='impact'){
-    o.frequency.setValueAtTime(140, t);
-    o.frequency.exponentialRampToValueAtTime(20, t+0.7);
-    g.gain.setValueAtTime(vol*1.5, t);
-    g.gain.exponentialRampToValueAtTime(0.001, t+1.5);
-  } else { // Battement sourd (tambour lointain)
-    o.frequency.setValueAtTime(60, t);
-    o.frequency.exponentialRampToValueAtTime(40, t+0.3);
-    g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(vol, t+0.05);
-    g.gain.exponentialRampToValueAtTime(0.001, t+0.6);
-  }
-  o.connect(g); g.connect(AUDIO.master); g.connect(AUDIO.envoi);
-  o.start(t); o.stop(t+1.6);
-}
-
-function instrumSolo(t, f, vol, type, duree){
-  const c=AUDIO.ctx; if(!c) return;
-  const o=c.createOscillator(), g=c.createGain(), fl=c.createBiquadFilter();
   o.frequency.value=f;
 
-  if(type==='cuivre'){
-    o.type='sawtooth'; fl.type='lowpass'; fl.frequency.setValueAtTime(100, t);
-    fl.frequency.linearRampToValueAtTime(900, t+0.1); fl.frequency.exponentialRampToValueAtTime(80, t+duree);
-    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t+0.05);
-    g.gain.exponentialRampToValueAtTime(0.001, t+duree*1.5);
-  }
-  else if(type==='flute'){
-    o.type='sine'; fl.type='lowpass'; fl.frequency.value=1200;
-    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t+0.3);
-    g.gain.exponentialRampToValueAtTime(0.001, t+duree*2);
-    // Vibrato
-    const lfo=c.createOscillator(), lg=c.createGain(); lfo.frequency.value=4; lg.gain.value=f*0.015;
-    lfo.connect(lg); lg.connect(o.frequency); lfo.start(t); lfo.stop(t+duree*2.1);
-  }
-  else if(type==='cloche'){
-    o.type='sine'; fl.type='bandpass'; fl.frequency.value=f; fl.Q.value=1.5;
-    g.gain.setValueAtTime(vol*1.5, t); g.gain.exponentialRampToValueAtTime(0.0001, t+3.5);
-    // Harmoniques inharmoniques
-    o.frequency.setValueAtTime(f, t);
-  }
-  else { // Piano / Cristal (Boîte à musique)
-    o.type='triangle'; fl.type='lowpass'; fl.frequency.value=2000;
-    g.gain.setValueAtTime(vol*1.2, t); g.gain.exponentialRampToValueAtTime(0.0001, t+2.5);
-  }
+  // Attaque très percussive, résonance longue
+  g.gain.setValueAtTime(vol, t);
+  g.gain.exponentialRampToValueAtTime(0.0001, t+2.5);
 
-  o.connect(fl); fl.connect(g);
-  g.connect(AUDIO.envoi); // Très noyé dans l'espace
-  if(type!=='cuivre' && type!=='cloche') g.connect(AUDIO.echo);
-  if(type==='cuivre') g.connect(AUDIO.master);
+  o.connect(g);
+  // Ce son va à 100% dans la réverb et l'écho, presque pas dans le master sec
+  g.connect(AUDIO.envoi); g.connect(AUDIO.echo);
 
-  o.start(t); o.stop(t+duree*2.5+0.1);
+  o.start(t); o.stop(t+2.6);
 }
 
-/* --- STRUCTURE THÉMATIQUE COMPLEXE --- */
-// Transforme les courts motifs en véritables actes de musique de film
+/* Étend un petit motif en quatre actes : thème, évolution, pont, résolution. */
 function etendreMelodie(motifOriginal){
-  if(!motifOriginal || !motifOriginal.length) return [];
-  const rep=(m, transpo, oct)=>m.map(n=> [n[0]+transpo, n[1]* (oct?2:1)]);
-  const theme = motifOriginal;
-  const reponse = rep(motifOriginal, 2, false); // Transposition diatonique
-  const silence = [[0, 8]]; // Pause dramatique
-  const developpement = rep(motifOriginal, 4, false); // Tension monte
-  const variation = motifOriginal.map((n,i)=> [n[0] + (i%2===0?7:0), n[1]]); // Sauts d'octaves/quintes
-
-  return [...theme, ...reponse, ...silence, ...developpement, ...variation, ...silence, ...silence];
+  const rep=(m, delta, fin)=>m.map((n, i) => {
+    if(i === m.length - 1 && fin !== undefined) return [fin, n[1]*2];
+    return [n[0] + delta, n[1]];
+  });
+  return [...motifOriginal, ...rep(motifOriginal,2,0),
+          ...rep(motifOriginal,4,4), ...rep(motifOriginal,0,0)];
 }
 
 function triade(g,deg){
@@ -2061,76 +2062,62 @@ function triade(g,deg){
 
 function jouerPas(p,t){
   const M=AUDIO.M, c=AUDIO.ctx; if(!M||!c) return;
-  const I=AUDIO.intensite;
+  const I=AUDIO.intensite; // Monte de 0 à 1 au fil du jeu
   const g=GAMMES[M.gamme]||GAMMES.eolien;
 
-  // Tempo de base ralenti pour la tension (1 pas = 1 croche)
-  const mes=(Math.floor(p/4));
+  // On ralentit drastiquement le rythme de base pour un côté majestueux
+  const tempoLent = Math.floor(p/2);
+  const mes=(tempoLent/8)|0;
   const acc=triade(g, M.prog[mes%M.prog.length]);
 
-  // Ouverture dramatique du filtre (plus de brillance quand l'intensité monte)
+  // Ouverture du filtre de la nappe en fonction de l'intensité (le son devient plus brillant)
   if(AUDIO.nappeFiltre) {
-    const baseFreq = M.timbre==='cristal' ? 800 : 200;
-    AUDIO.nappeFiltre.frequency.setTargetAtTime(baseFreq + I*800, t, 1.0);
+    AUDIO.nappeFiltre.frequency.setTargetAtTime(250 + I*600, t, 0.5);
   }
 
-  /* 1. FONDATIONS & HARMONIE (Changement d'accord) */
-  if(p % 16 === 0){
+  // --- ACTE 1 : ÉVOLUTION HARMONIQUE (Toutes les 8 temps lents) ---
+  if(tempoLent % 8 === 0){
     retunerNappe(acc[0]);
-    if(I > 0.25) percuEpique(t, 0.3 + I*0.4, M.timbre==='cuivre'?'impact':'sourd');
+    // Impact massif aux moments de haute tension
+    if(I > 0.3) percussionEpique(t, 0.4 + I*0.4);
 
-    // Basse continue (bourdon)
-    if(M.timbre==='cuivre' || M.timbre==='orgue'){
-      instrumSolo(t, freq(M.tonique, acc[0]-24), 0.25, 'cuivre', 4.0);
-    }
+    // Basse continue très grave
+    basseTension(t, freq(M.tonique, acc[0]-24), 0.3, 4.0);
   }
 
-  /* 2. PULSATION / OSTINATO (L'urgence) */
-  if(p % 2 === 0 && I > 0.15){
-    if(M.timbre==='cuivre'){
-      // Synthé pulse agressif
-      instrumSolo(t, freq(M.tonique, acc[0]-12), 0.15 * I, 'cuivre', 0.3);
-    } else if(M.timbre==='cristal' && p % 4 === 0){
-      // Chimes froids réguliers
-      instrumSolo(t, freq(M.tonique, acc[2]+24), 0.05 * I, 'piano', 1.0);
-    }
+  // --- ACTE 2 : OSTINATO (Pulsation rythmique) ---
+  // Une basse qui pulse au rythme des temps impairs, s'éveille avec la difficulté
+  if(I > 0.15 && p % 2 !== 0){
+    basseTension(t, freq(M.tonique, acc[0]-12), 0.15 * I, 0.5);
   }
 
-  /* 3. THÈME & MÉLODIE (Le Chant) */
-  const motif = AUDIO.themeAllonge;
-  if(motif && motif.length){
-    // Rythme de jeu de la mélodie diffère selon l'univers
-    const divis = M.timbre==='flute' ? 4 : 2;
-
-    if(p % divis === 0){
+  // --- ACTE 3 : LE THÈME AU CÉLESTA ---
+  // La mélodie écrite du niveau, jouée note à note dans la brume d'écho.
+  if(AUDIO.motifLong && AUDIO.motifLong.length){
+    if(p % 2 === 0){
       if(AUDIO.reste>0){ AUDIO.reste--; }
       else{
-        const note=motif[AUDIO.iMotif % motif.length];
+        const note=AUDIO.motifLong[AUDIO.iMotif % AUDIO.motifLong.length];
         AUDIO.iMotif++; AUDIO.reste=note[1]-1;
-
         const deg=note[0];
         const demi=(deg>=0? g[deg%g.length]+12*Math.floor(deg/g.length) : -(g[(-deg)%g.length]));
-
-        // Instrument soliste principal
-        let octave = M.timbre==='cristal' ? 24 : 12;
-        let instrument = M.timbre==='orgue' ? 'cloche' : M.timbre;
-        let vol = M.timbre==='flute' ? 0.3 : 0.08 + I*0.05;
-
-        instrumSolo(t, freq(M.tonique, octave+demi), vol, instrument, note[1]*0.25);
-
-        // Contrepoint aléatoire (Echo fantôme) à forte intensité
-        if(I>0.5 && Math.random()<0.3){
-           instrumSolo(t+0.5, freq(M.tonique, octave+demi+7), vol*0.5, 'piano', 1.0);
-        }
+        celestaMystique(t, freq(M.tonique, 24+demi), 0.06 + I*0.04);
       }
     }
+    if(p % 7 === 0 && Math.random() < 0.25){
+      const f = freq(M.tonique, acc[(Math.random()*3)|0] + 36);
+      celestaMystique(t, f, 0.03);
+    }
+  } else if(p % 3 === 0 && Math.random() < 0.6){
+    const f = freq(M.tonique, acc[(Math.random()*3)|0] + (Math.random()>0.5?24:12));
+    celestaMystique(t, f, 0.05 + (I * 0.03));
   }
 }
 
 function planifier(){
   const c=AUDIO.ctx, M=AUDIO.M; if(!c||!M) return;
-  const croche=60/(M.tempo)/2;
-  while(AUDIO.prochain < c.currentTime+0.2){
+  const croche=60/(M.tempo*0.8)/2; // Tempo ralenti pour la lourdeur cinématique
+  while(AUDIO.prochain < c.currentTime+0.25){
     jouerPas(AUDIO.pas,AUDIO.prochain);
     AUDIO.pas++; AUDIO.prochain+=croche;
   }
@@ -2140,59 +2127,71 @@ function musiqueNiveau(L){
   initAudio(); const c=AUDIO.ctx; if(!c) return;
   if(c.state==='suspended') c.resume();
   AUDIO.M=L.musique; AUDIO.pas=0; AUDIO.prochain=c.currentTime+0.1; AUDIO.intensite=0;
-
-  AUDIO.themeAllonge = L.musique.motif ? etendreMelodie(L.musique.motif) : [];
+  AUDIO.motifLong = L.musique.motif ? etendreMelodie(L.musique.motif) : null;
   AUDIO.iMotif=0; AUDIO.reste=0;
 
   lancerNappeCinematique(L.musique);
 
   AUDIO.master.gain.cancelScheduledValues(c.currentTime);
   AUDIO.master.gain.setValueAtTime(AUDIO.master.gain.value,c.currentTime);
-  AUDIO.master.gain.linearRampToValueAtTime(AUDIO.actif?0.75:0, c.currentTime+6.0); // Intro majestueuse
+  AUDIO.master.gain.linearRampToValueAtTime(AUDIO.actif?0.65:0, c.currentTime+5.0); // Fondu très lent
 
-  clearInterval(AUDIO.timer); AUDIO.timer=setInterval(planifier,40);
+  clearInterval(AUDIO.timer); AUDIO.timer=setInterval(planifier,50);
 }
 
 function musiqueChapitre(){
   if(!AUDIO.M) return;
-  AUDIO.intensite=Math.min(1,AUDIO.intensite+0.35); // La musique s'énerve à chaque palier
+  // À chaque chapitre, l'intensité monte brutalement, la musique s'énerve
+  AUDIO.intensite=Math.min(1,AUDIO.intensite+0.35);
   if(AUDIO.ctx) sfx('boss');
 }
 
 function volumeAudio(v){
   if(!AUDIO.ctx) return;
   AUDIO.master.gain.cancelScheduledValues(AUDIO.ctx.currentTime);
-  AUDIO.master.gain.setTargetAtTime(AUDIO.actif?v:0, AUDIO.ctx.currentTime, 0.4);
+  AUDIO.master.gain.setTargetAtTime(AUDIO.actif?v:0, AUDIO.ctx.currentTime, 0.3);
 }
 
 function couperAudio(){
   AUDIO.actif=!AUDIO.actif;
   $('btn-son').textContent=AUDIO.actif?'♪':'✕';
-  volumeAudio(G.etat==='jeu'?0.75:0.22);
+  volumeAudio(G.etat==='jeu'?0.65:0.22);
 }
 
-/* --- EFFETS SONORES (SFX) --- */
 function souffle(t,duree,vol,centre){
   const c=AUDIO.ctx; if(!c) return;
   const n=(c.sampleRate*duree)|0, b=c.createBuffer(1,n,c.sampleRate), d=b.getChannelData(0);
   for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2);
-  const s=c.createBufferSource(), f=c.createBiquadFilter(), g=c.createGain();
-  s.buffer=b; f.type='bandpass'; f.frequency.value=centre; f.Q.value=1.1;
-  g.gain.value=vol; s.connect(f); f.connect(g); g.connect(AUDIO.master); g.connect(AUDIO.envoi);
+  const s=c.createBufferSource(); s.buffer=b;
+  const f=c.createBiquadFilter(); f.type='bandpass'; f.frequency.value=centre; f.Q.value=1.1;
+  const g=c.createGain(); g.gain.value=vol;
+  s.connect(f); f.connect(g); g.connect(AUDIO.master); g.connect(AUDIO.envoi);
   s.start(t);
+}
+
+function synthNote(t, f, vol, timbre='piano', duree=0.8){
+   const c=AUDIO.ctx; if(!c) return;
+   const o=c.createOscillator(), g=c.createGain();
+   o.type='triangle';
+   g.gain.setValueAtTime(vol*1.5, t);
+   g.gain.exponentialRampToValueAtTime(0.001, t+duree*1.2);
+   o.frequency.value=f;
+   o.connect(g); g.connect(AUDIO.master); g.connect(AUDIO.envoi);
+   o.start(t); o.stop(t+duree*1.5);
 }
 
 function sfx(nom){
   if(!AUDIO.ctx||!AUDIO.actif||!AUDIO.M) return;
   const t=AUDIO.ctx.currentTime, M=AUDIO.M;
   if(nom==='niveau') {
-      [0,7,12,16].forEach((d,i)=>instrumSolo(t+i*0.08, freq(M.tonique,12+d), 0.15, 'piano', 2.0));
+      // Accord majestueux
+      [0,7,12,16].forEach((d,i)=>celestaMystique(t+i*0.08, freq(M.tonique,12+d), 0.15));
   }
-  if(nom==='boss'){ percuEpique(t, 0.8, 'impact'); souffle(t, 1.2, 0.15, 80); }
+  if(nom==='boss'){ percussionEpique(t, 0.8); souffle(t, 1.2, 0.15, 80); }
   if(nom==='mal'){ souffle(t,0.14,0.12,320); }
-  if(nom==='casse'){ instrumSolo(t,freq(M.tonique,19), 0.1, 'piano', 0.5); }
-  if(nom==='terre'){ percuEpique(t, 0.6, 'impact'); }
-  if(nom==='ultime'){ souffle(t, 1.5, 0.2, 500); percuEpique(t, 0.9, 'impact'); }
+  if(nom==='casse'){ celestaMystique(t,freq(M.tonique,19), 0.1); }
+  if(nom==='terre'){ percussionEpique(t, 0.6); }
+  if(nom==='ultime'){ souffle(t, 1.5, 0.2, 500); percussionEpique(t, 0.9); }
 }
 
 /* ==========================================================================
@@ -2470,7 +2469,7 @@ function dirJoueur(idx){
 /* --- état --- */
 const G={ etat:'menu', t:0, joueurs:[], ennemis:[], projs:[], gemmes:[], effets:[], textes:[],
   eclats:[], decor:[], brisables:[], butins:[], particules:[], motif:null, niveau:null,
-  diff:null, gel:0, punch:0, chapitre:0, finChapitre:0, colosse:null, annonce:null,
+  diff:null, gel:0, chapitre:0, finChapitre:0, colosse:null, annonce:null,
   brume:[], gouttes:[], eclabous:[], xp:0, lvl:1, niveauxDus:0, tues:0, spawnAcc:0,
   prochainBoss:CFG.regles.bossToutesLes, cam:{x:0,y:0}, shake:0, choix:[], flash:0, rendu:[] };
 
@@ -2871,8 +2870,7 @@ function majColosse(e,dt,vivants){
   const c=e.def.comportement;
   if(c==='charge'){
     if(e.charge>0){ e.charge-=dt; e.vitesse=e.def.vitesse*4.2; }
-    else if(e.minuteur<=0){ e.minuteur=rnd(3.2,4.6); e.charge=1.1; G.shake=Math.max(G.shake,5);
-      G.effets.push({type:'onde',x:e.x,y:e.y,r:e.r*3.2,t:0,duree:0.35,couleur:PAL.pierreC}); }
+    else if(e.minuteur<=0){ e.minuteur=rnd(3.2,4.6); e.charge=1.1; G.shake=Math.max(G.shake,5); }
     else e.vitesse=e.def.vitesse;
   }
   else if(c==='salve'){
@@ -2946,9 +2944,6 @@ function autour(g,x,y,r){
 function frapper(e,degats,couleur){
   e.pv-=degats; e.flash=0.1;
   if(!e.brisable){ e.squash=1; if(e.boss) G.gel=Math.max(G.gel,0.035); }
-  if(degats>=42 && G.effets.length<90)
-    G.effets.push({type:'etoile',x:e.x+rnd(-6,6),y:e.y+rnd(-8,2),r:8+Math.min(14,degats*0.12),
-                   t:0,duree:0.18,couleur:couleur||PAL.os});
   const gros=degats>=45;
   G.textes.push({x:e.x,y:e.y-e.r,v:Math.round(degats),t:gros?0.8:0.6,
                  couleur:gros?PAL.ambre:(couleur||PAL.os), pop:gros?1.55:1.12});
@@ -3003,8 +2998,6 @@ function tuer(e){
   G.gemmes.push({x:e.x,y:e.y,v:e.xp,r:e.boss?9:4.5,boss:e.boss,ph:Math.random()*6.28});
   eclats(e.x,e.y,e.boss?40:8,PAL.sang,e.boss?260:150);
   if(e.colosse){
-    G.effets.push({type:'onde',x:e.x,y:e.y,r:300,t:0,duree:0.7,couleur:PAL.ambre});
-    G.punch=Math.max(G.punch,1);
     G.colosse=null;
     const suivant=CFG.chapitres[G.chapitre+1];
     if(suivant){
@@ -3027,7 +3020,6 @@ function blesser(j,d){
   if(j.invul>0||j.aterre) return;
   const reel=Math.max(1,d-j.armure);
   j.pv-=reel; j.invul=0.72; G.shake=Math.max(G.shake,4); G.gel=Math.max(G.gel,0.05);
-  G.effets.push({type:'onde',x:j.x,y:j.y,r:70,t:0,duree:0.3,couleur:PAL.sang});
   G.textes.push({x:j.x,y:j.y-18,v:'-'+Math.round(reel),t:0.7,couleur:PAL.sang});
   eclats(j.x,j.y,5,PAL.sang,130);
   sfx('mal');
@@ -3178,8 +3170,6 @@ function declencherUltime(j){
     if(soin>0) G.textes.push({x:j.x,y:j.y-26,v:'+'+soin,t:1,couleur:PAL.sang});
   }
   G.effets.push({type:'ultime',x:j.x,y:j.y,r:U.rayon,t:0,duree:0.6,couleur:U.couleur});
-  G.effets.push({type:'onde',x:j.x,y:j.y,r:U.rayon*1.15,t:0,duree:0.5,couleur:PAL.os});
-  G.punch=Math.max(G.punch,0.7);
   G.shake=Math.max(G.shake,14); G.flash=0.45; G.gel=Math.max(G.gel,0.09);
   eclats(j.x,j.y,30,U.couleur,300);
   sfx('ultime');
@@ -3231,7 +3221,7 @@ function choisir(i){
   majFiches();
   if(G.niveauxDus>0){ proposer(); return; }   // encore un niveau en attente : carte suivante
   $('levelup').classList.add('cache'); G.etat='jeu'; dernier=performance.now();
-  volumeAudio(0.75);
+  volumeAudio(0.65);
 }
 function gagnerXp(v,j){
   G.xp+=v*j.mult.xp*(G.diff?G.diff.xp:1);
@@ -3249,7 +3239,7 @@ function gagnerXp(v,j){
 function togglePause(){
   if(G.etat==='jeu'){ G.etat='pause'; $('pause').classList.remove('cache'); volumeAudio(0.22); }
   else if(G.etat==='pause'){ G.etat='jeu'; $('pause').classList.add('cache');
-    dernier=performance.now(); volumeAudio(0.75); }
+    dernier=performance.now(); volumeAudio(0.65); }
 }
 function finir(victoire){
   if(NET.actif && NET.role==='hote') envoyer({t:'fin', v:!!victoire});
@@ -3310,7 +3300,6 @@ function boucle(now){
       const m=G.joueurs[NET.moi];
       if(m){ G.cam.x+=(m.x-G.cam.x)*Math.min(1,dt*7); G.cam.y+=(m.y-G.cam.y)*Math.min(1,dt*7); }
       G.shake=Math.max(0,G.shake-dt*28);
-  G.punch=Math.max(0,G.punch-dt*2.6);
       rendre(dt);
     }
     return;
@@ -3357,7 +3346,6 @@ function maj(dt){
   else { for(const j of vivants){cx+=j.x;cy+=j.y;} cx/=vivants.length; cy/=vivants.length; }
   G.cam.x+=(cx-G.cam.x)*Math.min(1,dt*7); G.cam.y+=(cy-G.cam.y)*Math.min(1,dt*7);
   G.shake=Math.max(0,G.shake-dt*28);
-  G.punch=Math.max(0,G.punch-dt*2.6);
 
   const horde=mod==='horde'?2:1;
   G.spawnAcc+=dt*(R.spawnBase+(G.t/60)*R.spawnParMinute)*horde*G.diff.spawn;
@@ -3769,7 +3757,7 @@ function ombre(x,y,w,a){
 function rendre(dt){
   const L=G.niveau; if(!L) return;
   const A=L.ambiance||{obscurite:0.72,nuit:PAL.nuit};
-  const Z=ZOOM*(1+G.punch*0.045), VW=W/Z, VH=H/Z;
+  const Z=ZOOM, VW=W/Z, VH=H/Z;
   const sx=G.shake?rnd(-G.shake,G.shake):0, sy=G.shake?rnd(-G.shake,G.shake):0;
   const ox=VW/2-G.cam.x+sx, oy=VH/2-G.cam.y+sy;
   const versEcran=(x,y)=>[(x+ox)*Z,(y+oy)*Z];
@@ -3973,18 +3961,6 @@ function rendre(dt){
       ctx.beginPath(); ctx.arc(x,y+5,1.6,0,6.2832); ctx.fill();
       ctx.globalAlpha=1;
     }
-    else if(f.type==='etoile'){
-      const x=f.x+ox, y=f.y+oy, r=f.r*(0.4+k*0.6);
-      ctx.globalAlpha=k; ctx.fillStyle=f.couleur;
-      ctx.beginPath();
-      ctx.moveTo(x,y-r); ctx.lineTo(x+r*0.22,y-r*0.22); ctx.lineTo(x+r,y);
-      ctx.lineTo(x+r*0.22,y+r*0.22); ctx.lineTo(x,y+r);
-      ctx.lineTo(x-r*0.22,y+r*0.22); ctx.lineTo(x-r,y);
-      ctx.lineTo(x-r*0.22,y-r*0.22); ctx.closePath(); ctx.fill();
-      ctx.globalAlpha=k*0.9; ctx.fillStyle=PAL.os;
-      ctx.beginPath(); ctx.arc(x,y,r*0.2,0,6.2832); ctx.fill();
-      ctx.globalAlpha=1;
-    }
     else if(f.type==='onde'){
       const x=f.x+ox, y=f.y+oy, r=f.r*(1-k*0.85);
       ctx.globalAlpha=k*0.7; ctx.strokeStyle=f.couleur; ctx.lineWidth=1+k*3;
@@ -4166,8 +4142,6 @@ function rendre(dt){
     if(f.type==='ame'){ const av=f.t/f.duree;
       const [px,py]=versEcran(f.x,f.y-av*44); lueur(px,py,9*Z,f.couleur,(1-av)*0.5); }
     if(f.type==='etincelle'){ const [px,py]=versEcran(f.x,f.y); lueur(px,py,7*Z,f.couleur,k*0.5); }
-    if(f.type==='etoile'){ const [px,py]=versEcran(f.x,f.y); lueur(px,py,f.r*2.2*Z*k,f.couleur,0.8*k); }
-    if(f.type==='onde'){ const [px,py]=versEcran(f.x,f.y); lueur(px,py,f.r*0.5*Z,f.couleur,0.25*k); }
     if(f.type==='laser'){
       const [px,py]=versEcran(f.x,f.y);
       gx2.save(); gx2.translate(px*e,py*e); gx2.rotate(f.ang);
