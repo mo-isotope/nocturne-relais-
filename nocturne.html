@@ -24,6 +24,12 @@
     width:52px;height:52px;border:1px solid rgba(233,227,210,.3);background:rgba(10,16,22,.7);
     color:var(--os);font-family:var(--mono);font-size:11px;letter-spacing:.1em;cursor:pointer}
   body.tactile #btn-pause{display:block}
+  #btn-ultime{position:absolute;right:12px;bottom:136px;pointer-events:auto;
+    width:66px;height:66px;border:2px solid var(--ambre);background:rgba(255,210,122,.14);
+    color:var(--ambre);font-size:24px;line-height:1;cursor:pointer;border-radius:50%;
+    display:flex;flex-direction:column;align-items:center;justify-content:center}
+  #btn-ultime.vide{opacity:.32;border-color:var(--brume);color:var(--brume)}
+  #btn-ultime b{font-family:var(--mono);font-size:11px;font-weight:600}
   #btn-son{position:absolute;right:12px;bottom:74px;pointer-events:auto;
     width:52px;height:52px;border:1px solid rgba(233,227,210,.3);background:rgba(10,16,22,.7);
     color:var(--os);font-family:var(--mono);font-size:16px;cursor:pointer}
@@ -95,6 +101,7 @@
   <div class="joueurs" id="fiches"></div>
   <button id="btn-pause">II</button>
   <button id="btn-son">&#9834;</button>
+  <button id="btn-ultime">◈</button>
 </div>
 
 <div id="menu" class="ecran"><div class="panneau">
@@ -540,211 +547,729 @@ const SPRITES = {
     "....nnn.....nnnnn...",
     "...OOO.....OOOOO...."]]},
 
+muscle:{ cycle:[0,1,0,2],
+    p:{S:PAL.peau,s:PAL.peauC,k:PAL.peauS,e:PAL.nuit,H:PAL.boisS,
+       C:PAL.ombre2,c:PAL.ombre,B:PAL.osC,O:PAL.nuit2}, f:[[
+    "........HHHH........",
+    ".......HHHHHH.......",
+    ".......SSSSSs.......",
+    ".......SeSSes.......",
+    ".......SSSSSs.......",
+    ".......SSHHSs.......",
+    "........Ssss........",
+    "..SSSs..ssss...sss..",
+    ".SSSSSs.CCCC..sssss.",
+    "SSSSSSsCCCCCCsssssss",
+    "SSSSSSsCCCCCCsssssss",
+    "SSSSSSsCCCCCCsssssss",
+    "SSSSSsskCCCCksssssss",
+    ".SSSSs.kCCCCk.sssss.",
+    ".SSSs..kCCCCk..ssss.",
+    ".SSs...kCCCCk...sss.",
+    ".kks...kCCCCk...kkk.",
+    "........BBBB........",
+    ".......CCCCCc.......",
+    ".......CCCCCc.......",
+    ".......CCCCCc.......",
+    ".......CCCCCc.......",
+    "...CCCC.....cccc....",
+    "...CCCC.....cccc....",
+    "...kkkk.....kkkk....",
+    "..OOOOO....OOOOO...."],[
+    "........HHHH........",
+    ".......HHHHHH.......",
+    ".......SSSSSs.......",
+    ".......SeSSes.......",
+    ".......SSSSSs.......",
+    ".......SSHHSs.......",
+    "........Ssss........",
+    "..SSSs..ssss...sss..",
+    ".SSSSSs.CCCC..sssss.",
+    "SSSSSSsCCCCCCsssssss",
+    "SSSSSSsCCCCCCsssssss",
+    "SSSSSSsCCCCCCsssssss",
+    "SSSSSsskCCCCksssssss",
+    ".SSSSs.kCCCCk.sssss.",
+    ".SSSs..kCCCCk..ssss.",
+    ".SSs...kCCCCk...sss.",
+    ".kks...kCCCCk...kkk.",
+    "........BBBB........",
+    ".......CCCCCc.......",
+    ".......CCCCCc.......",
+    ".......CCCCCc.......",
+    ".......CCCCCc.......",
+    "..CCCC......cccc....",
+    "..CCCC.......ccc....",
+    "..kkkk.......kkk....",
+    ".OOOOO.......OOO...."],[
+    "........HHHH........",
+    ".......HHHHHH.......",
+    ".......SSSSSs.......",
+    ".......SeSSes.......",
+    ".......SSSSSs.......",
+    ".......SSHHSs.......",
+    "........Ssss........",
+    "..SSSs..ssss...sss..",
+    ".SSSSSs.CCCC..sssss.",
+    "SSSSSSsCCCCCCsssssss",
+    "SSSSSSsCCCCCCsssssss",
+    "SSSSSSsCCCCCCsssssss",
+    "SSSSSsskCCCCksssssss",
+    ".SSSSs.kCCCCk.sssss.",
+    ".SSSs..kCCCCk..ssss.",
+    ".SSs...kCCCCk...sss.",
+    ".kks...kCCCCk...kkk.",
+    "........BBBB........",
+    ".......CCCCCc.......",
+    ".......CCCCCc.......",
+    ".......CCCCCc.......",
+    ".......CCCCCc.......",
+    "....CCCC....cccc....",
+    "....CCC.....ccccc...",
+    "....kkk.....kkkkk...",
+    "...OOO.....OOOOO...."]]},
+
+  galerien:{ cycle:[0,1,0,2],
+    p:{S:PAL.peau,s:PAL.peauC,k:PAL.peauS,e:PAL.nuit,H:PAL.ombre2,h:PAL.nuit2,
+       W:PAL.os,w:PAL.osC,G:PAL.glaceC,g:PAL.glaceS,
+       C:PAL.ombre,c:PAL.nuit2,V:PAL.vert,v:PAL.vertS,O:PAL.nuit2}, f:[[
+    ".......HHHHHH.......",
+    "......HHHHHHHh......",
+    "......SSSSSSss......",
+    "......SeSSSess......",
+    "......SSSSSSss......",
+    "......kSSSSks.......",
+    ".......ksssk........",
+    ".....WWWWWWWWw......",
+    "....WWWWWWWWWWw.....",
+    "...sGGGGGGGGGGs.....",
+    "...sWWWWWWWWWWs..V..",
+    "..ssGGGGGGGGGGss.V..",
+    "..ssWWWWWWWWWWss.V..",
+    "..ssGGGGGGGGGGssvVv.",
+    "..ssWWWWWWWWWWssvVv.",
+    "..kk.GGGGGGGG.kkvVv.",
+    ".....WWWWWWWW...vvv.",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "...CCCC.....cccc....",
+    "...CCCC.....cccc....",
+    "...kkkk.....kkkk....",
+    "..OOOOO....OOOOO...."],[
+    ".......HHHHHH.......",
+    "......HHHHHHHh......",
+    "......SSSSSSss......",
+    "......SeSSSess......",
+    "......SSSSSSss......",
+    "......kSSSSks.......",
+    ".......ksssk........",
+    ".....WWWWWWWWw......",
+    "....WWWWWWWWWWw.....",
+    "...sGGGGGGGGGGs.....",
+    "...sWWWWWWWWWWs..V..",
+    "..ssGGGGGGGGGGss.V..",
+    "..ssWWWWWWWWWWss.V..",
+    "..ssGGGGGGGGGGssvVv.",
+    "..ssWWWWWWWWWWssvVv.",
+    "..kk.GGGGGGGG.kkvVv.",
+    ".....WWWWWWWW...vvv.",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "..CCCC......cccc....",
+    "..CCCC.......ccc....",
+    "..kkkk.......kkk....",
+    ".OOOOO.......OOO...."],[
+    ".......HHHHHH.......",
+    "......HHHHHHHh......",
+    "......SSSSSSss......",
+    "......SeSSSess......",
+    "......SSSSSSss......",
+    "......kSSSSks.......",
+    ".......ksssk........",
+    ".....WWWWWWWWw......",
+    "....WWWWWWWWWWw.....",
+    "...sGGGGGGGGGGs.....",
+    "...sWWWWWWWWWWs..V..",
+    "..ssGGGGGGGGGGss.V..",
+    "..ssWWWWWWWWWWss.V..",
+    "..ssGGGGGGGGGGssvVv.",
+    "..ssWWWWWWWWWWssvVv.",
+    "..kk.GGGGGGGG.kkvVv.",
+    ".....WWWWWWWW...vvv.",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "....CCCC....cccc....",
+    "....CCC.....ccccc...",
+    "....kkk.....kkkkk...",
+    "...OOO.....OOOOO...."]]},
+
+  /* ================= MONSTRES REDESSINÉS — 18 x 18, moitié gauche ============ */
+
+  s_rampant:{ miroir:true,
+    p:{C:PAL.vert,c:PAL.vertC,d:PAL.vertS,e:PAL.os,t:PAL.osC}, f:[[
+    ".........",
+    ".........",
+    "....ccCCC",
+    "...cCCCCC",
+    "..cCCeeCC",
+    "..cCCCCCC",
+    "...cttCCC",
+    "..ccCCCCC",
+    ".ccCCCCCC",
+    "ccCCccccc",
+    "ccCcddddd",
+    ".cCcddddd",
+    ".ccCccccc",
+    "..ccCCCCC",
+    "..cCC..CC",
+    ".dd......",
+    ".........",
+    "........."],[
+    ".........",
+    "....ccCCC",
+    "...cCCCCC",
+    "..cCCeeCC",
+    "..cCCCCCC",
+    "...cttCCC",
+    "..ccCCCCC",
+    ".ccCCCCCC",
+    "ccCCccccc",
+    "ccCcddddd",
+    ".cCcddddd",
+    ".ccCccccc",
+    "..ccCCCCC",
+    "...cCC.CC",
+    "..dd.....",
+    ".........",
+    ".........",
+    "........."]]},
+
+  s_chauve:{ miroir:true,
+    p:{A:PAL.spectre,a:PAL.spectreC,x:PAL.spectreS,C:PAL.spectre,c:PAL.spectreC,e:PAL.sang}, f:[[
+    ".........",
+    "AA.......",
+    "AAAa.....",
+    "AAAAa..cC",
+    "AAAAAa.cC",
+    "xAAAAacCC",
+    "x.AAacCeC",
+    "x..acCCCC",
+    "....cCCCC",
+    ".....cCCC",
+    "......cCC",
+    ".......cC",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    "........."],[
+    ".........",
+    ".........",
+    "..AAa....",
+    "..AAAa.cC",
+    "...AAacCC",
+    "...xAacCC",
+    "....acCeC",
+    "....cCCCC",
+    "....cCCCC",
+    ".....cCCC",
+    "......cCC",
+    ".......cC",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    "........."]]},
+
+  s_gargouille:{ miroir:true,
+    p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS,e:PAL.sang,t:PAL.os}, f:[[
+    ".d.......",
+    ".dd......",
+    "..dd.sss.",
+    "...sssSSS",
+    "..ssSSSSS",
+    ".ssSSeeSS",
+    ".ssSSSSSS",
+    "..ssStttS",
+    "..sSSSSSS",
+    ".ssSSSddd",
+    "sssSSdddd",
+    "ssSSddddd",
+    ".sSSddddd",
+    "..ssSSSSS",
+    "...ddd.dd",
+    "...dd..dd",
+    ".........",
+    "........."],[
+    ".........",
+    ".d.......",
+    ".dd..sss.",
+    "..dssSSSS",
+    "..ssSSSSS",
+    ".ssSSeeSS",
+    ".ssSSSSSS",
+    "..ssStttS",
+    "..sSSSSSS",
+    ".ssSSSddd",
+    "sssSSdddd",
+    "ssSSddddd",
+    ".sSSddddd",
+    "..ssSSSSS",
+    "....ddddd",
+    "....dd.dd",
+    ".........",
+    "........."]]},
+
+  s_spectre:{ miroir:true,
+    p:{C:PAL.glace,c:PAL.glaceC,t:PAL.glaceS,e:PAL.ombre}, f:[[
+    "....ccCCC",
+    "...cCCCCC",
+    "..cCCCCCC",
+    "..cCeeCCC",
+    "..cCCCCCC",
+    ".cCCCCCCC",
+    ".cCCCCCCC",
+    ".cCCCCCCC",
+    "..cCCCCCC",
+    "..ctttttt",
+    "..tt.ttt.",
+    "...t..tt.",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    "........."],[
+    "....ccCCC",
+    "...cCCCCC",
+    "..cCCCCCC",
+    "..cCeeCCC",
+    "..cCCCCCC",
+    ".cCCCCCCC",
+    ".cCCCCCCC",
+    ".cCCCCCCC",
+    "..cCCCCCC",
+    "..ctttttt",
+    "...tt.ttt",
+    "....t..tt",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    "........."]]},
+
+  s_ver:{ miroir:true,
+    p:{C:PAL.bois,c:PAL.boisC,d:PAL.boisS,e:PAL.nuit}, f:[[
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    "..cc.cCCC",
+    ".cCCcCCeC",
+    ".cCCcCCCC",
+    "..dd.dCCC",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    "........."],[
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    "..cc.cCCC",
+    ".cCCcCCeC",
+    ".cCCcCCCC",
+    "..dd.dCCC",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    "........."]]},
+
+  s_goule:{ miroir:true,
+    p:{C:PAL.sangC,c:PAL.sang,d:PAL.sangS,e:PAL.os,k:PAL.nuit2}, f:[[
+    ".........",
+    "....ccCCC",
+    "...cCCCCC",
+    "..cCCeeCC",
+    "...cCCCCC",
+    "..ccCCCCC",
+    ".ccCCCCCC",
+    "kcCCCCCCC",
+    "kcCCCCddd",
+    ".cCCCdddd",
+    "..cCCCCCC",
+    "..cCCC...",
+    "..cCC....",
+    ".kkk.....",
+    ".........",
+    ".........",
+    ".........",
+    "........."],[
+    "....ccCCC",
+    "...cCCCCC",
+    "..cCCeeCC",
+    "...cCCCCC",
+    "..ccCCCCC",
+    ".ccCCCCCC",
+    "kcCCCCCCC",
+    "kcCCCCddd",
+    ".cCCCdddd",
+    "..cCCCCCC",
+    "..cCCC...",
+    "...cCC...",
+    "..kkk....",
+    ".........",
+    ".........",
+    ".........",
+    ".........",
+    "........."]]},
+
+  /* La Masse : lente, énorme, encaisse tout */
+  s_brute:{ miroir:true,
+    p:{C:PAL.peauC,c:PAL.peauS,d:PAL.boisS,e:PAL.sang,t:PAL.os,k:PAL.nuit2}, f:[[
+    ".........",
+    "....ccCCC",
+    "...cCCCCC",
+    "...cCeeCC",
+    "...cCCCCC",
+    "..ccCttCC",
+    ".ccCCCCCC",
+    "ccCCCCCCC",
+    "cCCCCCddd",
+    "cCCCCdddd",
+    "cCCCCdddd",
+    "cCCCCCddd",
+    ".cCCCCCCC",
+    ".ccCCCCCC",
+    "..ccCCCCC",
+    "..kkk.kkk",
+    ".........",
+    "........."],[
+    "....ccCCC",
+    "...cCCCCC",
+    "...cCeeCC",
+    "...cCCCCC",
+    "..ccCttCC",
+    ".ccCCCCCC",
+    "ccCCCCCCC",
+    "cCCCCCddd",
+    "cCCCCdddd",
+    "cCCCCdddd",
+    "cCCCCCddd",
+    ".cCCCCCCC",
+    ".ccCCCCCC",
+    "..ccCCCCC",
+    "..kkkkkk.",
+    ".........",
+    ".........",
+    "........."]]},
+
   /* ================= ENNEMIS — 16 x 16, 2 images ================= */
 
-  s_rampant:{ p:{C:PAL.vert,c:PAL.vertC,d:PAL.vertS,e:PAL.os}, f:[[
-    "................",
-    "................",
-    "....CCCCcc......",
-    "..CCCCCCcccc....",
-    "..CCeCCCcecc....",
-    "..CCCCCCcccc....",
-    ".CCCCCCCCcccccc.",
-    ".CCCCCCCCcccccc.",
-    ".dCCCCCCccccccd.",
-    "..CCCCCCcccccc..",
-    "..CCCC....cccc..",
-    "..CC........cc..",
-    ".dd..........dd.",
-    "................",
-    "................",
-    "................"],[
-    "................",
-    "....CCCCcc......",
-    "..CCCCCCcccc....",
-    "..CCeCCCcecc....",
-    "..CCCCCCcccc....",
-    ".CCCCCCCCcccccc.",
-    ".CCCCCCCCcccccc.",
-    ".dCCCCCCccccccd.",
-    "..CCCCCCcccccc..",
-    "..CCCC....cccc..",
-    "..CC........cc..",
-    "..dd........dd..",
-    "................",
-    "................",
-    "................",
-    "................"]]},
 
-  s_chauve:{ p:{A:PAL.spectreC,a:PAL.spectreS,C:PAL.spectre,c:PAL.spectreC,e:PAL.os}, f:[[
-    "................",
-    "AA............aa",
-    "AAAA...CC...aaaa",
-    "AAAAA.CCcc.aaaaa",
-    "AAAA.CCCccc.aaaa",
-    "AA..CeCCcec..aaa",
-    "....CCCCcccc....",
-    "....CCCCcccc....",
-    ".....CCcccc.....",
-    "......CCcc......",
-    ".......Cc.......",
-    "................",
-    "................",
-    "................",
-    "................",
-    "................"],[
-    "................",
-    "................",
-    ".AAA...CC...aaa.",
-    ".AAAA.CCcc.aaaa.",
-    "..AA.CCCccc.aa..",
-    "AA..CeCCcec..aaa",
-    "....CCCCcccc....",
-    "....CCCCcccc....",
-    ".....CCcccc.....",
-    "......CCcc......",
-    ".......Cc.......",
-    "................",
-    "................",
-    "................",
-    "................",
-    "................"]]},
 
-  s_gargouille:{ p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS,e:PAL.sang}, f:[[
-    ".SS..........ss.",
-    ".SSS..dddd..sss.",
-    ".SSSSdddddddsss.",
-    "..SSdddeeddddss.",
-    "..Sddddddddddss.",
-    ".SSdddddddddddd.",
-    ".SSdddddddddddd.",
-    ".SSddddddddddss.",
-    "..Sddddddddds...",
-    "..SSdddddddss...",
-    "..dd......dd....",
-    ".ddd......ddd...",
-    "................",
-    "................",
-    "................",
-    "................"],[
-    "..SS........ss..",
-    ".SSS..dddd..sss.",
-    ".SSSSdddddddsss.",
-    "..SSdddeeddddss.",
-    "..Sddddddddddss.",
-    ".SSdddddddddddd.",
-    ".SSdddddddddddd.",
-    ".SSddddddddddss.",
-    "..Sddddddddds...",
-    "..SSdddddddss...",
-    "...dd....dd.....",
-    "..ddd....ddd....",
-    "................",
-    "................",
-    "................",
-    "................"]]},
 
-  s_spectre:{ p:{C:PAL.glace,c:PAL.glaceC,t:PAL.glaceS,e:PAL.ombre}, f:[[
-    ".....CCcc.......",
-    "...CCCCCcccc....",
-    "..CCCCCCcccccc..",
-    "..CCeCCCCceccc..",
-    "..CCCCCCcccccc..",
-    ".CCCCCCCCcccccc.",
-    ".CCCCCCCCcccccc.",
-    "..CCCCCCcccccc..",
-    "..tttttttttttt..",
-    "..ttt.tttt.ttt..",
-    "...t..tt..t.....",
-    "................",
-    "................",
-    "................",
-    "................",
-    "................"],[
-    ".....CCcc.......",
-    "...CCCCCcccc....",
-    "..CCCCCCcccccc..",
-    "..CCeCCCCceccc..",
-    "..CCCCCCcccccc..",
-    ".CCCCCCCCcccccc.",
-    ".CCCCCCCCcccccc.",
-    "..CCCCCCcccccc..",
-    "..tttttttttttt..",
-    ".ttt.tttt.ttt...",
-    "..t..tt..t......",
-    "................",
-    "................",
-    "................",
-    "................",
-    "................"]]},
 
-  s_ver:{ p:{C:PAL.bois,c:PAL.boisC,d:PAL.boisS}, f:[[
-    "................",
-    "................",
-    "................",
-    "................",
-    "................",
-    "..CC.CC.cc.cc...",
-    ".CCCdCCcdccdcc..",
-    ".CCCdCCcdccdcc..",
-    "..cc.cc.cc.cc...",
-    "................",
-    "................",
-    "................",
-    "................",
-    "................",
-    "................",
-    "................"],[
-    "................",
-    "................",
-    "................",
-    "................",
-    "..CC.CC.cc.cc...",
-    ".CCCdCCcdccdcc..",
-    ".CCCdCCcdccdcc..",
-    "..cc.cc.cc.cc...",
-    "................",
-    "................",
-    "................",
-    "................",
-    "................",
-    "................",
-    "................",
-    "................"]]},
 
-  s_goule:{ p:{C:PAL.sangC,c:PAL.sangS,d:PAL.nuit2,e:PAL.os}, f:[[
-    "................",
-    ".....CCcc.......",
-    "...CCCCCcccc....",
-    "...CeCCCcec.....",
-    "...CCCCCcccc....",
-    "..CCCCCCcccccc..",
-    ".dCCCCCCccccccd.",
-    ".dCCCCCCccccccd.",
-    "..CCCCCCcccccc..",
-    "..CCC....ccc....",
-    "..CCC....ccc....",
-    ".ddd......ddd...",
+
+
+  /* ================= COLOSSES — 32 x 32, moitié gauche seulement,
+     la droite est le reflet (miroir:true). ================= */
+
+  b_colosse:{ miroir:true,
+    p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS,e:PAL.sang,f:PAL.ambre}, f:[[
     "................",
     "................",
+    "..d.............",
+    "..dd............",
+    "...ddd..........",
+    "....dddSSSSSSSSS",
+    "...ddSSSSSSSSSSS",
+    "..ddSSSSSSSSSSSS",
+    "..dSSSSSSSSSSSSS",
+    "..SSSSddddSSSSSS",
+    "..SSSdeeeedSSSSS",
+    "..SSSddddddSSSSS",
+    "...SSSSSSSSSSSSS",
+    "....SSSSssSSSSSS",
+    ".....sssssSSSSSS",
+    "...SSSSSSSSSSSSS",
+    ".SSSSSSSSSSSSSSS",
+    "SSSSSSSSdddSSSSS",
+    "SSSSSSSdddddSSSS",
+    "SSSSSSdddddddSSS",
+    "sSSSSSdddffdddSS",
+    "ssSSSSdddffdddSS",
+    ".sssSSSdddddddSS",
+    "..sssSSSSSSSSSSS",
+    "...sssSSSSSSSSSS",
+    "....ssSSSSSSSSSS",
+    ".....sSSSSSSSSSS",
+    "......ssSSSSSSSS",
+    ".....sssSSSSSSSS",
+    "....ssss..dddSSS",
+    "....ddd...dddddd",
+    "...dddd...dddddd"],[
     "................",
-    "................"],[
-    ".....CCcc.......",
-    "...CCCCCcccc....",
-    "...CeCCCcec.....",
-    "...CCCCCcccc....",
-    "..CCCCCCcccccc..",
-    ".dCCCCCCccccccd.",
-    ".dCCCCCCccccccd.",
-    "..CCCCCCcccccc..",
-    "..CCC....ccc....",
-    "..CCC....ccc....",
-    "..ddd....ddd....",
+    "..d.............",
+    "..dd............",
+    "...ddd..........",
+    "....dddSSSSSSSSS",
+    "...ddSSSSSSSSSSS",
+    "..ddSSSSSSSSSSSS",
+    "..dSSSSSSSSSSSSS",
+    "..SSSSddddSSSSSS",
+    "..SSSdffffdSSSSS",
+    "..SSSddddddSSSSS",
+    "...SSSSSSSSSSSSS",
+    "....SSSSssSSSSSS",
+    ".....sssssSSSSSS",
+    "...SSSSSSSSSSSSS",
+    ".SSSSSSSSSSSSSSS",
+    "SSSSSSSSdddSSSSS",
+    "SSSSSSSdddddSSSS",
+    "SSSSSSdddddddSSS",
+    "sSSSSSdddffdddSS",
+    "ssSSSSdddffdddSS",
+    ".sssSSSdddddddSS",
+    "..sssSSSSSSSSSSS",
+    "...sssSSSSSSSSSS",
+    "....ssSSSSSSSSSS",
+    ".....sSSSSSSSSSS",
+    "......ssSSSSSSSS",
+    ".....sssSSSSSSSS",
+    "....ssssSSSSSSSS",
+    "....ssss..dddSSS",
+    "....ddd...dddddd",
+    "...dddd...dddddd"]]},
+
+  b_faucheuse:{ miroir:true,
+    p:{C:PAL.ombre2,c:PAL.ombre,d:PAL.nuit,O:PAL.os,o:PAL.osC,
+       e:PAL.menthe,m:PAL.mentheC,b:PAL.boisS}, f:[[
+    "..............b.",
+    "..........OOOOb.",
+    ".........OOOOOb.",
+    "........OOo...b.",
+    ".......OOo....b.",
+    "......CCCCCb....",
+    ".....CCCCCCb....",
+    "....CCCCCCCb....",
+    "....CCdddddb....",
+    "....Cdeeeedb....",
+    "....Cddeeddb....",
+    "....CCddddCb....",
+    ".....CCCCCCb....",
+    "....CCCCCCCCb...",
+    "...CCCCCCCCCCb..",
+    "..CCCCCCCCCCCCb.",
+    "..CCCCCCCCCCCCCb",
+    ".CCCCcccccCCCCCC",
+    ".CCCcccccccCCCCC",
+    ".CCCccOOOccCCCCC",
+    ".CCCccOOOccCCCCC",
+    ".CCCcccccccCCCCC",
+    "..CCCcccccCCCCCC",
+    "..CCCCCCCCCCCCCC",
+    "...CCCCCCCCCCCCC",
+    "...cCCCCCCCCCCCC",
+    "...ccCCCCCCCCCCC",
+    "..cccCCCCCCCCCCC",
+    "..ccccCCCCCCCCCC",
+    ".cccccCCCCCCCCCC",
+    ".ccccccCCCCCCCCC",
+    "cccccccCCCCCCCCC"],[
+    "..............b.",
+    "..........OOOOb.",
+    ".........OOOOOb.",
+    "........OOo...b.",
+    ".......OOo....b.",
+    "......CCCCCb....",
+    ".....CCCCCCb....",
+    "....CCCCCCCb....",
+    "....CCdddddb....",
+    "....Cdmmmmdb....",
+    "....Cddmmddb....",
+    "....CCddddCb....",
+    ".....CCCCCCb....",
+    "....CCCCCCCCb...",
+    "...CCCCCCCCCCb..",
+    "..CCCCCCCCCCCCb.",
+    "..CCCCCCCCCCCCCb",
+    ".CCCCcccccCCCCCC",
+    ".CCCcccccccCCCCC",
+    ".CCCccOOOccCCCCC",
+    ".CCCccOOOccCCCCC",
+    ".CCCcccccccCCCCC",
+    "..CCCcccccCCCCCC",
+    "..CCCCCCCCCCCCCC",
+    "...CCCCCCCCCCCCC",
+    "...cCCCCCCCCCCCC",
+    "..ccCCCCCCCCCCCC",
+    "..cccCCCCCCCCCCC",
+    ".ccccCCCCCCCCCCC",
+    ".cccccCCCCCCCCCC",
+    "cccccccCCCCCCCCC",
+    "ccccccccCCCCCCCC"]]},
+
+  b_mere:{ miroir:true,
+    p:{C:PAL.vertC,c:PAL.vertS,S:PAL.vert,e:PAL.ambre,d:PAL.nuit2,
+       o:PAL.osC,p:PAL.spectre}, f:[[
     "................",
     "................",
+    "..........SSSSSS",
+    ".......SSSSSSSSS",
+    ".....SSSSSSSSSSS",
+    "....SSSSCCCCSSSS",
+    "...SSSCCeeeeCCSS",
+    "...SSCCCeeeeCCCS",
+    "..SSCCCCCCCCCCCC",
+    "..SCCCCddddCCCCC",
+    ".SCCCCddddddCCCC",
+    ".SCCCdddddddddCC",
+    "SCCCddddoooodddC",
+    "SCCddddooooooddC",
+    "SCCdddoooooooodd",
+    "SCCdddoooooooodd",
+    "SCCddddoooooodd.",
+    "SCCCddddoooodddC",
+    ".SCCCdddddddddCC",
+    ".SCCCCddddddCCCC",
+    "..SCCCCddddCCCCC",
+    "..SSCCCCCCCCCCCC",
+    "...SSCCCCCCCCCCC",
+    "...SSSCCCCCCCCCC",
+    "....SSSCCCCCCCCC",
+    ".....cccCCCCCCCC",
+    "......ccccCCCCCC",
+    ".......cccccCCCC",
+    "........ppccccCC",
+    ".......pp..ccccc",
+    "......pp....cccc",
+    ".....pp......ccc"],[
     "................",
-    "................",
-    "................"]]},
+    "..........SSSSSS",
+    ".......SSSSSSSSS",
+    ".....SSSSSSSSSSS",
+    "....SSSSCCCCSSSS",
+    "...SSSCCeeeeCCSS",
+    "...SSCCCeeeeCCCS",
+    "..SSCCCCCCCCCCCC",
+    "..SCCCCddddCCCCC",
+    ".SCCCCddddddCCCC",
+    ".SCCCdddddddddCC",
+    "SCCCddddoooodddC",
+    "SCCddddooooooddC",
+    "SCCdddoooooooodd",
+    "SCCdddoooooooodd",
+    "SCCdddoooooooodd",
+    "SCCddddoooooodd.",
+    "SCCCddddoooodddC",
+    ".SCCCdddddddddCC",
+    ".SCCCCddddddCCCC",
+    "..SCCCCddddCCCCC",
+    "..SSCCCCCCCCCCCC",
+    "...SSCCCCCCCCCCC",
+    "...SSSCCCCCCCCCC",
+    "....SSSCCCCCCCCC",
+    ".....cccCCCCCCCC",
+    "......ccccCCCCCC",
+    "......pcccccCCCC",
+    ".....pp...ccccCC",
+    "....pp.....ccccc",
+    "...pp.......cccc",
+    "..pp.........ccc"]]},
+
+  b_seigneur:{ miroir:true,
+    p:{C:PAL.sangS,c:PAL.sangS,S:PAL.sangC,d:PAL.nuit,
+       e:PAL.ambre,f:PAL.ambreC,O:PAL.os,a:PAL.ombre}, f:[[
+    "....a...........",
+    "...aa......ddddd",
+    "..aaa....ddddddd",
+    ".aaaa...dddddddd",
+    "aaaaa..ddSSSSSSS",
+    "aaaa..ddSSSSSSSS",
+    "aaa..ddSSSSSSSSS",
+    "aa..ddSSSSddddSS",
+    "a..ddSSSddeeeedd",
+    "..ddSSSSddeeeedd",
+    "..dSSSSSSddddddd",
+    "..dSSSSSSSSSSSSS",
+    "...dSSSSOOOOSSSS",
+    "...ddSSSSOOSSSSS",
+    "..dddSSSSSSSSSSS",
+    ".ddddSSSSSSSSSSS",
+    "ddddSSSSSSSSSSSS",
+    "dddSSSSCCCCCSSSS",
+    "ddSSSSCCCCCCCSSS",
+    "dSSSSCCCffffCCSS",
+    "dSSSSCCCffffCCSS",
+    "dSSSSCCCCCCCCCSS",
+    ".SSSSSCCCCCCCSSS",
+    ".cSSSSSCCCCCSSSS",
+    "..cSSSSSSSSSSSSS",
+    "..ccSSSSSSSSSSSS",
+    "...ccSSSSSSSSSSS",
+    "...cccSSSSSSSSSS",
+    "..ccccSSSS..dddd",
+    "..cccc.....ddddd",
+    ".ccccc.....ddddd",
+    ".cccc......ddddd"],[
+    "....a...........",
+    "...aa......ddddd",
+    "..aaa....ddddddd",
+    ".aaaa...dddddddd",
+    "aaaaa..ddSSSSSSS",
+    "aaaa..ddSSSSSSSS",
+    "aaa..ddSSSSSSSSS",
+    "aa..ddSSSSddddSS",
+    "a..ddSSSddffffdd",
+    "..ddSSSSddffffdd",
+    "..dSSSSSSddddddd",
+    "..dSSSSSSSSSSSSS",
+    "...dSSSSOOOOSSSS",
+    "...ddSSSSOOSSSSS",
+    "..dddSSSSSSSSSSS",
+    ".ddddSSSSSSSSSSS",
+    "ddddSSSSSSSSSSSS",
+    "dddSSSSCCCCCSSSS",
+    "ddSSSSCCCCCCCSSS",
+    "dSSSSCCCCffCCCSS",
+    "dSSSSCCCCffCCCSS",
+    "dSSSSCCCCCCCCCSS",
+    ".SSSSSCCCCCCCSSS",
+    ".cSSSSSCCCCCSSSS",
+    "..cSSSSSSSSSSSSS",
+    "..ccSSSSSSSSSSSS",
+    "...ccSSSSSSSSSSS",
+    "...cccSSSSSSSSSS",
+    "..ccccSSSSSSdddd",
+    "..cccc.....ddddd",
+    ".ccccc.....ddddd",
+    ".cccc......ddddd"]]},
 
   /* ================= DÉCORS — image unique ================= */
 
@@ -888,6 +1413,247 @@ const SPRITES = {
     "................",
     "................"]]},
 
+
+  /* ===== GRANDES STRUCTURES — 'miroir' : moitié gauche seulement ===== */
+
+  d_arche:{ miroir:true, p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS,m:PAL.vertC}, f:[[
+    "SSSSSSSSssss",
+    "SSSSSSSSssss",
+    "dddddddddddd",
+    "SSSSSsssdddd",
+    "SSSSssdd....",
+    "SSSSsd......",
+    "SSSSd.......",
+    "SSSsd.......",
+    "SSSsd.......",
+    "SSSsd.......",
+    "SSSsd.......",
+    "SSSsd.......",
+    "SSSsd.......",
+    "SSSsd.......",
+    "SSSsd.......",
+    "SSSsd.......",
+    "SSSsd.......",
+    "SSSsd.......",
+    "SSSsd.......",
+    "mSSsd.......",
+    "mmSsd.......",
+    "dddd........"]]},
+
+  d_puits:{ miroir:true, p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS,n:PAL.nuit,b:PAL.boisS}, f:[[
+    "........",
+    "......bb",
+    ".....bbb",
+    "....bbb.",
+    "...bbb..",
+    "..bbb...",
+    ".SSSSSSS",
+    "SSSSSSSS",
+    "SSSnnnnn",
+    "SSnnnnnn",
+    "SSnnnnnn",
+    "SSnnnnnn",
+    "SSSnnnnn",
+    "SSSSSSSS",
+    "sSSSSSSS",
+    "ssssssss",
+    "dddddddd",
+    "........"]]},
+
+  d_autel:{ miroir:true, p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS,F:PAL.ambre,O:PAL.os}, f:[[
+    "........",
+    "......FF",
+    "......OO",
+    "......OO",
+    "....SSSS",
+    "...SSSSS",
+    "..SSSSSS",
+    "..SSSSSS",
+    "..ssssss",
+    "...ddddd",
+    "...ddddd",
+    "..dddddd",
+    ".ddddddd",
+    "dddddddd",
+    "........"]]},
+
+  d_obelisque:{ miroir:true, p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS,e:PAL.menthe}, f:[[
+    "....SS",
+    "...SSS",
+    "...SSS",
+    "..SSSS",
+    "..SSSS",
+    "..SSeS",
+    "..SSSS",
+    "..SSSS",
+    "..SSeS",
+    "..SSSS",
+    ".SSSSS",
+    ".SSSSS",
+    ".SSeSS",
+    ".SSSSS",
+    ".SSSSS",
+    ".SSSSS",
+    ".ssSSS",
+    ".ssSSS",
+    "dddddd",
+    "dddddd",
+    "......"]]},
+
+  d_fontaine:{ miroir:true, p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS,g:PAL.glaceC,G:PAL.glace}, f:[[
+    "..........",
+    "........SS",
+    ".......SSS",
+    "......SSSS",
+    ".....SSGGG",
+    "....SSGGGG",
+    "...SSGGGGG",
+    "..SSGGGGGG",
+    "..SgggggGG",
+    ".SSggggggg",
+    ".SSSSSSSSS",
+    ".sssssssss",
+    "..dddddddd",
+    "..dddddddd",
+    ".........."]]},
+
+  d_cage:{ miroir:true, p:{m:PAL.boisS,M:PAL.boisC,O:PAL.osC,d:PAL.nuit2}, f:[[
+    "......mm",
+    "......mm",
+    "....MMMM",
+    "...MMMMM",
+    "..Mm..mM",
+    "..Mm..mM",
+    "..Mm.OmM",
+    "..MmOOmM",
+    "..MmOOmM",
+    "..Mm.OmM",
+    "..Mm..mM",
+    "...MMMMM",
+    "....MMMM",
+    "........"]]},
+
+  d_arbregeant:{ miroir:true, p:{T:PAL.boisC,t:PAL.boisS,b:PAL.nuit2,m:PAL.vertS}, f:[[
+    "b.........b.....",
+    ".bb......bb.....",
+    "..bb....bb......",
+    "...bb..bb.......",
+    "....bbbb........",
+    "..b..bTTt.......",
+    "..bb.bTTt.......",
+    "...bbbTTt.......",
+    "......TTTt......",
+    "......TTTt......",
+    ".b....TTTt......",
+    ".bb...TTTt......",
+    "..bb.TTTTt......",
+    "...b.TTTTt......",
+    ".....TTTTt......",
+    "....TTTTTt......",
+    "....TTTTTt......",
+    "...TTTTTTt......",
+    "...TTTTTTt......",
+    "..TTTTTTTt......",
+    "..TTTTTTTt......",
+    ".TTTTTTTTt......",
+    ".TTTTTTTTt......",
+    "TTTTTTTTTt......",
+    "mTTTTTTTTt......",
+    "mmbbbbbbbb......",
+    "................"]]},
+
+  /* murs de salle : blocs pleins, ils arrêtent joueurs et créatures */
+  d_mur:{ p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS,m:PAL.vertC}, f:[[
+    "SSSSSSSSssssssss",
+    "SSSSSSSSssssssss",
+    "dddddddddddddddd",
+    "SSSSSSssssssssss",
+    "SSSSSSssssssssss",
+    "SSSSSSssssssssss",
+    "dddddddddddddddd",
+    "SSSSSSSSssssssss",
+    "SSSSSSSSssssssss",
+    "SSSSSSSSssssssss",
+    "dddddddddddddddd",
+    "SSSSSSssssssssss",
+    "mSSSSSssssssssss",
+    "mmSSSSsssssssssm",
+    "dddddddddddddddd",
+    "dddddddddddddddd"]]},
+
+  d_murbrise:{ p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS,m:PAL.vertC}, f:[[
+    "SSSSss..........",
+    "SSSSSss.........",
+    "ddddddd.........",
+    "SSSSSsss........",
+    "SSSSSssss.......",
+    "SSSSSsssss......",
+    "dddddddddd......",
+    "SSSSSSssssss....",
+    "SSSSSSsssssss...",
+    "SSSSSSssssssss..",
+    "dddddddddddddd..",
+    "SSSSSSsssssssss.",
+    "mSSSSSsssssssss.",
+    "mmSSSSssssssssss",
+    "dddddddddddddddd",
+    "dddddddddddddddd"]]},
+
+  /* ===== BRISABLES ===== */
+
+  d_sarcophage:{ p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS,O:PAL.osC,e:PAL.nuit}, f:[[
+    "....................",
+    "...SSSSSSSSssssss...",
+    "..SSSSSSSSSSssssss..",
+    ".SSSSSOOOOOOssssss..",
+    ".SSSSOeOOOeOsssssss.",
+    ".SSSSSOOOOOOsssssss.",
+    ".SSSSSSSSSSssssssss.",
+    ".SSSSSSSSSSssssssss.",
+    "..dddddddddddddddd..",
+    "..dddddddddddddddd..",
+    "...................."]]},
+
+  d_coffre:{ miroir:true, p:{M:PAL.boisC,m:PAL.boisS,O:PAL.ambre,o:PAL.ambreC,d:PAL.nuit2}, f:[[
+    "......",
+    "...MMM",
+    "..MMMM",
+    ".MMMMM",
+    "MMMMMM",
+    "mmmmmm",
+    "MMMOOO",
+    "MMMOoO",
+    "MMMOOO",
+    "mmmmmm",
+    "MMMMMM",
+    "dddddd",
+    "......"]]},
+
+  d_gravats:{ p:{S:PAL.pierreC,s:PAL.pierreS,d:PAL.ombre2}, f:[[
+    "................",
+    "......SS........",
+    "....SSSSs...SS..",
+    "..SSSSSSss.SSss.",
+    ".SSSSsSSsssSSsss",
+    "SSSsssSssssdsss.",
+    ".dddddddddddd...",
+    "................"]]},
+
+  /* ===== ARME : cercueil orbitant ===== */
+  o_cercueil:{ miroir:true, p:{M:PAL.boisC,m:PAL.boisS,d:PAL.nuit2,O:PAL.osC}, f:[[
+    "..dd",
+    ".dMM",
+    ".dMM",
+    "dMMM",
+    "dMMM",
+    "dMOO",
+    "dMOO",
+    "dMMM",
+    "dMMM",
+    ".dMM",
+    ".dMM",
+    "..dd"]]},
+
   d_statue:{ p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS}, f:[[
     ".....SSSsss.....",
     "....SSSSssss....",
@@ -929,6 +1695,12 @@ const CFG = {
     { id:'sourcier', nom:'Le Sourcier', desc:'Foudre à distance. Aimant à butin.',
       sprite:'sourcier', couleur:PAL.menthe, pv:95, vitesse:150, arme:'foudre',
       mult:{ degats:0.95, cadence:0.85, aimant:1.8, armure:0 } },
+    { id:'muscle', nom:'L’Homme musclé', desc:'Croix bénite. Cogne fort, encaisse mieux.',
+      sprite:'muscle', couleur:PAL.peau, pv:150, vitesse:126, arme:'croix',
+      mult:{ degats:1.25, cadence:1.05, aimant:0.9, armure:1 } },
+    { id:'galerien', nom:'Le Galérien', desc:'Pistolet laser. Vif, rien à perdre.',
+      sprite:'galerien', couleur:PAL.glaceC, pv:90, vitesse:164, arme:'laser',
+      mult:{ degats:1.0, cadence:0.9, aimant:1.15, armure:0 } },
   ],
 
   armes: {
@@ -952,6 +1724,14 @@ const CFG = {
                  desc:'Frappe des ennemis au hasard à l’écran.',
                  base:{ degats:26, cadence:1.7, nb:1, rayon:34 },
                  gain:{ degats:11, cadence:-0.11, nb:0.4, rayon:2 } },
+    laser:     { nom:'Pistolet laser', type:'laser', max:8, couleur:PAL.menthe,
+                 desc:'Rayon perçant vers l’ennemi le plus proche.',
+                 base:{ degats:9, cadence:0.6, nb:1, portee:340, largeur:7 },
+                 gain:{ degats:4.5, cadence:-0.035, nb:0.3, portee:22, largeur:1.4 } },
+    croix:     { nom:'Croix de fer', type:'croix', max:8, couleur:PAL.ambre,
+                 desc:'Part en tournoyant, revient en fauchant.',
+                 base:{ degats:16, cadence:1.3, nb:1, vitesse:330, taille:11 },
+                 gain:{ degats:7, cadence:-0.07, nb:0.34, vitesse:16, taille:1.2 } },
     mine:      { nom:'Reliquaire', type:'mine', max:8, couleur:PAL.spectre,
                  desc:'Pose des reliques qui explosent après 2 s.',
                  base:{ degats:34, cadence:2.0, nb:1, rayon:82, delai:2 },
@@ -975,11 +1755,38 @@ const CFG = {
 
   ennemis: {
     rampant:   { nom:'Rampant',       sprite:'s_rampant',    pv:22,  vitesse:56,  degats:8,  taille:11, xp:1 },
-    chauve:    { nom:'Chauve-souris', sprite:'s_chauve',     pv:14,  vitesse:112, degats:6,  taille:9,  xp:1, erratique:1 },
+    chauve:    { nom:'Chauve-souris', sprite:'s_chauve',     pv:14,  vitesse:104, degats:6,  taille:9,  xp:1, erratique:1, vole:1 },
     gargouille:{ nom:'Gargouille',    sprite:'s_gargouille', pv:120, vitesse:42,  degats:16, taille:19, xp:5 },
-    spectre:   { nom:'Spectre',       sprite:'s_spectre',    pv:46,  vitesse:82,  degats:11, taille:13, xp:2, traverse:1 },
-    ver:       { nom:'Ver',           sprite:'s_ver',        pv:9,   vitesse:138, degats:5,  taille:7,  xp:1 },
+    spectre:   { nom:'Spectre',       sprite:'s_spectre',    pv:46,  vitesse:82,  degats:11, taille:13, xp:2, traverse:1, vole:1 },
+    ver:       { nom:'Ver',           sprite:'s_ver',        pv:9,   vitesse:118, degats:5,  taille:7,  xp:1 },
+    brute:     { nom:'La Masse',      sprite:'s_brute',      pv:260, vitesse:34,  degats:24, taille:16, xp:7 },
     goule:     { nom:'Goule',         sprite:'s_goule',      pv:64,  vitesse:70,  degats:13, taille:15, xp:3 },
+  },
+
+  /* COLOSSES — apparaissent à la fin de chaque chapitre.
+     comportement : 'charge' fonce par à-coups, 'invoque' fait éclore des sbires,
+     'salve' tire des projectiles en éventail.                                */
+  colosses:{
+    colosse:   { nom:'Le Colosse de pierre', sprite:'b_colosse', pv:950, vitesse:40,
+                 degats:26, taille:46, xp:160, comportement:'charge' },
+    faucheuse: { nom:'La Faucheuse',         sprite:'b_faucheuse', pv:1200, vitesse:74,
+                 degats:22, taille:44, xp:170, comportement:'salve' },
+    mere:      { nom:'La Mère des vers',     sprite:'b_mere', pv:1600, vitesse:34,
+                 degats:20, taille:50, xp:180, comportement:'invoque' },
+    seigneur:  { nom:'Le Seigneur de la Nuit', sprite:'b_seigneur', pv:3400, vitesse:56,
+                 degats:32, taille:58, xp:400, comportement:'final' },
+  },
+
+  /* ARMES ULTIMES — déclenchées à la main, en réserve limitée.
+     Touche Espace (ou bouton à l'écran) pour le joueur 1,
+     Entrée pour le joueur 2. Manette : gâchette droite.                      */
+  ultimes:{
+    jugement:{ nom:'Jugement', couleur:PAL.ambre, charges:3, recharge:26,
+      desc:'Une colonne de feu balaye tout l’écran.',
+      degats:340, rayon:330 },
+    exsangue:{ nom:'Exsangue', couleur:PAL.sang, charges:2, recharge:34,
+      desc:'Draine la vie de tout ce qui vous entoure et vous soigne.',
+      degats:210, rayon:250, soin:0.5 },
   },
 
   /* décors destructibles : pv à casser, et ce qu'ils lâchent.
@@ -991,6 +1798,10 @@ const CFG = {
     d_champignon: {pv:7,  butin:'soin'},
     d_glace:      {pv:18, butin:'aimant'},
     d_brasier:    {pv:22, butin:'xp'},
+    d_sarcophage: {pv:38, butin:'soin'},
+    d_gravats:    {pv:12, butin:'xp'},
+    d_cage:       {pv:20, butin:'soin'},
+    d_coffre:     {pv:30, butin:'charge'},
   },
 
   /* objets ramassables */
@@ -999,6 +1810,7 @@ const CFG = {
     xp:    {nom:'Relique',       couleur:PAL.menthe, r:7,  valeur:0.34 },
     aimant:{nom:'Appel',         couleur:PAL.glace,  r:6,  valeur:0 },
     orbe:  {nom:'Orbe du colosse',couleur:PAL.ambre, r:12, valeur:0 },
+    charge:{nom:'Éclat de puissance',couleur:PAL.spectre, r:9, valeur:1 },
   },
 
   /* difficultés — multiplicateurs appliqués au lancement */
@@ -1016,40 +1828,57 @@ const CFG = {
   niveaux: [
     { id:'crypte', nom:'La Crypte oubliée', desc:'Terrain d’apprentissage. Rien de vicieux.',
       sol:'#1a1626', grains:[PAL.nuit,PAL.pierreS], teinte:PAL.spectreC, modif:null, duree:900,
-      decor:['d_tombe','d_colonne','d_ossements','d_chandelier','d_statue'], densite:420,
+      decor:['d_tombe','d_colonne','d_ossements','d_chandelier','d_statue','d_arche','d_sarcophage','d_obelisque','d_gravats','d_puits','d_autel'], densite:420,
       particules:{type:'poussiere', couleur:PAL.pierre},
-      musique:{ tonique:73.42, gamme:'eolien', tempo:64, timbre:'orgue', densite:0.5, prog:[0,5,3,4] },
-      ambiance:{ obscurite:0.66, nuit:PAL.nuit, rim:PAL.spectre, brume:PAL.spectreS, brumeN:5 },
+      musique:{ tonique:73.42, gamme:'eolien', tempo:58, timbre:'orgue', prog:[0,5,3,4],
+        motif:[[0,4],[2,2],[4,2],[2,4],[0,4],[-3,8],[0,4],[4,2],[2,2],[0,8]] },
+      ambiance:{ obscurite:0.66, nuit:PAL.nuit, rim:PAL.spectre, brume:PAL.spectreS, brumeN:5,
+        etal:{haut:'#43307a',bas:'#0c2438',force:0.5}, loin:'#151126', pres:'#080614' },
       vagues:[ {t:0,e:'rampant'}, {t:60,e:'chauve'}, {t:180,e:'spectre'},
-               {t:300,e:'gargouille'}, {t:420,e:'goule'} ] },
+               {t:300,e:'gargouille'}, {t:420,e:'goule'}, {t:220,e:'brute'} ] },
 
     { id:'marais', nom:'Le Marais aux cierges', desc:'Brume épaisse : vous ne voyez pas venir.',
       sol:'#16241d', grains:[PAL.nuit,PAL.vertC], teinte:PAL.vertC, modif:'brume', duree:900,
-      decor:['d_arbre','d_champignon','d_ossements','d_tombe','d_chandelier'], densite:520,
+      decor:['d_arbre','d_champignon','d_ossements','d_tombe','d_chandelier','d_arbregeant','d_gravats','d_cage','d_puits','d_sarcophage'], densite:520,
       particules:{type:'spores', couleur:PAL.menthe},
-      musique:{ tonique:65.41, gamme:'dorien', tempo:54, timbre:'cordes', densite:0.4, prog:[0,3,5,4] },
-      ambiance:{ obscurite:0.88, nuit:PAL.nuit, rim:PAL.menthe, brume:PAL.vertC, brumeN:9 },
+      musique:{ tonique:65.41, gamme:'dorien', tempo:48, timbre:'flute', prog:[0,3,5,4],
+        motif:[[0,8],[4,4],[3,4],[2,8],[4,4],[5,4],[4,8],[2,8]] },
+      ambiance:{ obscurite:0.88, nuit:PAL.nuit, rim:PAL.menthe, brume:PAL.vertC, brumeN:9,
+        etal:{haut:'#1f4a38',bas:'#0a1f2c',force:0.55}, loin:'#0c1914', pres:'#050c0a' },
       meteo:'pluie',
       vagues:[ {t:0,e:'rampant'}, {t:45,e:'ver'}, {t:150,e:'goule'},
-               {t:300,e:'spectre'}, {t:450,e:'gargouille'} ] },
+               {t:300,e:'spectre'}, {t:450,e:'gargouille'}, {t:220,e:'brute'} ] },
 
     { id:'gel', nom:'Le Cloître gelé', desc:'Sol verglacé : vous glissez à chaque virage.',
       sol:'#141c2b', grains:[PAL.ombre2,PAL.glaceS], teinte:PAL.glaceC, modif:'verglas', duree:900,
-      decor:['d_colonne','d_glace','d_statue','d_arbre'], densite:400,
+      decor:['d_colonne','d_glace','d_statue','d_arbre','d_arche','d_fontaine','d_obelisque','d_gravats','d_cage','d_autel'], densite:400,
       particules:{type:'neige', couleur:PAL.glace},
-      musique:{ tonique:61.74, gamme:'harmonique', tempo:76, timbre:'cloche', densite:0.55, prog:[0,5,1,4] },
-      ambiance:{ obscurite:0.58, nuit:PAL.nuit, rim:PAL.glace, brume:PAL.glaceS, brumeN:6 },
+      musique:{ tonique:61.74, gamme:'harmonique', tempo:66, timbre:'cristal', prog:[0,5,1,4],
+        motif:[[4,4],[6,2],[4,2],[2,4],[0,4],[2,4],[4,4],[6,8],[4,8]] },
+      ambiance:{ obscurite:0.58, nuit:PAL.nuit, rim:PAL.glace, brume:PAL.glaceS, brumeN:6,
+        etal:{haut:'#33557c',bas:'#101a2e',force:0.45}, loin:'#101d2c', pres:'#070d16' },
       vagues:[ {t:0,e:'chauve'}, {t:40,e:'ver'}, {t:120,e:'rampant'},
-               {t:240,e:'goule'}, {t:360,e:'gargouille'}, {t:480,e:'spectre'} ] },
+               {t:240,e:'goule'}, {t:360,e:'gargouille'}, {t:480,e:'spectre'}, {t:220,e:'brute'} ] },
 
     { id:'brasier', nom:'Le Brasier', desc:'Horde permanente. Pour tester une build.',
       sol:'#20141a', grains:[PAL.sangS,PAL.ombre], teinte:PAL.sangC, modif:'horde', duree:900,
-      decor:['d_brasier','d_ossements','d_colonne','d_statue'], densite:380,
+      decor:['d_brasier','d_ossements','d_colonne','d_statue','d_gravats','d_cage','d_arche','d_sarcophage','d_autel','d_obelisque'], densite:380,
       particules:{type:'braises', couleur:PAL.ambre},
-      musique:{ tonique:55.00, gamme:'phrygien', tempo:96, timbre:'cuivre', densite:0.6, prog:[0,1,0,4] },
-      ambiance:{ obscurite:0.74, nuit:PAL.nuit, rim:PAL.ambre, brume:PAL.sangS, brumeN:7 },
+      musique:{ tonique:55.00, gamme:'phrygien', tempo:84, timbre:'cuivre', prog:[0,1,0,4],
+        motif:[[0,2],[1,2],[0,4],[-2,4],[0,2],[1,2],[3,4],[1,8],[0,8]] },
+      ambiance:{ obscurite:0.74, nuit:PAL.nuit, rim:PAL.ambre, brume:PAL.sangS, brumeN:7,
+        etal:{haut:'#6e3014',bas:'#230810',force:0.55}, loin:'#1e0d10', pres:'#0d0407' },
       vagues:[ {t:0,e:'rampant'}, {t:20,e:'ver'}, {t:60,e:'chauve'},
-               {t:120,e:'goule'}, {t:200,e:'spectre'}, {t:300,e:'gargouille'} ] },
+               {t:120,e:'goule'}, {t:200,e:'spectre'}, {t:300,e:'gargouille'}, {t:220,e:'brute'} ] },
+  ],
+
+  /* CHAPITRES — chaque terrain se traverse en trois actes, chacun avec sa
+     teinte et son colosse, puis le Seigneur de la Nuit clôt la partie.      */
+  chapitres:[
+    { nom:'I · L’approche',   duree:135, teinte:1.00, colosse:'colosse'   },
+    { nom:'II · La descente', duree:150, teinte:0.74, colosse:'faucheuse' },
+    { nom:'III · Le seuil',   duree:165, teinte:0.50, colosse:'mere'      },
+    { nom:'IV · Le Seigneur', duree:60,  teinte:0.26, colosse:'seigneur'  },
   ],
 
   regles: {
@@ -1060,13 +1889,7 @@ const CFG = {
 };
 
 /* ==========================================================================
-   3. MUSIQUE — cordes pincées simulées (Karplus-Strong), aucun fichier audio.
-      Chaque univers définit dans CFG.niveaux[].musique :
-      tonique : fréquence de base (Hz)      gamme  : nom d'une gamme ci-dessous
-      tempo   : battements par minute        timbre : orgue | cordes | cloche | cuivre
-      densite : quantité de notes (0 à 1)    prog   : degrés d'accords (0 = tonique)
-      La mélodie est tirée au sort dans l'accord en cours : elle ne boucle jamais
-      mais reste toujours juste.
+   3. MUSIQUE — Bande Originale Cinématique (Multi-Univers)
    ========================================================================== */
 const GAMMES = {
   eolien:    [0,2,3,5,7,8,10],
@@ -1075,131 +1898,161 @@ const GAMMES = {
   harmonique:[0,2,3,5,7,8,11],
 };
 
-const AUDIO={ ctx:null, actif:true, master:null, verb:null, envoi:null,
-  pas:0, prochain:0, timer:null, M:null, nappe:[], nappeOsc:[], nappeGain:null, intensite:0 };
+const AUDIO={ ctx:null, actif:true, master:null, verb:null, envoi:null, echo:null,
+  pas:0, prochain:0, timer:null, M:null, intensite:0,
+  nappe:[], nappeOsc:[], nappeGain:null, themeAllonge:[] };
 
 function initAudio(){
   if(AUDIO.ctx) return;
   const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
   const c=new AC(); AUDIO.ctx=c;
+
+  // Compresseur Master "Glue" pour un mix massif
   const comp=c.createDynamicsCompressor();
-  comp.threshold.value=-16; comp.ratio.value=6; comp.connect(c.destination);
+  comp.threshold.value=-22; comp.knee.value=20; comp.ratio.value=8;
+  comp.attack.value=0.005; comp.release.value=0.3;
+  comp.connect(c.destination);
+
   AUDIO.master=c.createGain(); AUDIO.master.gain.value=0; AUDIO.master.connect(comp);
-  const len=Math.floor(c.sampleRate*3.2), ir=c.createBuffer(2,len,c.sampleRate);
+
+  // Réverbération Gigantesque (5.5 secondes, déclin sombre)
+  const len=Math.floor(c.sampleRate*5.5), ir=c.createBuffer(2,len,c.sampleRate);
   for(let ch=0;ch<2;ch++){ const d=ir.getChannelData(ch);
-    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.1); }
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len, 3.5); }
   AUDIO.verb=c.createConvolver(); AUDIO.verb.buffer=ir;
-  const vg=c.createGain(); vg.gain.value=0.6;
+
+  const vg=c.createGain(); vg.gain.value=0.8;
   AUDIO.verb.connect(vg); vg.connect(AUDIO.master);
+
   AUDIO.envoi=c.createGain(); AUDIO.envoi.gain.value=1; AUDIO.envoi.connect(AUDIO.verb);
+
+  // Délai stéréo long (injecté dans la réverbération)
+  AUDIO.echo=c.createDelay(3.0); AUDIO.echo.delayTime.value=0.8;
+  const echoGain=c.createGain(); echoGain.gain.value=0.4;
+  const echoFiltre=c.createBiquadFilter(); echoFiltre.type='bandpass'; echoFiltre.frequency.value=800; echoFiltre.Q.value=0.5;
+  AUDIO.echo.connect(echoFiltre); echoFiltre.connect(echoGain); echoGain.connect(AUDIO.echo);
+  echoGain.connect(AUDIO.verb);
 }
+
 const freq=(base,demi)=>base*Math.pow(2,demi/12);
 
-/* corde pincée : ligne à retard bouclée sur elle-même, comme une vraie corde */
-const CORDES=new Map();
-function fabriquerCorde(f){
-  const c=AUDIO.ctx, sr=c.sampleRate, n=(sr*2.4)|0;
-  const buf=c.createBuffer(1,n,sr), d=buf.getChannelData(0);
-  const p=Math.max(2,Math.round(sr/f));
-  const ligne=new Float32Array(p);
-  for(let i=0;i<p;i++) ligne[i]=Math.random()*2-1;
-  let idx=0, prev=0;
-  for(let i=0;i<n;i++){
-    const v=ligne[idx];
-    ligne[idx]=(v+ligne[(idx+1)%p])*0.5*0.996;
-    d[i]=(v+prev)*0.5; prev=v;
-    idx=(idx+1)%p;
-  }
-  return buf;
-}
-function corde(t,f,vol,verbe){
+/* --- GÉNÉRATEURS DE SONS CINÉMATIQUES --- */
+
+// Nappes d'accords qui changent selon l'univers
+function lancerNappeCinematique(M){
   const c=AUDIO.ctx; if(!c) return;
-  const cle=Math.round(f*8);
-  let b=CORDES.get(cle);
-  if(!b){ b=fabriquerCorde(f); CORDES.set(cle,b); }
-  const s=c.createBufferSource(); s.buffer=b;
-  s.playbackRate.value=1+(Math.random()*2-1)*0.004;   // dérive humaine
-  const g=c.createGain(); g.gain.value=vol;
-  s.connect(g); g.connect(AUDIO.master);
-  if(verbe!==false) g.connect(AUDIO.envoi);
-  s.start(t);
-}
-function cloche(t,f,vol){
-  const c=AUDIO.ctx; if(!c) return;
-  for(const [mult,v,dur] of [[1,1,2.4],[2.76,0.4,1.1],[5.4,0.15,0.5]]){
-    const o=c.createOscillator(), g=c.createGain();
-    o.type='sine'; o.frequency.value=f*mult;
-    g.gain.setValueAtTime(vol*v,t);
-    g.gain.exponentialRampToValueAtTime(0.0006,t+dur);
-    o.connect(g); g.connect(AUDIO.envoi); o.start(t); o.stop(t+dur+0.05);
+  arreterNappe();
+
+  const fl=c.createBiquadFilter();
+  fl.type='lowpass'; fl.frequency.value= M.timbre==='cristal' ? 800 : 200;
+
+  const g=c.createGain(); g.gain.value=0; fl.connect(g);
+  g.connect(AUDIO.master); g.connect(AUDIO.envoi);
+  g.gain.linearRampToValueAtTime(0.09, c.currentTime+8);
+  AUDIO.nappeOsc=[];
+
+  const accords = [[-24,2], [-12,4], [-12,-2], [0,1], [0,-1], [7,3]];
+
+  for(const [off,det] of accords){
+    const o=c.createOscillator();
+    // Signature sonore selon le timbre du niveau
+    if(M.timbre==='cuivre') o.type = 'sawtooth'; // Cuivres lourds
+    else if(M.timbre==='flute') o.type = 'sine'; // Chœurs spectraux
+    else if(M.timbre==='cristal') o.type = (off===-24)? 'triangle' : 'sine'; // Froid
+    else o.type = (off===-24 || off===7) ? 'sine' : 'sawtooth'; // Cordes gothiques (orgue)
+
+    o.frequency.value=freq(M.tonique,off); o.detune.value=det;
+    o.connect(fl); o.start();
+    AUDIO.nappe.push({o, fl}); AUDIO.nappeOsc.push({o,off});
   }
+  AUDIO.nappeGain=g; AUDIO.nappeFiltre=fl;
 }
-function tambour(t,vol){
+const lancerNappe=lancerNappeCinematique;
+
+function retunerNappe(base){
+  const c=AUDIO.ctx, M=AUDIO.M; if(!c||!M) return;
+  const glisse = M.timbre==='flute' ? 3.0 : 1.2; // La flûte flotte, les cuivres attaquent
+  for(const {o,off} of AUDIO.nappeOsc)
+    o.frequency.setTargetAtTime(freq(M.tonique,base+off), c.currentTime, glisse);
+}
+
+function arreterNappe(){
+  for(const n of AUDIO.nappe){ try{n.o.stop(AUDIO.ctx.currentTime+0.1);}catch(e){} }
+  AUDIO.nappe=[]; AUDIO.nappeOsc=[]; AUDIO.nappeGain=null; AUDIO.nappeFiltre=null;
+}
+
+function percuEpique(t, vol, type='impact'){
   const c=AUDIO.ctx; if(!c) return;
   const o=c.createOscillator(), g=c.createGain();
   o.type='sine';
-  o.frequency.setValueAtTime(105,t);
-  o.frequency.exponentialRampToValueAtTime(36,t+0.16);
-  g.gain.setValueAtTime(vol,t);
-  g.gain.exponentialRampToValueAtTime(0.001,t+0.3);
-  o.connect(g); g.connect(AUDIO.master);
-  o.start(t); o.stop(t+0.34);
-}
-function chuchote(t,vol){
-  const c=AUDIO.ctx; if(!c) return;
-  const n=(c.sampleRate*0.09)|0, b=c.createBuffer(1,n,c.sampleRate), d=b.getChannelData(0);
-  for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.2);
-  const s=c.createBufferSource(); s.buffer=b;
-  const f=c.createBiquadFilter(); f.type='highpass'; f.frequency.value=5200;
-  const g=c.createGain(); g.gain.value=vol;
-  s.connect(f); f.connect(g); g.connect(AUDIO.master);
-  s.start(t);
-}
-function souffle(t,duree,vol,centre){
-  const c=AUDIO.ctx; if(!c) return;
-  const n=(c.sampleRate*duree)|0, b=c.createBuffer(1,n,c.sampleRate), d=b.getChannelData(0);
-  for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2);
-  const s=c.createBufferSource(); s.buffer=b;
-  const f=c.createBiquadFilter(); f.type='bandpass'; f.frequency.value=centre; f.Q.value=1.1;
-  const g=c.createGain(); g.gain.value=vol;
-  s.connect(f); f.connect(g); g.connect(AUDIO.master); g.connect(AUDIO.envoi);
-  s.start(t);
-}
-
-/* nappe de fond : accordée sur l'accord en cours, glisse d'un accord à l'autre */
-function lancerNappe(M){
-  const c=AUDIO.ctx; if(!c) return;
-  arreterNappe();
-  const types={orgue:['triangle',0.06,420], cordes:['sawtooth',0.03,300],
-               cloche:['sine',0.07,600],   cuivre:['square',0.028,260]};
-  const [forme,vol,coupe]=types[M.timbre]||types.orgue;
-  const fl=c.createBiquadFilter(); fl.type='lowpass'; fl.frequency.value=coupe; fl.Q.value=1.2;
-  const g=c.createGain(); g.gain.value=0; fl.connect(g);
-  g.connect(AUDIO.master); g.connect(AUDIO.envoi);
-  g.gain.linearRampToValueAtTime(vol, c.currentTime+5);
-  AUDIO.nappeOsc=[];
-  for(const [off,det] of [[0,-6],[0,7],[7,3],[12,-4]]){
-    const o=c.createOscillator();
-    o.type=forme; o.frequency.value=freq(M.tonique,off); o.detune.value=det;
-    o.connect(fl); o.start();
-    AUDIO.nappe.push(o); AUDIO.nappeOsc.push({o,off});
+  if(type==='impact'){
+    o.frequency.setValueAtTime(140, t);
+    o.frequency.exponentialRampToValueAtTime(20, t+0.7);
+    g.gain.setValueAtTime(vol*1.5, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t+1.5);
+  } else { // Battement sourd (tambour lointain)
+    o.frequency.setValueAtTime(60, t);
+    o.frequency.exponentialRampToValueAtTime(40, t+0.3);
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t+0.05);
+    g.gain.exponentialRampToValueAtTime(0.001, t+0.6);
   }
-  const lfo=c.createOscillator(), lg=c.createGain();
-  lfo.frequency.value=0.05; lg.gain.value=coupe*0.4;
-  lfo.connect(lg); lg.connect(fl.frequency); lfo.start();
-  AUDIO.nappe.push(lfo); AUDIO.nappeGain=g;
-}
-function retunerNappe(base){
-  const c=AUDIO.ctx, M=AUDIO.M; if(!c||!M) return;
-  for(const {o,off} of AUDIO.nappeOsc)
-    o.frequency.setTargetAtTime(freq(M.tonique,base+off), c.currentTime, 0.6);
-}
-function arreterNappe(){
-  for(const o of AUDIO.nappe){ try{o.stop(AUDIO.ctx.currentTime+0.01);}catch(e){} }
-  AUDIO.nappe=[]; AUDIO.nappeOsc=[]; AUDIO.nappeGain=null;
+  o.connect(g); g.connect(AUDIO.master); g.connect(AUDIO.envoi);
+  o.start(t); o.stop(t+1.6);
 }
 
-/* accord diatonique bâti sur un degré de la gamme */
+function instrumSolo(t, f, vol, type, duree){
+  const c=AUDIO.ctx; if(!c) return;
+  const o=c.createOscillator(), g=c.createGain(), fl=c.createBiquadFilter();
+  o.frequency.value=f;
+
+  if(type==='cuivre'){
+    o.type='sawtooth'; fl.type='lowpass'; fl.frequency.setValueAtTime(100, t);
+    fl.frequency.linearRampToValueAtTime(900, t+0.1); fl.frequency.exponentialRampToValueAtTime(80, t+duree);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t+0.05);
+    g.gain.exponentialRampToValueAtTime(0.001, t+duree*1.5);
+  }
+  else if(type==='flute'){
+    o.type='sine'; fl.type='lowpass'; fl.frequency.value=1200;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t+0.3);
+    g.gain.exponentialRampToValueAtTime(0.001, t+duree*2);
+    // Vibrato
+    const lfo=c.createOscillator(), lg=c.createGain(); lfo.frequency.value=4; lg.gain.value=f*0.015;
+    lfo.connect(lg); lg.connect(o.frequency); lfo.start(t); lfo.stop(t+duree*2.1);
+  }
+  else if(type==='cloche'){
+    o.type='sine'; fl.type='bandpass'; fl.frequency.value=f; fl.Q.value=1.5;
+    g.gain.setValueAtTime(vol*1.5, t); g.gain.exponentialRampToValueAtTime(0.0001, t+3.5);
+    // Harmoniques inharmoniques
+    o.frequency.setValueAtTime(f, t);
+  }
+  else { // Piano / Cristal (Boîte à musique)
+    o.type='triangle'; fl.type='lowpass'; fl.frequency.value=2000;
+    g.gain.setValueAtTime(vol*1.2, t); g.gain.exponentialRampToValueAtTime(0.0001, t+2.5);
+  }
+
+  o.connect(fl); fl.connect(g);
+  g.connect(AUDIO.envoi); // Très noyé dans l'espace
+  if(type!=='cuivre' && type!=='cloche') g.connect(AUDIO.echo);
+  if(type==='cuivre') g.connect(AUDIO.master);
+
+  o.start(t); o.stop(t+duree*2.5+0.1);
+}
+
+/* --- STRUCTURE THÉMATIQUE COMPLEXE --- */
+// Transforme les courts motifs en véritables actes de musique de film
+function etendreMelodie(motifOriginal){
+  if(!motifOriginal || !motifOriginal.length) return [];
+  const rep=(m, transpo, oct)=>m.map(n=> [n[0]+transpo, n[1]* (oct?2:1)]);
+  const theme = motifOriginal;
+  const reponse = rep(motifOriginal, 2, false); // Transposition diatonique
+  const silence = [[0, 8]]; // Pause dramatique
+  const developpement = rep(motifOriginal, 4, false); // Tension monte
+  const variation = motifOriginal.map((n,i)=> [n[0] + (i%2===0?7:0), n[1]]); // Sauts d'octaves/quintes
+
+  return [...theme, ...reponse, ...silence, ...developpement, ...variation, ...silence, ...silence];
+}
+
 function triade(g,deg){
   const n=g.length, t=[];
   for(const k of [0,2,4]){ const i=deg+k; t.push(g[i%n]+12*Math.floor(i/n)); }
@@ -1210,70 +2063,136 @@ function jouerPas(p,t){
   const M=AUDIO.M, c=AUDIO.ctx; if(!M||!c) return;
   const I=AUDIO.intensite;
   const g=GAMMES[M.gamme]||GAMMES.eolien;
-  const mes=(p/8)|0, pm=p%8;
+
+  // Tempo de base ralenti pour la tension (1 pas = 1 croche)
+  const mes=(Math.floor(p/4));
   const acc=triade(g, M.prog[mes%M.prog.length]);
-  const finPhrase=(mes%4)===3;
 
-  if(pm===0){
-    corde(t, freq(M.tonique, acc[0]), 0.42, false);       // basse pincée
+  // Ouverture dramatique du filtre (plus de brillance quand l'intensité monte)
+  if(AUDIO.nappeFiltre) {
+    const baseFreq = M.timbre==='cristal' ? 800 : 200;
+    AUDIO.nappeFiltre.frequency.setTargetAtTime(baseFreq + I*800, t, 1.0);
+  }
+
+  /* 1. FONDATIONS & HARMONIE (Changement d'accord) */
+  if(p % 16 === 0){
     retunerNappe(acc[0]);
-    if(I>0.12||M.timbre==='cuivre') tambour(t, 0.42*(0.4+0.6*I));
-  }
-  if(pm===4){
-    if(Math.random()<0.6) corde(t, freq(M.tonique, acc[2]), 0.26, false);
-    if(I>0.35) tambour(t, 0.26);
-  }
-  if(pm%2===1 && I>0.22 && Math.random()<0.4+0.4*I) chuchote(t, 0.02+0.04*I);
+    if(I > 0.25) percuEpique(t, 0.3 + I*0.4, M.timbre==='cuivre'?'impact':'sourd');
 
-  const dens=M.densite*(finPhrase?0.35:1)*(0.55+0.7*I);
-  if(Math.random()<dens){
-    const oct=24+(Math.random()<0.3?12:0);
-    const note=Math.random()<0.72 ? acc[(Math.random()*3)|0] : g[(Math.random()*g.length)|0];
-    const tt=t+Math.random()*0.02;                        // décalage humain
-    const f=freq(M.tonique, oct+note);
-    corde(tt, f, 0.13+Math.random()*0.1);
-    if(M.timbre==='cloche') cloche(tt, f*2, 0.045);
-    if(Math.random()<0.28)                                 // note d'écho
-      corde(tt+60/M.tempo/4, freq(M.tonique, oct+acc[(Math.random()*3)|0]), 0.1);
+    // Basse continue (bourdon)
+    if(M.timbre==='cuivre' || M.timbre==='orgue'){
+      instrumSolo(t, freq(M.tonique, acc[0]-24), 0.25, 'cuivre', 4.0);
+    }
+  }
+
+  /* 2. PULSATION / OSTINATO (L'urgence) */
+  if(p % 2 === 0 && I > 0.15){
+    if(M.timbre==='cuivre'){
+      // Synthé pulse agressif
+      instrumSolo(t, freq(M.tonique, acc[0]-12), 0.15 * I, 'cuivre', 0.3);
+    } else if(M.timbre==='cristal' && p % 4 === 0){
+      // Chimes froids réguliers
+      instrumSolo(t, freq(M.tonique, acc[2]+24), 0.05 * I, 'piano', 1.0);
+    }
+  }
+
+  /* 3. THÈME & MÉLODIE (Le Chant) */
+  const motif = AUDIO.themeAllonge;
+  if(motif && motif.length){
+    // Rythme de jeu de la mélodie diffère selon l'univers
+    const divis = M.timbre==='flute' ? 4 : 2;
+
+    if(p % divis === 0){
+      if(AUDIO.reste>0){ AUDIO.reste--; }
+      else{
+        const note=motif[AUDIO.iMotif % motif.length];
+        AUDIO.iMotif++; AUDIO.reste=note[1]-1;
+
+        const deg=note[0];
+        const demi=(deg>=0? g[deg%g.length]+12*Math.floor(deg/g.length) : -(g[(-deg)%g.length]));
+
+        // Instrument soliste principal
+        let octave = M.timbre==='cristal' ? 24 : 12;
+        let instrument = M.timbre==='orgue' ? 'cloche' : M.timbre;
+        let vol = M.timbre==='flute' ? 0.3 : 0.08 + I*0.05;
+
+        instrumSolo(t, freq(M.tonique, octave+demi), vol, instrument, note[1]*0.25);
+
+        // Contrepoint aléatoire (Echo fantôme) à forte intensité
+        if(I>0.5 && Math.random()<0.3){
+           instrumSolo(t+0.5, freq(M.tonique, octave+demi+7), vol*0.5, 'piano', 1.0);
+        }
+      }
+    }
   }
 }
+
 function planifier(){
   const c=AUDIO.ctx, M=AUDIO.M; if(!c||!M) return;
-  const croche=60/M.tempo/2;
-  while(AUDIO.prochain < c.currentTime+0.25){
+  const croche=60/(M.tempo)/2;
+  while(AUDIO.prochain < c.currentTime+0.2){
     jouerPas(AUDIO.pas,AUDIO.prochain);
     AUDIO.pas++; AUDIO.prochain+=croche;
   }
 }
+
 function musiqueNiveau(L){
   initAudio(); const c=AUDIO.ctx; if(!c) return;
   if(c.state==='suspended') c.resume();
   AUDIO.M=L.musique; AUDIO.pas=0; AUDIO.prochain=c.currentTime+0.1; AUDIO.intensite=0;
-  lancerNappe(L.musique);
+
+  AUDIO.themeAllonge = L.musique.motif ? etendreMelodie(L.musique.motif) : [];
+  AUDIO.iMotif=0; AUDIO.reste=0;
+
+  lancerNappeCinematique(L.musique);
+
   AUDIO.master.gain.cancelScheduledValues(c.currentTime);
   AUDIO.master.gain.setValueAtTime(AUDIO.master.gain.value,c.currentTime);
-  AUDIO.master.gain.linearRampToValueAtTime(AUDIO.actif?0.8:0, c.currentTime+2.5);
+  AUDIO.master.gain.linearRampToValueAtTime(AUDIO.actif?0.75:0, c.currentTime+6.0); // Intro majestueuse
+
   clearInterval(AUDIO.timer); AUDIO.timer=setInterval(planifier,40);
 }
+
+function musiqueChapitre(){
+  if(!AUDIO.M) return;
+  AUDIO.intensite=Math.min(1,AUDIO.intensite+0.35); // La musique s'énerve à chaque palier
+  if(AUDIO.ctx) sfx('boss');
+}
+
 function volumeAudio(v){
   if(!AUDIO.ctx) return;
   AUDIO.master.gain.cancelScheduledValues(AUDIO.ctx.currentTime);
-  AUDIO.master.gain.setTargetAtTime(AUDIO.actif?v:0, AUDIO.ctx.currentTime, 0.15);
+  AUDIO.master.gain.setTargetAtTime(AUDIO.actif?v:0, AUDIO.ctx.currentTime, 0.4);
 }
+
 function couperAudio(){
   AUDIO.actif=!AUDIO.actif;
   $('btn-son').textContent=AUDIO.actif?'♪':'✕';
-  volumeAudio(G.etat==='jeu'?0.8:0.3);
+  volumeAudio(G.etat==='jeu'?0.75:0.22);
 }
-/* bruitages, dans la tonalité du niveau */
+
+/* --- EFFETS SONORES (SFX) --- */
+function souffle(t,duree,vol,centre){
+  const c=AUDIO.ctx; if(!c) return;
+  const n=(c.sampleRate*duree)|0, b=c.createBuffer(1,n,c.sampleRate), d=b.getChannelData(0);
+  for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2);
+  const s=c.createBufferSource(), f=c.createBiquadFilter(), g=c.createGain();
+  s.buffer=b; f.type='bandpass'; f.frequency.value=centre; f.Q.value=1.1;
+  g.gain.value=vol; s.connect(f); f.connect(g); g.connect(AUDIO.master); g.connect(AUDIO.envoi);
+  s.start(t);
+}
+
 function sfx(nom){
   if(!AUDIO.ctx||!AUDIO.actif||!AUDIO.M) return;
   const t=AUDIO.ctx.currentTime, M=AUDIO.M;
-  if(nom==='niveau') [0,7,12,19].forEach((d,i)=>corde(t+i*0.06, freq(M.tonique,24+d), 0.22));
-  if(nom==='boss'){ corde(t,freq(M.tonique,-5),0.5,false); tambour(t,0.6); souffle(t,0.7,0.14,110); }
-  if(nom==='mal'){ souffle(t,0.14,0.12,320); tambour(t,0.3); }
-  if(nom==='casse'){ souffle(t,0.2,0.1,1400); corde(t,freq(M.tonique,19),0.12); }
-  if(nom==='terre'){ corde(t,freq(M.tonique,0),0.4); corde(t+0.2,freq(M.tonique,-4),0.4); }
+  if(nom==='niveau') {
+      [0,7,12,16].forEach((d,i)=>instrumSolo(t+i*0.08, freq(M.tonique,12+d), 0.15, 'piano', 2.0));
+  }
+  if(nom==='boss'){ percuEpique(t, 0.8, 'impact'); souffle(t, 1.2, 0.15, 80); }
+  if(nom==='mal'){ souffle(t,0.14,0.12,320); }
+  if(nom==='casse'){ instrumSolo(t,freq(M.tonique,19), 0.1, 'piano', 0.5); }
+  if(nom==='terre'){ percuEpique(t, 0.6, 'impact'); }
+  if(nom==='ultime'){ souffle(t, 1.5, 0.2, 500); percuEpique(t, 0.9, 'impact'); }
 }
 
 /* ==========================================================================
@@ -1294,6 +2213,32 @@ if(TACTILE){
    1 = échelle d'origine ; en dessous de 1 on voit plus loin autour de soi. */
 let W=0,H=0,DPR=1,ZOOM=1;
 let lumCv=null, lumCtx=null, glowCv=null, glowCtx=null, halo=null;
+let gradeCv=null, gradeCle='', vigCv=null, vigCle='';
+/* Étalonnage : un dégradé coloré posé en lumière douce sur toute l'image,
+   comme un filtre de cinéma. Vignette : les bords s'enfoncent dans le noir. */
+function fabriquerEtalonnage(A){
+  const cle=W+'x'+H+'|'+(A.etal?A.etal.haut+A.etal.bas:'');
+  if(gradeCle!==cle && A.etal){
+    gradeCv=gradeCv||document.createElement('canvas');
+    gradeCv.width=Math.max(2,W>>2); gradeCv.height=Math.max(2,H>>2);
+    const x=gradeCv.getContext('2d');
+    const g=x.createLinearGradient(0,0,0,gradeCv.height);
+    g.addColorStop(0,A.etal.haut); g.addColorStop(1,A.etal.bas);
+    x.fillStyle=g; x.fillRect(0,0,gradeCv.width,gradeCv.height);
+    gradeCle=cle;
+  }
+  const cv=W+'x'+H;
+  if(vigCle!==cv){
+    vigCv=vigCv||document.createElement('canvas');
+    vigCv.width=Math.max(2,W>>2); vigCv.height=Math.max(2,H>>2);
+    const x=vigCv.getContext('2d');
+    const g=x.createRadialGradient(vigCv.width/2,vigCv.height/2,Math.min(vigCv.width,vigCv.height)*0.34,
+                                    vigCv.width/2,vigCv.height/2,Math.max(vigCv.width,vigCv.height)*0.72);
+    g.addColorStop(0,'#ffffff'); g.addColorStop(1,'#5e5a6e');
+    x.fillStyle=g; x.fillRect(0,0,vigCv.width,vigCv.height);
+    vigCle=cv;
+  }
+}
 function resize(){
   DPR=Math.min(devicePixelRatio||1, TACTILE?2:2);
   W=innerWidth; H=innerHeight;
@@ -1323,6 +2268,18 @@ function faireHalo(){
 }
 faireHalo(); resize();
 
+/* Qualité adaptative : si les images deviennent trop lentes, on retire
+   d'abord le flou lumineux, puis les liserés, puis on allège les particules.
+   Tout revient dès que la machine respire à nouveau. */
+const QUAL={ bloom:true, rim:true, part:1, moy:16, pire:0 };
+function jaugerQualite(ms){
+  QUAL.moy=QUAL.moy*0.92+ms*0.08;
+  if(QUAL.moy>26){ if(QUAL.bloom){QUAL.bloom=false;return;} if(QUAL.rim){QUAL.rim=false;return;}
+    if(QUAL.part>0.35) QUAL.part=0.35; }
+  else if(QUAL.moy<14){ if(QUAL.part<1) QUAL.part=1;
+    else if(!QUAL.rim) QUAL.rim=true; else if(!QUAL.bloom) QUAL.bloom=true; }
+}
+
 const rnd=(a,b)=>a+Math.random()*(b-a);
 const clamp=(v,a,b)=>v<a?a:v>b?b:v;
 const dist2=(a,b,c,d)=>{const x=a-c,y=b-d;return x*x+y*y;};
@@ -1343,8 +2300,16 @@ function compilerSprites(){
     const s=SPRITES[k], out={img:[],blanc:[],contour:[],rim:[],w:0,h:0,
       cycle:s.cycle||(s.f.length>1?[0,1]:[0])};
     for(const brut of s.f){
-      const w=Math.max(...brut.map(r=>r.length)), h=brut.length;
-      const rows=brut.map(r=>r.length<w ? r+'.'.repeat(w-r.length) : r);
+      let lignes=brut;
+      // 'miroir' : on ne dessine que la moitié gauche, l'autre est le reflet.
+      // Pratique pour les créatures vues de face, et deux fois moins à écrire.
+      if(s.miroir){
+        const d=Math.max(...brut.map(r=>r.length));
+        lignes=brut.map(r=>{ const g=r.length<d ? r+'.'.repeat(d-r.length) : r;
+          return g + g.split('').reverse().join(''); });
+      }
+      const w=Math.max(...lignes.map(r=>r.length)), h=lignes.length;
+      const rows=lignes.map(r=>r.length<w ? r+'.'.repeat(w-r.length) : r);
       const mk=()=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;};
       const a=mk(), b=mk(), d=mk(), rm=mk();
       const xa=a.getContext('2d'), xb=b.getContext('2d'),
@@ -1375,14 +2340,35 @@ function poserSprite(nom,img,x,y,haut,flip,alpha,mode,dx,dy){
   const s=SPR[nom]; if(!s) return;
   const i=((img|0)%s.img.length+s.img.length)%s.img.length;
   const c = mode==='blanc'? s.blanc[i] : mode==='nu'? s.img[i]
-          : mode==='rim'? teinter(s.rim[i],TEINTE_RIM) : s.contour[i];
+          : mode==='rim'? teinter(s.rim[i],TEINTE_RIM)
+          : (QUAL.rim && s.fusion && s.fusion[i]) ? s.fusion[i] : s.contour[i];
   const ech=haut/s.h, w=c.width*ech*(dx||1), h=c.height*ech*(dy||1);
+  // cas courant : ni miroir ni transparence -> un seul appel, sans save/restore
+  if(!flip && (alpha===undefined||alpha===1)){
+    ctx.drawImage(c, x-w/2, y-h/2, w, h);
+    return;
+  }
   ctx.save();
   if(alpha!==undefined) ctx.globalAlpha=alpha;
   ctx.translate(x,y);
   if(flip) ctx.scale(-1,1);
   ctx.drawImage(c,-w/2,-h/2,w,h);
   ctx.restore();
+}
+/* Le liseré est cuit une fois pour toutes dans le sprite au début du niveau :
+   ça supprime un appel de dessin par créature et par image. */
+function cuireLiseres(couleur){
+  for(const k in SPR){
+    const s=SPR[k]; s.fusion=[];
+    for(let i=0;i<s.contour.length;i++){
+      const src=s.contour[i], c=document.createElement('canvas');
+      c.width=src.width; c.height=src.height;
+      const x=c.getContext('2d'); x.imageSmoothingEnabled=false;
+      x.drawImage(src,0,0);
+      x.globalAlpha=0.48; x.drawImage(teinter(s.rim[i],couleur),1,1);
+      s.fusion.push(c);
+    }
+  }
 }
 /* colorisation d'une silhouette, mise en cache par couleur */
 let TEINTE_RIM='#ffffff';
@@ -1411,6 +2397,10 @@ addEventListener('keydown',e=>{ keys.add(e.code);
   if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code)) e.preventDefault();
   if(e.code==='Escape') togglePause();
   if(e.code==='KeyM') couperAudio();
+  if(G.etat==='jeu'){
+    if(e.code==='Space' && G.joueurs[0]) declencherUltime(G.joueurs[0]);
+    if(e.code==='Enter' && G.joueurs[1] && !NET.actif) declencherUltime(G.joueurs[1]);
+  }
   if(G.etat==='levelup' && ['Digit1','Digit2','Digit3'].includes(e.code)) choisir(+e.code.slice(5)-1);
 });
 addEventListener('keyup',e=>keys.delete(e.code));
@@ -1480,7 +2470,8 @@ function dirJoueur(idx){
 /* --- état --- */
 const G={ etat:'menu', t:0, joueurs:[], ennemis:[], projs:[], gemmes:[], effets:[], textes:[],
   eclats:[], decor:[], brisables:[], butins:[], particules:[], motif:null, niveau:null,
-  diff:null, gel:0, brume:[], gouttes:[], eclabous:[], xp:0, lvl:1, niveauxDus:0, tues:0, spawnAcc:0,
+  diff:null, gel:0, punch:0, chapitre:0, finChapitre:0, colosse:null, annonce:null,
+  brume:[], gouttes:[], eclabous:[], xp:0, lvl:1, niveauxDus:0, tues:0, spawnAcc:0,
   prochainBoss:CFG.regles.bossToutesLes, cam:{x:0,y:0}, shake:0, choix:[], flash:0, rendu:[] };
 
 /* --- menu --- */
@@ -1543,6 +2534,19 @@ function dessineReseau(){
     couleur:PAL.menthe, actif:NET.role==='invite', onClick:()=>lancer('invite')});
 }
 
+$('btn-pause').onclick=e=>{ e.preventDefault(); togglePause(); };
+$('btn-son').onclick=e=>{ e.preventDefault(); initAudio(); couperAudio(); };
+$('btn-ultime').onclick=e=>{ e.preventDefault();
+  if(NET.actif && NET.role==='invite'){ envoyer({t:'ult'}); return; }
+  const j=G.joueurs[NET.actif?NET.moi:0]; if(j) declencherUltime(j);
+};
+$('btn-rejouer').onclick=()=>{
+  $('fin').classList.add('cache'); $('hud').classList.add('cache');
+  if(NET.actif && NET.role==='invite'){ majReseauUI('En attente de l’hôte…'); G.etat='menu'; return; }
+  $('menu').classList.remove('cache'); G.etat='menu';
+  arreterNappe(); clearInterval(AUDIO.timer); volumeAudio(0);
+};
+
 /* --- création --- */
 function nouvelleArme(id){ return {id, niveau:1, cd:0, phase:0, def:CFG.armes[id]}; }
 function statArme(a,j){
@@ -1558,41 +2562,188 @@ function creerJoueur(idx,persoId,x,y){
   return { idx, perso:p, x, y, r:12, pv:p.pv, pvMax:p.pv, vitesse:p.vitesse,
     armure:p.mult.armure, mult:{degats:p.mult.degats,cadence:p.mult.cadence,aimant:p.mult.aimant,vitesse:1,xp:1},
     armes:[nouvelleArme(p.arme)], passifs:{}, invul:0, aterre:false, revive:0,
+    ultime:{ cle:idx===0?'jugement':'exsangue', charges:0, cd:0 },
     vx:0, vy:0, dir:{x:0,y:1}, orbAngle:0, marche:0, flip:false, type:'joueur' };
 }
 function genererDecor(L){
   const r=alea(L.id.length*7919+1337), A=CFG.regles.arene, out=[];
-  for(let i=0;i<L.densite;i++){
-    const nom=L.decor[(r()*L.decor.length)|0];
-    const h=SPR[nom].h*(1.9+r()*1.1);
-    const o={ type:'decor', id:i, nom, x:r()*A, y:r()*A, h, flip:r()>0.5, ph:r()*6.28, flash:0 };
+  let id=0;
+  const poser=(nom,x,y,ech,extra)=>{
+    const h=SPR[nom].h*(ech||1.9+r()*1.1);
+    const o={ type:'decor', id:id++, nom, x, y, h, flip:r()>0.5, ph:r()*6.28, flash:0 };
     const br=CFG.brisables[nom];
     if(br){ o.brisable=true; o.butin=br.butin; o.pv=br.pv; o.pvMax=br.pv; o.r=h*0.30; }
-    out.push(o);
+    if(extra) Object.assign(o,extra);
+    out.push(o); return o;
+  };
+
+  /* 1. semis de fond, mais par bosquets plutôt qu'au hasard uniforme :
+        c'est ce qui casse l'impression de répétition. */
+  const nGroupes=Math.round(L.densite/7);
+  for(let k=0;k<nGroupes;k++){
+    const cx=r()*A, cy=r()*A, rayon=60+r()*140;
+    const dominant=L.decor[(r()*L.decor.length)|0];
+    const n=3+((r()*6)|0);
+    for(let i=0;i<n;i++){
+      const nom = r()<0.65 ? dominant : L.decor[(r()*L.decor.length)|0];
+      const a=r()*6.28, d=r()*rayon;
+      poser(nom, clamp(cx+Math.cos(a)*d,40,A-40), clamp(cy+Math.sin(a)*d,40,A-40),
+            1.5+r()*1.6);
+    }
   }
+  /* 2. quelques pièces maîtresses, très grandes, qui servent de repères */
+  const geants=['d_arbregeant','d_arche','d_obelisque','d_fontaine','d_puits']
+                 .filter(n=>L.decor.includes(n));
+  if(geants.length) for(let k=0;k<14;k++)
+    poser(geants[(r()*geants.length)|0], 200+r()*(A-400), 200+r()*(A-400), 3.6+r()*1.8);
+
+  /* 3. salles en ruine : quatre murs, une ouverture, du butin dedans */
+  G.salles=[]; G.murs=[];
+  const nSalles=7;
+  for(let k=0;k<nSalles;k++){
+    const larg=6+((r()*4)|0), haut=5+((r()*3)|0), T=46;   // en blocs de 46 px
+    const x0=300+r()*(A-600-larg*T), y0=300+r()*(A-600-haut*T);
+    const cote=(r()*4)|0, trou=1+((r()*(cote<2?larg:haut)-2)|0);
+    const mur=(cx,cy)=>{
+      const brise=r()<0.22;
+      const o=poser(brise?'d_murbrise':'d_mur', cx+T/2, cy+T/2, T/16*1.05);
+      o.mur=true;
+      if(!brise) G.murs.push({x:cx, y:cy-T*0.35, w:T, h:T*0.85});
+    };
+    for(let i=0;i<larg;i++){
+      if(!(cote===0 && i===trou)) mur(x0+i*T, y0);
+      if(!(cote===1 && i===trou)) mur(x0+i*T, y0+(haut-1)*T);
+    }
+    for(let j=1;j<haut-1;j++){
+      if(!(cote===2 && j===trou)) mur(x0, y0+j*T);
+      if(!(cote===3 && j===trou)) mur(x0+(larg-1)*T, y0+j*T);
+    }
+    // contenu : un coffre au centre, et quelques brisables autour
+    const cx=x0+larg*T/2, cy=y0+haut*T/2;
+    poser('d_coffre', cx, cy, 3.2);
+    const dedans=L.decor.filter(n=>CFG.brisables[n] && n!=='d_coffre');
+    for(let i=0;i<3 && dedans.length;i++)
+      poser(dedans[(r()*dedans.length)|0],
+            cx+(r()*2-1)*larg*T*0.3, cy+(r()*2-1)*haut*T*0.25, 1.8+r());
+    G.salles.push({x:x0, y:y0, w:larg*T, h:haut*T});
+  }
+
   out.sort((a,b)=>a.y-b.y);
   return out;
 }
+
+/* Les murs sont fixes : on les indexe une fois pour toutes. */
+function indexerMurs(){
+  G.grilleMurs=grille(G.murs.map(m=>({x:m.x+m.w/2, y:m.y+m.h/2, m})), 64);
+}
+/* Repousse une entité hors des murs qu'elle chevauche. */
+function decoincer(o, rayon){
+  if(!G.grilleMurs) return;
+  for(const c of autour(G.grilleMurs, o.x, o.y, rayon+40)){
+    const m=c.m;
+    const px=(m.w/2+rayon)-Math.abs(o.x-(m.x+m.w/2));
+    const py=(m.h/2+rayon)-Math.abs(o.y-(m.y+m.h/2));
+    if(px<=0||py<=0) continue;
+    if(px<py) o.x += (o.x<m.x+m.w/2 ? -px : px);
+    else      o.y += (o.y<m.y+m.h/2 ? -py : py);
+  }
+}
+
+/* Chaque chapitre assombrit le terrain : on refabrique la tuile de sol. */
+function appliquerChapitre(){
+  const L=G.niveau, ch=CFG.chapitres[G.chapitre]; if(!ch) return;
+  G.teinteCh=ch.teinte;
+  faireMotif(L);
+  musiqueChapitre();
+}
+function assombrir(hex,k){
+  const n=parseInt(hex.slice(1),16);
+  const r=Math.round(((n>>16)&255)*k), v=Math.round(((n>>8)&255)*k), b=Math.round((n&255)*k);
+  return '#'+((1<<24)|(r<<16)|(v<<8)|b).toString(16).slice(1);
+}
 function faireMotif(L){
+  /* Sol façon 16 bits : chaque univers a sa matière — dalles fissurées,
+     vase et flaques, glace veinée, basalte aux veines de braise —
+     avec un tramage en damier pour les dégradés, comme sur Mega Drive. */
   const T=256, t=document.createElement('canvas'); t.width=t.height=T;
   const x=t.getContext('2d'), r=alea(L.id.length*104729+11);
-  x.fillStyle=L.sol; x.fillRect(0,0,T,T);
-  for(let i=0;i<26;i++){                       // grandes taches douces
-    const cx=r()*T, cy=r()*T, rad=18+r()*54;
-    const g=x.createRadialGradient(cx,cy,0,cx,cy,rad);
-    const c=L.grains[(r()*2)|0];
-    g.addColorStop(0,c); g.addColorStop(1,'rgba(0,0,0,0)');
-    x.globalAlpha=0.30+r()*0.3; x.fillStyle=g;
-    x.beginPath(); x.arc(cx,cy,rad,0,6.2832); x.fill();
+  const k=G.teinteCh===undefined?1:G.teinteCh;
+  const F=(c)=>assombrir(c,k);
+  x.fillStyle=F(L.sol); x.fillRect(0,0,T,T);
+
+  const damier=(c,a,pas)=>{                    // trame : un pixel sur deux
+    x.fillStyle=c; x.globalAlpha=a;
+    for(let j=0;j<T;j+=pas) for(let i=(j/pas)%2*pas;i<T;i+=pas*2) x.fillRect(i,j,1,1);
+    x.globalAlpha=1;
+  };
+  const fissure=(x0,y0,n,c)=>{
+    x.strokeStyle=c; x.globalAlpha=0.8; x.lineWidth=1; x.beginPath(); x.moveTo(x0,y0);
+    let px=x0, py=y0;
+    for(let i=0;i<n;i++){ px+=r()*14-7; py+=4+r()*10; x.lineTo(px|0,py|0); }
+    x.stroke(); x.globalAlpha=1;
+  };
+
+  if(L.id==='crypte' || L.id==='brasier'){
+    /* dallage : pierres décalées une rangée sur deux, joints sombres,
+       chaque dalle éclairée en haut-gauche et ombrée en bas-droite */
+    const dh=42, dw=62;
+    for(let ligne=0; ligne*dh<T+dh; ligne++){
+      const dec=(ligne%2)*dw/2;
+      for(let col=-1; col*dw<T+dw; col++){
+        const dx=col*dw+dec, dy=ligne*dh;
+        const ton=0.9+r()*0.2;
+        x.fillStyle=F(assombrir(L.id==='crypte'?'#232033':'#241a1c',ton));
+        x.fillRect(dx+1,dy+1,dw-2,dh-2);
+        x.fillStyle='rgba(255,255,255,0.05)'; x.fillRect(dx+1,dy+1,dw-2,2);
+        x.fillStyle='rgba(0,0,0,0.30)';       x.fillRect(dx+1,dy+dh-3,dw-2,2);
+        x.fillStyle=F(PAL.nuit); x.fillRect(dx,dy,dw,1); x.fillRect(dx,dy,1,dh);
+        if(r()<0.30) fissure(dx+6+r()*(dw-12), dy+3, 3, 'rgba(10,8,16,0.7)');
+        if(L.id==='brasier' && r()<0.22){      // veine de braise dans le joint
+          x.fillStyle=F(PAL.ambreC); x.globalAlpha=0.85;
+          x.fillRect(dx+2+r()*(dw-10), dy+dh-2, 4+r()*10, 1); x.globalAlpha=1;
+        }
+      }
+    }
+    if(L.id==='brasier'){ damier(F(PAL.sangS),0.35,3); }
+    else damier(F(PAL.ombre),0.3,3);
   }
-  x.globalAlpha=0.5;
-  for(let i=0;i<70;i++){                       // éclats de matière
-    x.fillStyle=L.grains[(r()*2)|0];
-    const w=2+((r()*7)|0);
-    x.fillRect((r()*T)|0,(r()*T)|0,w,1+((r()*2)|0));
+  else if(L.id==='marais'){
+    damier(F(PAL.vertS),0.5,2);
+    for(let i=0;i<7;i++){                      // flaques d'eau stagnante
+      const cx=r()*T, cy=r()*T, rw=20+r()*34, rh=rw*(0.4+r()*0.2);
+      x.fillStyle=F('#0d1a22'); x.globalAlpha=0.9;
+      x.beginPath(); x.ellipse(cx,cy,rw,rh,0,0,6.2832); x.fill();
+      x.globalAlpha=0.5; x.strokeStyle=F(PAL.glaceS); x.lineWidth=1;
+      x.beginPath(); x.ellipse(cx,cy-1,rw,rh,0,0,6.2832); x.stroke();
+      x.globalAlpha=0.35; x.strokeStyle=F(PAL.glaceC);
+      x.beginPath(); x.ellipse(cx,cy,rw*0.5,rh*0.5,0,0,6.2832); x.stroke();
+      x.globalAlpha=1;
+    }
+    for(let i=0;i<40;i++){                     // touffes d'herbe
+      const gx=(r()*T)|0, gy=(r()*T)|0;
+      x.fillStyle=F(r()<0.5?PAL.vertC:PAL.vertS);
+      x.fillRect(gx,gy,1,3); x.fillRect(gx-1,gy+1,1,2); x.fillRect(gx+1,gy+1,1,2);
+    }
   }
-  x.globalAlpha=0.22;
-  for(let i=0;i<420;i++){                      // grain fin
+  else if(L.id==='gel'){
+    /* plaques de glace : veines claires en diagonale + reflets */
+    damier(F(PAL.glaceS),0.25,2);
+    for(let i=0;i<9;i++) fissure(r()*T, r()*T*0.3, 6, F('#cfe8f2'));
+    x.globalAlpha=0.5;
+    for(let i=0;i<12;i++){                     // reflets obliques
+      const gx=r()*T, gy=r()*T, len=12+r()*30;
+      x.strokeStyle=F(PAL.glace); x.beginPath();
+      x.moveTo(gx,gy); x.lineTo(gx+len,gy-len*0.5); x.stroke();
+    }
+    x.globalAlpha=1;
+    for(let i=0;i<6;i++){                      // plaques de neige
+      const cx=r()*T, cy=r()*T, rad=10+r()*20;
+      x.fillStyle='rgba(244,238,221,0.10)';
+      x.beginPath(); x.arc(cx,cy,rad,0,6.2832); x.fill();
+    }
+  }
+  x.globalAlpha=0.16;
+  for(let i=0;i<300;i++){                      // grain fin final
     x.fillStyle = r()>0.5 ? PAL.os : PAL.nuit;
     x.fillRect((r()*T)|0,(r()*T)|0,1,1);
   }
@@ -1640,13 +2791,37 @@ function demarrer(){
   G.ennemis=[]; G.projs=[]; G.gemmes=[]; G.effets=[]; G.textes=[]; G.eclats=[]; G.butins=[]; G.shake=0;
   G.prochainBoss=CFG.regles.bossToutesLes;
   G.diff=CFG.difficultes.find(d=>d.id===choixDiff)||CFG.difficultes[1];
-  G.decor=genererDecor(L); G.brisables=G.decor.filter(o=>o.brisable);
+  G.chapitre=0; G.finChapitre=CFG.chapitres[0].duree; G.colosse=null;
+  G.annonce={txt:CFG.chapitres[0].nom, t:0};
+  TEINTE_RIM=(L.ambiance&&L.ambiance.rim)||PAL.glace;
+  cuireLiseres(TEINTE_RIM);
+  G.teinteCh=CFG.chapitres[0].teinte;
+  G.murs=[]; G.salles=[];
+  G.decor=genererDecor(L); G.brisables=G.decor.filter(o=>o.brisable && !o.mur);
+  indexerMurs();
+  /* deux plans de profondeur : des silhouettes floues d'arrière-plan qui
+     glissent moins vite que le sol, et quelques masses de premier plan qui
+     glissent plus vite — c'est ce décalage qui donne la profondeur. */
+  {
+    const r2=alea(L.id.length*31337+7), A2=CFG.regles.arene;
+    const grands=L.decor.filter(n=>!CFG.brisables[n]&&SPR[n]&&SPR[n].h>=14);
+    G.lointain=[]; G.proche=[];
+    for(let i=0;i<34;i++) G.lointain.push({
+      nom:grands[(r2()*grands.length)|0], x:r2()*A2*1.5-A2*0.25, y:r2()*A2*1.5-A2*0.25,
+      h:(SPR[grands[0]]?110:90)+r2()*150, flip:r2()>0.5 });
+    for(let i=0;i<8;i++) G.proche.push({
+      nom:grands[(r2()*grands.length)|0], x:r2()*A2*1.8-A2*0.4, y:r2()*A2*1.8-A2*0.4,
+      h:260+r2()*240, flip:r2()>0.5 });
+  }
   faireMotif(L); faireParticules(L); faireBrume(L); faireGouttes(L);
   G.joueurs=[creerJoueur(0,choixPerso[0],c-30,c)];
   if(nbJoueurs===2) G.joueurs.push(creerJoueur(1,choixPerso[1],c+30,c));
+  for(const j of G.joueurs) j.ultime.charges=1;   // une charge pour commencer
   G.cam={x:c,y:c};
   $('menu').classList.add('cache'); $('fin').classList.add('cache'); $('hud').classList.remove('cache');
   $('zone').textContent=L.nom;
+  G.majZone=()=>{ $('zone').textContent=L.nom+' · '+(CFG.chapitres[G.chapitre]||{nom:''}).nom; };
+  G.majZone();
   if(NET.actif && NET.role==='hote')
     envoyer({t:'go', n:CLES_NIVEAUX.indexOf(L.id), d:CLES_DIFF.indexOf(choixDiff),
              p:[CLES_PERSOS.indexOf(choixPerso[0]), CLES_PERSOS.indexOf(choixPerso[1])]});
@@ -1658,17 +2833,92 @@ function demarrer(){
 function spawnEnnemi(boss){
   if(G.ennemis.length>=CFG.regles.ennemisMax) return;
   const types=G.niveau.vagues.filter(v=>G.t>=v.t).map(v=>v.e); if(!types.length) return;
-  const def=CFG.ennemis[boss?'gargouille':types[(Math.random()*types.length)|0]];
-  const ang=Math.random()*Math.PI*2, d=Math.max(W,H)*0.62+60;
+  const def=CFG.ennemis[types[(Math.random()*types.length)|0]];
+  const ang=Math.random()*Math.PI*2, d=Math.max(W,H)*0.62/ZOOM+80;
   const horde=G.niveau.modif==='horde';
   const D=G.diff||{pv:1,degats:1};
-  const pv=def.pv*(1+(G.t/60)*CFG.regles.pvParMinute)*(boss?20:1)*(horde?0.6:1)*D.pv;
+  const pv=def.pv*(1+(G.t/60)*CFG.regles.pvParMinute)*(horde?0.6:1)*D.pv;
   G.ennemis.push({ type:'ennemi', def,
     x:clamp(G.cam.x+Math.cos(ang)*d,20,CFG.regles.arene-20),
     y:clamp(G.cam.y+Math.sin(ang)*d,20,CFG.regles.arene-20),
-    pv, pvMax:pv, r:def.taille*(boss?2.7:1), vitesse:def.vitesse*(boss?0.62:1)*rnd(0.9,1.1),
-    degats:def.degats*(boss?2.2:1)*D.degats, xp:def.xp*(boss?30:1), boss:!!boss,
+    pv, pvMax:pv, r:def.taille, vitesse:def.vitesse*rnd(0.9,1.1),
+    degats:def.degats*D.degats, xp:def.xp, boss:false,
     flash:0, phase:Math.random()*6.28, flip:false, anim:Math.random()*10 });
+}
+
+/* Un colosse : gros, nommé, avec un comportement propre. */
+function invoquerColosse(cle){
+  const def=CFG.colosses[cle]; if(!def) return;
+  const D=G.diff||{pv:1,degats:1};
+  const ang=Math.random()*Math.PI*2, d=Math.max(W,H)*0.55/ZOOM+120;
+  const cible=G.joueurs.find(j=>!j.aterre)||G.joueurs[0];
+  const pv=def.pv*(1+Math.min(0.6,(G.t/150)*0.2))*D.pv;
+  G.colosse={ type:'ennemi', def, cle, colosse:true, boss:true, nom:def.nom,
+    x:clamp(cible.x+Math.cos(ang)*d,60,CFG.regles.arene-60),
+    y:clamp(cible.y+Math.sin(ang)*d,60,CFG.regles.arene-60),
+    pv, pvMax:pv, r:def.taille, vitesse:def.vitesse*D.pv*0.9,
+    degats:def.degats*D.degats, xp:def.xp,
+    flash:0, phase:0, flip:false, anim:0, minuteur:2.5, charge:0 };
+  G.ennemis.push(G.colosse);
+  G.shake=12; G.flash=0.4; sfx('boss');
+  G.annonce={txt:def.nom, t:0};
+}
+
+/* comportements propres aux colosses */
+function majColosse(e,dt,vivants){
+  e.minuteur-=dt;
+  const cible=vivants[0]; if(!cible) return;
+  const c=e.def.comportement;
+  if(c==='charge'){
+    if(e.charge>0){ e.charge-=dt; e.vitesse=e.def.vitesse*4.2; }
+    else if(e.minuteur<=0){ e.minuteur=rnd(3.2,4.6); e.charge=1.1; G.shake=Math.max(G.shake,5);
+      G.effets.push({type:'onde',x:e.x,y:e.y,r:e.r*3.2,t:0,duree:0.35,couleur:PAL.pierreC}); }
+    else e.vitesse=e.def.vitesse;
+  }
+  else if(c==='salve'){
+    if(e.minuteur<=0){
+      e.minuteur=rnd(2.4,3.4);
+      const base=Math.atan2(cible.y-e.y,cible.x-e.x);
+      for(let k=-3;k<=3;k++){
+        const a=base+k*0.22;
+        G.projs.push({type:'ennemi',x:e.x,y:e.y,vx:Math.cos(a)*230,vy:Math.sin(a)*230,
+          r:7,degats:e.degats*0.5,vie:3.4,couleur:PAL.mentheC,hostile:true});
+      }
+    }
+  }
+  else if(c==='invoque'){
+    if(e.minuteur<=0){ e.minuteur=rnd(4,6);
+      for(let k=0;k<6;k++){
+        const a=Math.random()*6.28;
+        const d=CFG.ennemis.ver;
+        G.ennemis.push({type:'ennemi',def:d,x:e.x+Math.cos(a)*50,y:e.y+Math.sin(a)*50,
+          pv:d.pv*3,pvMax:d.pv*3,r:d.taille,vitesse:d.vitesse,degats:d.degats,xp:d.xp,
+          boss:false,flash:0,phase:0,flip:false,anim:0});
+      }
+      G.shake=Math.max(G.shake,4);
+    }
+  }
+  else if(c==='final'){
+    // il fait tout : il charge, il tire, et il appelle du renfort
+    if(e.charge>0){ e.charge-=dt; e.vitesse=e.def.vitesse*3.4; }
+    else e.vitesse=e.def.vitesse;
+    if(e.minuteur<=0){
+      e.minuteur=rnd(2.2,3.2);
+      const r=Math.random();
+      if(r<0.4){ e.charge=1; G.shake=Math.max(G.shake,6); }
+      else if(r<0.8){
+        const base=Math.atan2(cible.y-e.y,cible.x-e.x);
+        for(let k=-4;k<=4;k++){ const a=base+k*0.19;
+          G.projs.push({type:'ennemi',x:e.x,y:e.y,vx:Math.cos(a)*260,vy:Math.sin(a)*260,
+            r:8,degats:e.degats*0.45,vie:3.6,couleur:PAL.sang,hostile:true}); }
+      } else {
+        for(let k=0;k<5;k++){ const a=Math.random()*6.28, d=CFG.ennemis.goule;
+          G.ennemis.push({type:'ennemi',def:d,x:e.x+Math.cos(a)*60,y:e.y+Math.sin(a)*60,
+            pv:d.pv*4,pvMax:d.pv*4,r:d.taille,vitesse:d.vitesse,degats:d.degats,xp:d.xp,
+            boss:false,flash:0,phase:0,flip:false,anim:0}); }
+      }
+    }
+  }
 }
 
 /* --- grille --- */
@@ -1696,7 +2946,12 @@ function autour(g,x,y,r){
 function frapper(e,degats,couleur){
   e.pv-=degats; e.flash=0.1;
   if(!e.brisable){ e.squash=1; if(e.boss) G.gel=Math.max(G.gel,0.035); }
-  G.textes.push({x:e.x,y:e.y-e.r,v:Math.round(degats),t:0.6,couleur:couleur||PAL.os});
+  if(degats>=42 && G.effets.length<90)
+    G.effets.push({type:'etoile',x:e.x+rnd(-6,6),y:e.y+rnd(-8,2),r:8+Math.min(14,degats*0.12),
+                   t:0,duree:0.18,couleur:couleur||PAL.os});
+  const gros=degats>=45;
+  G.textes.push({x:e.x,y:e.y-e.r,v:Math.round(degats),t:gros?0.8:0.6,
+                 couleur:gros?PAL.ambre:(couleur||PAL.os), pop:gros?1.55:1.12});
   eclats(e.x,e.y,2,couleur||PAL.os,110);
   if(e.pv<=0){ if(e.brisable) casser(e); else tuer(e); }
 }
@@ -1729,6 +2984,12 @@ function ramasser(b,j){
     for(const gm of G.gemmes) gm.attire=j;
     G.textes.push({x:j.x,y:j.y-22,v:'APPEL',t:1.1,couleur:PAL.glace});
   }
+  else if(b.type==='charge'){
+    const U=CFG.ultimes[j.ultime.cle];
+    j.ultime.charges=Math.min(U.charges, j.ultime.charges+1);
+    G.textes.push({x:j.x,y:j.y-24,v:'+1 '+U.nom,t:1.4,couleur:PAL.spectre});
+    majFiches();
+  }
   else if(b.type==='orbe'){
     G.flash=0.4; G.lvl++; G.niveauxDus++; $('niv').textContent=G.lvl;
     G.textes.push({x:j.x,y:j.y-24,v:'NIVEAU !',t:1.3,couleur:PAL.ambre});
@@ -1741,6 +3002,19 @@ function tuer(e){
   G.ennemis.splice(i,1); G.tues++;
   G.gemmes.push({x:e.x,y:e.y,v:e.xp,r:e.boss?9:4.5,boss:e.boss,ph:Math.random()*6.28});
   eclats(e.x,e.y,e.boss?40:8,PAL.sang,e.boss?260:150);
+  if(e.colosse){
+    G.effets.push({type:'onde',x:e.x,y:e.y,r:300,t:0,duree:0.7,couleur:PAL.ambre});
+    G.punch=Math.max(G.punch,1);
+    G.colosse=null;
+    const suivant=CFG.chapitres[G.chapitre+1];
+    if(suivant){
+      G.chapitre++;
+      G.finChapitre=G.t+suivant.duree;
+      G.annonce={txt:suivant.nom, t:0};
+      appliquerChapitre();
+      if(G.majZone) G.majZone();
+    } else { finir(true); }
+  }
   if(e.boss){ G.shake=14; G.flash=0.35;
     lacher(e.x,e.y,'orbe');
     for(let k=0;k<6;k++) G.gemmes.push({x:e.x+rnd(-40,40),y:e.y+rnd(-40,40),v:6,r:6,ph:Math.random()*6.28}); }
@@ -1753,6 +3027,7 @@ function blesser(j,d){
   if(j.invul>0||j.aterre) return;
   const reel=Math.max(1,d-j.armure);
   j.pv-=reel; j.invul=0.72; G.shake=Math.max(G.shake,4); G.gel=Math.max(G.gel,0.05);
+  G.effets.push({type:'onde',x:j.x,y:j.y,r:70,t:0,duree:0.3,couleur:PAL.sang});
   G.textes.push({x:j.x,y:j.y-18,v:'-'+Math.round(reel),t:0.7,couleur:PAL.sang});
   eclats(j.x,j.y,5,PAL.sang,130);
   sfx('mal');
@@ -1776,11 +3051,11 @@ function eclair(x,y){
   }
   return pts;
 }
-function tirer(j,a,dt){
+function tirer(j,a,dt,g){
   const s=statArme(a,j);
   if(a.def.type==='orbite'){
     a.cd-=dt;
-    if(a.cd<=0){ a.cd=s.cadence; const g=grilleCibles(60);
+    if(a.cd<=0){ a.cd=s.cadence; 
       for(let k=0;k<s.nb;k++){
         const ang=j.orbAngle+k*(Math.PI*2/s.nb);
         const ox=j.x+Math.cos(ang)*s.rayon, oy=j.y+Math.sin(ang)*s.rayon;
@@ -1792,7 +3067,7 @@ function tirer(j,a,dt){
   }
   if(a.def.type==='aura'){
     a.cd-=dt;
-    if(a.cd<=0){ a.cd=s.cadence; const g=grilleCibles(80);
+    if(a.cd<=0){ a.cd=s.cadence; 
       for(const e of autour(g,j.x,j.y,s.rayon+30))
         if(dist2(j.x,j.y,e.x,e.y)<(s.rayon+e.r)**2) frapper(e,s.degats,a.def.couleur);
       G.effets.push({type:'aura',x:0,y:0,r:s.rayon,t:0,duree:0.3,couleur:a.def.couleur,suit:j});
@@ -1807,11 +3082,13 @@ function tirer(j,a,dt){
       for(let k=0;k<s.nb;k++){
         const ang=base+(k-(s.nb-1)/2)*0.16;
         G.projs.push({type:'proj',x:j.x,y:j.y,vx:Math.cos(ang)*s.vitesse,vy:Math.sin(ang)*s.vitesse,
-          r:s.taille,degats:s.degats,vie:s.portee/s.vitesse,perce:s.perce,touche:new Set(),couleur:a.def.couleur});
+          r:s.taille*(1+(a.niveau-1)/(a.def.max-1)*0.5),degats:s.degats,
+          vie:s.portee/s.vitesse,perce:s.perce,touche:new Set(),
+          couleur:a.def.couleur, grade:(a.niveau-1)/(a.def.max-1)});
       }
       break; }
     case 'fouet': {
-      const g=grilleCibles(70);
+      
       for(let k=0;k<s.nb;k++){
         const cote=(a.phase+k)%2?1:-1, cx=j.x+cote*s.portee*0.5, cy=j.y;
         for(const e of autour(g,cx,cy,s.portee))
@@ -1824,13 +3101,45 @@ function tirer(j,a,dt){
       break; }
     case 'foudre': {
       const cibles=G.ennemis.filter(e=>Math.abs(e.x-G.cam.x)<W*0.55&&Math.abs(e.y-G.cam.y)<H*0.55);
-      const g=grilleCibles(60);
+      
       for(let k=0;k<s.nb&&cibles.length;k++){
         const e=cibles[(Math.random()*cibles.length)|0];
         for(const o of autour(g,e.x,e.y,s.rayon+30))
           if(dist2(e.x,e.y,o.x,o.y)<(s.rayon+o.r)**2) frapper(o,s.degats,a.def.couleur);
         G.effets.push({type:'foudre',x:e.x,y:e.y,r:s.rayon,t:0,duree:0.3,
           couleur:a.def.couleur,pts:eclair(e.x,e.y)});
+      }
+      break; }
+    case 'laser': {
+      // rayons perçants vers les cibles les plus proches
+      const cibles=[...G.ennemis].filter(e=>dist2(j.x,j.y,e.x,e.y)<s.portee*s.portee)
+        .sort((e1,e2)=>dist2(j.x,j.y,e1.x,e1.y)-dist2(j.x,j.y,e2.x,e2.y))
+        .slice(0, Math.round(s.nb));
+      for(const cible of cibles){
+        const ang=Math.atan2(cible.y-j.y,cible.x-j.x);
+        const ux=Math.cos(ang), uy=Math.sin(ang), deja=new Set();
+        for(let d=30; d<=s.portee; d+=44){
+          for(const e of autour(g, j.x+ux*d, j.y+uy*d, 60)){
+            if(deja.has(e)) continue;
+            const px=e.x-j.x, py=e.y-j.y, proj=px*ux+py*uy;
+            if(proj<0||proj>s.portee) continue;
+            if(Math.abs(px*uy-py*ux)<s.largeur+e.r){ deja.add(e); frapper(e,s.degats,a.def.couleur); }
+          }
+        }
+        G.effets.push({type:'laser',x:j.x,y:j.y,ang,len:s.portee,
+          w:s.largeur,t:0,duree:0.16,couleur:a.def.couleur});
+      }
+      break; }
+    case 'croix': {
+      // part vers la cible, ralentit, s'arrête, puis revient en fauchant
+      const c=ennemiProche(j.x,j.y,700);
+      const base=c?Math.atan2(c.y-j.y,c.x-j.x):Math.atan2(j.dir.y,j.dir.x);
+      for(let k=0;k<Math.round(s.nb);k++){
+        const ang=base+(k-(Math.round(s.nb)-1)/2)*0.5;
+        G.projs.push({type:'croix', x:j.x, y:j.y, suit:j,
+          ux:Math.cos(ang), uy:Math.sin(ang), v:s.vitesse, dec:s.vitesse*0.72,
+          r:s.taille, degats:s.degats, vie:3.4, rot:0, retour:false,
+          touche:new Set(), couleur:a.def.couleur, grade:(a.niveau-1)/(a.def.max-1)});
       }
       break; }
     case 'mine':
@@ -1847,6 +3156,34 @@ function tirer(j,a,dt){
           tick:0,couleur:a.def.couleur,proprio:j});
       break; }
   }
+}
+
+/* --- armes ultimes : puissantes, en réserve limitée --- */
+function declencherUltime(j){
+  const U=CFG.ultimes[j.ultime.cle];
+  if(!U || j.ultime.charges<=0 || j.aterre) return;
+  j.ultime.charges--;
+  const D=U.degats*j.mult.degats;
+  let touches=0, drain=0;
+  const g=G.grille||grilleCibles(60);
+  for(const e of autour(g,j.x,j.y,U.rayon+40)){
+    if(dist2(j.x,j.y,e.x,e.y)>(U.rayon+e.r)**2) continue;
+    touches++;
+    if(U.soin) drain+=Math.min(e.pv,D);
+    frapper(e,D,U.couleur);
+  }
+  if(U.soin && drain>0){
+    const soin=Math.min(j.pvMax-j.pv, Math.round(drain*U.soin*0.05));
+    j.pv+=soin;
+    if(soin>0) G.textes.push({x:j.x,y:j.y-26,v:'+'+soin,t:1,couleur:PAL.sang});
+  }
+  G.effets.push({type:'ultime',x:j.x,y:j.y,r:U.rayon,t:0,duree:0.6,couleur:U.couleur});
+  G.effets.push({type:'onde',x:j.x,y:j.y,r:U.rayon*1.15,t:0,duree:0.5,couleur:PAL.os});
+  G.punch=Math.max(G.punch,0.7);
+  G.shake=Math.max(G.shake,14); G.flash=0.45; G.gel=Math.max(G.gel,0.09);
+  eclats(j.x,j.y,30,U.couleur,300);
+  sfx('ultime');
+  majFiches();
 }
 
 /* --- montée de niveau --- */
@@ -1883,7 +3220,7 @@ function proposer(){
       <span class="n">${o.nom}</span><span class="d">${o.desc}</span>`;
     b.onclick=()=>choisir(i); c.appendChild(b);
   });
-  sfx('niveau'); volumeAudio(0.35);
+  sfx('niveau'); volumeAudio(0.25);
   $('reste').textContent = G.niveauxDus>1 ? '· '+G.niveauxDus+' EN ATTENTE' : '';
   $('levelup').classList.remove('cache'); G.etat='levelup';
 }
@@ -1910,7 +3247,7 @@ function gagnerXp(v,j){
 
 /* --- pause / fin / fiches --- */
 function togglePause(){
-  if(G.etat==='jeu'){ G.etat='pause'; $('pause').classList.remove('cache'); volumeAudio(0.3); }
+  if(G.etat==='jeu'){ G.etat='pause'; $('pause').classList.remove('cache'); volumeAudio(0.22); }
   else if(G.etat==='pause'){ G.etat='jeu'; $('pause').classList.add('cache');
     dernier=performance.now(); volumeAudio(0.75); }
 }
@@ -1926,25 +3263,42 @@ function finir(victoire){
     G.joueurs.map(j=>`J${j.idx+1} · ${j.perso.nom} — `+
       j.armes.map(a=>`${a.def.nom} <b>${a.niveau}</b>`).join(', ')).join('<br>');
   $('fin').classList.remove('cache'); $('hud').classList.add('cache');
-  volumeAudio(0.3);
+  volumeAudio(0.22);
 }
 function majFiches(){
+  const moi=G.joueurs[NET.actif?NET.moi:0];
+  if(moi&&moi.ultime){
+    const b=$('btn-ultime');
+    b.classList.toggle('vide', moi.ultime.charges<=0);
+    b.innerHTML='◈<b>'+moi.ultime.charges+'</b>';
+  }
   const c=$('fiches'); c.innerHTML='';
   for(const j of G.joueurs){
     const d=document.createElement('div'); d.className='fiche';
     d.style.borderLeftColor=j.perso.couleur;
     d.innerHTML=`<div class="nom">J${j.idx+1} · ${j.perso.nom}${j.aterre?' · À TERRE':''}</div>
       <div class="pv"><i style="width:${Math.max(0,j.pv/j.pvMax*100)}%"></i></div>
-      <div class="armes">${j.armes.map(a=>a.def.nom+' '+a.niveau).join(' · ')}</div>`;
+      <div class="armes">${j.armes.map(a=>a.def.nom+' '+a.niveau).join(' · ')}</div>
+      <div class="armes" style="color:var(--ambre)">${CFG.ultimes[j.ultime.cle].nom} ${'◈'.repeat(j.ultime.charges)||'—'}</div>`;
     c.appendChild(d);
   }
 }
 
 /* --- boucle --- */
-let dernier=performance.now();
+let dernier=performance.now(), tImagePrec=performance.now();
 function boucle(now){
   requestAnimationFrame(boucle);
   const dt=Math.min(0.05,(now-dernier)/1000); dernier=now;
+  jaugerQualite((now-tImagePrec)||16); tImagePrec=now;
+  for(let i=0;i<2;i++){
+    const p=pads()[i], j=G.joueurs[NET.actif?NET.moi:i];
+    if(!p||!j) continue;
+    const g=p.buttons[7]&&p.buttons[7].pressed;
+    if(g && !p.__ult && G.etat==='jeu'){
+      if(NET.actif && NET.role==='invite') envoyer({t:'ult'}); else declencherUltime(j);
+    }
+    p.__ult=g;
+  }
   const p0=pads()[0];
   if(p0&&p0.buttons[9]&&p0.buttons[9].pressed){ if(!startDejaPresse){ startDejaPresse=true; togglePause(); } }
   else startDejaPresse=false;
@@ -1956,6 +3310,7 @@ function boucle(now){
       const m=G.joueurs[NET.moi];
       if(m){ G.cam.x+=(m.x-G.cam.x)*Math.min(1,dt*7); G.cam.y+=(m.y-G.cam.y)*Math.min(1,dt*7); }
       G.shake=Math.max(0,G.shake-dt*28);
+  G.punch=Math.max(0,G.punch-dt*2.6);
       rendre(dt);
     }
     return;
@@ -1982,13 +3337,18 @@ function maj(dt){
       } else j.revive=Math.max(0,j.revive-dt*0.5);
       continue;
     }
+    const U=CFG.ultimes[j.ultime.cle];
+    if(U && j.ultime.charges<U.charges){
+      j.ultime.cd+=dt;
+      if(j.ultime.cd>=U.recharge){ j.ultime.cd=0; j.ultime.charges++; majFiches(); }
+    }
     const d=dirJoueur(j.idx), v=j.vitesse*j.mult.vitesse;
     if(mod==='verglas'){ j.vx+=(d.x*v-j.vx)*Math.min(1,dt*2.2); j.vy+=(d.y*v-j.vy)*Math.min(1,dt*2.2); }
     else { j.vx=d.x*v; j.vy=d.y*v; }
     j.x=clamp(j.x+j.vx*dt,16,R.arene-16); j.y=clamp(j.y+j.vy*dt,16,R.arene-16);
+    decoincer(j, j.r);
     if(d.x||d.y){ j.dir=d; j.marche+=dt*7; if(Math.abs(d.x)>0.15) j.flip=d.x<0; }
     j.orbAngle+=dt*2.1;
-    for(const a of j.armes) tirer(j,a,dt);
   }
   if(!vivants.length) return;
 
@@ -1997,14 +3357,23 @@ function maj(dt){
   else { for(const j of vivants){cx+=j.x;cy+=j.y;} cx/=vivants.length; cy/=vivants.length; }
   G.cam.x+=(cx-G.cam.x)*Math.min(1,dt*7); G.cam.y+=(cy-G.cam.y)*Math.min(1,dt*7);
   G.shake=Math.max(0,G.shake-dt*28);
+  G.punch=Math.max(0,G.punch-dt*2.6);
 
   const horde=mod==='horde'?2:1;
   G.spawnAcc+=dt*(R.spawnBase+(G.t/60)*R.spawnParMinute)*horde*G.diff.spawn;
   while(G.spawnAcc>=1){ G.spawnAcc--; spawnEnnemi(false); }
-  if(G.t>=G.prochainBoss){ G.prochainBoss+=R.bossToutesLes; spawnEnnemi(true); G.shake=8; sfx('boss'); }
-  if(G.t>=G.niveau.duree){ finir(true); return; }
+  /* chapitres : le terrain s'assombrit, puis le colosse du chapitre arrive */
+  const ch=CFG.chapitres[G.chapitre];
+  if(ch && !G.colosse && G.t>=G.finChapitre){
+    invoquerColosse(ch.colosse);
+  }
+  if(G.colosse && G.colosse.pv<=0) G.colosse=null;
+  if(G.annonce){ G.annonce.t+=dt; if(G.annonce.t>3.4) G.annonce=null; }
 
-  const g=grilleCibles(44);
+  const g=grilleCibles(44);            // une seule construction par image
+  G.grille=g;
+  for(const j of G.joueurs) if(!j.aterre)
+    for(const a of j.armes) tirer(j,a,dt,g);
   for(const e of G.ennemis){
     e.flash=Math.max(0,e.flash-dt); e.phase+=dt; e.anim+=dt*6;
     if(e.squash) e.squash=Math.max(0,e.squash-dt*5);
@@ -2021,7 +3390,16 @@ function maj(dt){
       }
     }
     const n=Math.hypot(ax,ay)||1;
-    e.x+=ax/n*e.vitesse*dt; e.y+=ay/n*e.vitesse*dt;
+    // Une créature ordinaire ne doit jamais distancer sa proie : on la
+    // plafonne juste en dessous de la vitesse réelle du joueur visé.
+    let vit=e.vitesse;
+    if(!e.colosse){
+      const vMax=cible.vitesse*cible.mult.vitesse*0.93;
+      if(vit>vMax) vit=vMax;
+    }
+    e.x+=ax/n*vit*dt; e.y+=ay/n*vit*dt;
+    if(!e.def.vole && !e.colosse) decoincer(e, e.r*0.7);
+    if(e.colosse) majColosse(e,dt,vivants);
     for(const j of vivants) if(dist2(e.x,e.y,j.x,j.y)<(e.r+j.r)**2) blesser(j,e.degats);
   }
 
@@ -2051,7 +3429,26 @@ function maj(dt){
       }
       continue;
     }
+    if(p.type==='croix'){
+      p.v-=p.dec*dt; p.rot+=dt*11;
+      if(!p.retour && p.v<=0){ p.retour=true; p.touche.clear(); }
+      p.x+=p.ux*p.v*dt; p.y+=p.uy*p.v*dt;
+      for(const e of autour(g,p.x,p.y,p.r+30)){
+        if(p.touche.has(e)) continue;
+        if(dist2(p.x,p.y,e.x,e.y)<(p.r+e.r)**2){ p.touche.add(e); frapper(e,p.degats,p.couleur); }
+      }
+      // la croix disparaît une fois repassée derrière son lanceur
+      const dos=p.suit ? (p.x-p.suit.x)*p.ux+(p.y-p.suit.y)*p.uy : 0;
+      if(p.vie<=0 || (p.retour && dos<-26)) G.projs.splice(i,1);
+      continue;
+    }
     p.x+=p.vx*dt; p.y+=p.vy*dt;
+    if(p.hostile){                       // tir de colosse : vise les joueurs
+      for(const j of vivants)
+        if(dist2(p.x,p.y,j.x,j.y)<(p.r+j.r)**2){ blesser(j,p.degats); p.vie=0; break; }
+      if(p.vie<=0) G.projs.splice(i,1);
+      continue;
+    }
     for(const e of autour(g,p.x,p.y,p.r+30)){
       if(p.touche.has(e)) continue;
       if(dist2(p.x,p.y,e.x,e.y)<(p.r+e.r)**2){
@@ -2110,6 +3507,20 @@ function maj(dt){
   $('tues').textContent=G.tues;
   $('xpb').style.width=Math.min(100,G.xp/CFG.regles.xpNiveau(G.lvl)*100)+'%';
   if(G.t%0.25<dt) majFiches();
+}
+
+/* Les dégradés sont coûteux à créer : on les garde en mémoire par rayon. */
+const CACHE_DEG=new Map();
+function degradeRond(x,y,r,arrets){
+  const cle=Math.round(r)+'|'+arrets;
+  let d=CACHE_DEG.get(cle);
+  if(!d){
+    const c=document.createElement('canvas'); c.width=c.height=2;
+    d=c.getContext('2d').createRadialGradient(0,0,0,0,0,Math.round(r)||1);
+    for(const a of arrets.split(';')){ const [p,col]=a.split('@'); d.addColorStop(+p,col); }
+    CACHE_DEG.set(cle,d);
+  }
+  return d;
 }
 
 /* --- rendu --- */
@@ -2188,6 +3599,7 @@ function pairPresent(present){
 
 /* --- tables de correspondance : on envoie des indices, pas des noms --- */
 const CLES_ENNEMIS=Object.keys(CFG.ennemis);
+CLES_ENNEMIS.forEach((k,i)=>{ CFG.ennemis[k].__i=i; });
 const CLES_BUTINS=Object.keys(CFG.butins);
 const CLES_PERSOS=CFG.personnages.map(p=>p.id);
 const CLES_NIVEAUX=CFG.niveaux.map(l=>l.id);
@@ -2205,8 +3617,7 @@ function instantane(){
         r(j.revive*10)]),
     N:[], G:[], B:[], P:[], F:[] };
   for(const e of G.ennemis){ if(!pres(e)) continue;
-    s.N.push([CLES_ENNEMIS.indexOf(
-      Object.keys(CFG.ennemis).find(k=>CFG.ennemis[k]===e.def)),
+    s.N.push([e.def.__i,
       r(e.x),r(e.y),r(e.r),(e.flip?1:0)|(e.boss?2:0)|(e.flash>0?4:0),
       r(e.anim)%2, e.boss?r(e.pv/e.pvMax*100):0, r((e.squash||0)*100)]);
   }
@@ -2350,15 +3761,15 @@ function faireDisque(){
 }
 faireDisque();
 function ombre(x,y,w,a){
-  ctx.save(); ctx.globalAlpha=a===undefined?1:a/0.5;
+  ctx.globalAlpha=(a===undefined?1:a/0.5);
   ctx.drawImage(disque, x-w*1.5, y-w*0.55, w*3, w*1.1);
-  ctx.restore();
+  ctx.globalAlpha=1;
 }
 
 function rendre(dt){
   const L=G.niveau; if(!L) return;
   const A=L.ambiance||{obscurite:0.72,nuit:PAL.nuit};
-  const Z=ZOOM, VW=W/Z, VH=H/Z;
+  const Z=ZOOM*(1+G.punch*0.045), VW=W/Z, VH=H/Z;
   const sx=G.shake?rnd(-G.shake,G.shake):0, sy=G.shake?rnd(-G.shake,G.shake):0;
   const ox=VW/2-G.cam.x+sx, oy=VH/2-G.cam.y+sy;
   const versEcran=(x,y)=>[(x+ox)*Z,(y+oy)*Z];
@@ -2376,6 +3787,22 @@ function rendre(dt){
   }
   ctx.strokeStyle=PAL.sangS; ctx.lineWidth=3;
   ctx.strokeRect(ox,oy,CFG.regles.arene,CFG.regles.arene);
+
+  /* silhouettes d'arrière-plan, en parallaxe lente */
+  if(G.lointain && A.loin){
+    const oxL=VW/2-G.cam.x*0.55, oyL=VH/2-G.cam.y*0.55;
+    ctx.globalAlpha=0.55;
+    for(const o of G.lointain){
+      const x=o.x+oxL, y=o.y+oyL;
+      if(x<-o.h||x>VW+o.h||y<-o.h||y>VH+o.h) continue;
+      const sp=SPR[o.nom]; if(!sp) continue;
+      const c=teinter(sp.blanc[0],A.loin), w=c.width*(o.h/c.height);
+      if(o.flip){ ctx.save(); ctx.translate(x,y); ctx.scale(-1,1);
+        ctx.drawImage(c,-w/2,-o.h,w,o.h); ctx.restore(); }
+      else ctx.drawImage(c,x-w/2,y-o.h,w,o.h);
+    }
+    ctx.globalAlpha=1;
+  }
 
   /* gemmes au sol */
   for(const gm of G.gemmes){
@@ -2426,7 +3853,6 @@ function rendre(dt){
       const trem=o.flash>0?rnd(-1.5,1.5):0;
       ombre(x+o.h*0.10,y,o.h*0.24,0.4);
       poserSprite(o.nom,0,x+trem,y-o.h/2,o.h,o.flip);
-      if(RIM) poserSprite(o.nom,0,x+trem,y-o.h/2,o.h,o.flip,0.22,'rim');
       if(o.flash>0) poserSprite(o.nom,0,x+trem,y-o.h/2,o.h,o.flip,Math.min(1,o.flash*9),'blanc');
       else if(o.brisable && o.pv<o.pvMax){        // fêlé : on le montre entamé
         ctx.globalAlpha=0.35; ctx.fillStyle=PAL.nuit;
@@ -2434,11 +3860,20 @@ function rendre(dt){
         ctx.globalAlpha=1;
       }
     } else if(o.type==='ennemi'){
-      const haut=o.r*2.3, frame=imageCycle(o.def.sprite,o.anim);
+      const haut=o.r*(o.colosse?2.0:2.3), frame=imageCycle(o.def.sprite,o.anim);
+      if(o.colosse){                       // halo sombre sous le colosse
+        ctx.globalAlpha=0.5;
+        ctx.drawImage(disque, x-o.r*2.2, y-o.r*0.9, o.r*4.4, o.r*1.8);
+        ctx.globalAlpha=1;
+      }
       const sq=o.squash||0, dx=1+sq*0.26, dy=1-sq*0.20;
       ombre(x+haut*0.13,y+haut*0.40,o.r*0.8,0.4);
       poserSprite(o.def.sprite,frame,x,y+haut*0.10*sq,haut,o.flip,1,null,dx,dy);
-      if(RIM) poserSprite(o.def.sprite,frame,x,y+haut*0.10*sq,haut,o.flip,0.30,'rim',dx,dy);
+      if(o.colosse){                       // les colosses accrochent une lumière dorée
+        const sauve=TEINTE_RIM; TEINTE_RIM=PAL.ambre;
+        poserSprite(o.def.sprite,frame,x,y+haut*0.10*sq,haut,o.flip,0.55,'rim',dx,dy);
+        TEINTE_RIM=sauve;
+      }
       if(o.flash>0) poserSprite(o.def.sprite,frame,x,y+haut*0.10*sq,haut,o.flip,
                                 Math.min(1,o.flash*9),'blanc',dx,dy);
     } else {
@@ -2459,14 +3894,13 @@ function rendre(dt){
         const img=bouge?imageCycle(o.perso.sprite,o.marche):0;
         const al=(o.invul>0 && Math.floor(o.invul*18)%2)?0.45:1;
         poserSprite(o.perso.sprite, img, x, y+bob, haut, o.flip, al);
-        if(RIM) poserSprite(o.perso.sprite, img, x, y+bob, haut, o.flip, 0.34*al,'rim');
       }
     }
   }
 
-  /* barres de vie des colosses */
+  /* barres de vie flottantes */
   for(const e of G.ennemis){
-    if(!e.boss) continue;
+    if(!e.boss||e.colosse) continue;
     const x=e.x+ox, y=e.y+oy-e.r*1.6, w=e.r*1.8;
     ctx.fillStyle='rgba(12,10,19,.75)'; ctx.fillRect(x-w,y-1,w*2,6);
     ctx.fillStyle=PAL.sangC; ctx.fillRect(x-w+1,y,(w*2-2)*(e.pv/e.pvMax),4);
@@ -2519,6 +3953,65 @@ function rendre(dt){
       ctx.strokeStyle=f.couleur; ctx.globalAlpha=k; ctx.lineWidth=2;
       ctx.beginPath(); ctx.arc(gx,gy,r,0,6.2832); ctx.stroke(); ctx.globalAlpha=1;
     }
+    else if(f.type==='etincelle'){
+      const x=f.x+ox, y=f.y+oy, r=3+k*5;
+      ctx.globalAlpha=k;
+      ctx.strokeStyle=f.couleur; ctx.lineWidth=1.4;
+      ctx.beginPath();
+      ctx.moveTo(x-r,y); ctx.lineTo(x+r,y);
+      ctx.moveTo(x,y-r); ctx.lineTo(x,y+r);
+      ctx.stroke();
+      ctx.fillStyle=PAL.os; ctx.fillRect(x-1,y-1,2,2);
+      ctx.globalAlpha=1;
+    }
+    else if(f.type==='ame'){
+      const av=f.t/f.duree, x=f.x+ox, y=f.y+oy-av*44;
+      ctx.globalAlpha=(1-av)*0.8;
+      ctx.fillStyle=f.couleur;
+      ctx.beginPath(); ctx.arc(x,y,2.6+Math.sin(f.t*18)*0.7,0,6.2832); ctx.fill();
+      ctx.globalAlpha=(1-av)*0.3;
+      ctx.beginPath(); ctx.arc(x,y+5,1.6,0,6.2832); ctx.fill();
+      ctx.globalAlpha=1;
+    }
+    else if(f.type==='etoile'){
+      const x=f.x+ox, y=f.y+oy, r=f.r*(0.4+k*0.6);
+      ctx.globalAlpha=k; ctx.fillStyle=f.couleur;
+      ctx.beginPath();
+      ctx.moveTo(x,y-r); ctx.lineTo(x+r*0.22,y-r*0.22); ctx.lineTo(x+r,y);
+      ctx.lineTo(x+r*0.22,y+r*0.22); ctx.lineTo(x,y+r);
+      ctx.lineTo(x-r*0.22,y+r*0.22); ctx.lineTo(x-r,y);
+      ctx.lineTo(x-r*0.22,y-r*0.22); ctx.closePath(); ctx.fill();
+      ctx.globalAlpha=k*0.9; ctx.fillStyle=PAL.os;
+      ctx.beginPath(); ctx.arc(x,y,r*0.2,0,6.2832); ctx.fill();
+      ctx.globalAlpha=1;
+    }
+    else if(f.type==='onde'){
+      const x=f.x+ox, y=f.y+oy, r=f.r*(1-k*0.85);
+      ctx.globalAlpha=k*0.7; ctx.strokeStyle=f.couleur; ctx.lineWidth=1+k*3;
+      ctx.beginPath(); ctx.ellipse(x,y,r,r*0.6,0,0,6.2832); ctx.stroke();
+      ctx.globalAlpha=1;
+    }
+    else if(f.type==='laser'){
+      const x0=f.x+ox, y0=f.y+oy;
+      ctx.save(); ctx.translate(x0,y0); ctx.rotate(f.ang);
+      ctx.globalAlpha=k;
+      ctx.fillStyle=f.couleur; ctx.fillRect(0,-f.w*0.5,f.len,f.w);
+      ctx.globalAlpha=k*0.9; ctx.fillStyle=PAL.os;
+      ctx.fillRect(0,-f.w*0.18,f.len,f.w*0.36);
+      ctx.globalAlpha=k*0.3; ctx.fillStyle=f.couleur;
+      ctx.fillRect(0,-f.w*1.1,f.len,f.w*2.2);
+      ctx.restore(); ctx.globalAlpha=1;
+    }
+    else if(f.type==='ultime'){
+      const r=f.r*(0.25+k*0.9);
+      ctx.globalAlpha=k*0.85; ctx.strokeStyle=f.couleur; ctx.lineWidth=6*k+1;
+      ctx.beginPath(); ctx.arc(f.x+ox,f.y+oy,r,0,6.2832); ctx.stroke();
+      ctx.globalAlpha=k*0.35; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(f.x+ox,f.y+oy,r*0.72,0,6.2832); ctx.stroke();
+      ctx.globalAlpha=k*0.18; ctx.fillStyle=f.couleur;
+      ctx.beginPath(); ctx.arc(f.x+ox,f.y+oy,r,0,6.2832); ctx.fill();
+      ctx.globalAlpha=1;
+    }
     else if(f.type==='cendre'){
       const av=f.t/f.duree;
       ctx.imageSmoothingEnabled=false;
@@ -2542,34 +4035,56 @@ function rendre(dt){
       ctx.beginPath(); ctx.arc(x,y,p.r,0,6.2832); ctx.fill();
       ctx.globalAlpha=1; ctx.fillStyle=PAL.os;
       ctx.beginPath(); ctx.arc(x-1.5,y-1.5,1.6,0,6.2832); ctx.fill();
+    } else if(p.type==='croix'){
+      const gr=p.grade||0, L2=p.r*2.4, l=p.r*0.55;
+      if(gr>0.4){ ctx.globalAlpha=0.2+gr*0.2; ctx.fillStyle=p.couleur;
+        ctx.beginPath(); ctx.arc(x,y,p.r*1.6,0,6.2832); ctx.fill(); ctx.globalAlpha=1; }
+      ctx.save(); ctx.translate(x,y); ctx.rotate(p.rot);
+      ctx.fillStyle='rgba(12,10,19,.8)';
+      ctx.fillRect(-l/2-1,-L2/2-1,l+2,L2+2);
+      ctx.fillRect(-L2*0.36-1,-L2*0.10-l/2-1,L2*0.72+2,l+2);
+      ctx.fillStyle=p.couleur;
+      ctx.fillRect(-l/2,-L2/2,l,L2);                        // montant
+      ctx.fillRect(-L2*0.36,-L2*0.10-l/2,L2*0.72,l);        // traverse, un peu haute
+      ctx.fillStyle=PAL.os; ctx.globalAlpha=0.55;
+      ctx.fillRect(-l/2,-L2/2,l*0.45,L2); ctx.globalAlpha=1;
+      ctx.restore();
     } else if(p.type==='boom'){
       ctx.save(); ctx.translate(x,y); ctx.rotate(G.t*13);
       ctx.fillStyle='rgba(12,10,19,.6)'; ctx.fillRect(-p.r-1,-3.5,p.r*2+2,7);
       ctx.fillStyle=p.couleur; ctx.fillRect(-p.r,-2.5,p.r*2,5); ctx.fillRect(-2.5,-p.r,5,p.r*2);
       ctx.restore();
     } else {
+      const gr=p.grade||0;
       ctx.save(); ctx.translate(x,y); ctx.rotate(Math.atan2(p.vy,p.vx));
-      const g=ctx.createLinearGradient(-p.r*5,0,p.r*2,0);
+      const g=ctx.createLinearGradient(-p.r*(5+gr*5),0,p.r*2,0);
       g.addColorStop(0,'rgba(244,238,221,0)'); g.addColorStop(1,p.couleur);
-      ctx.fillStyle=g; ctx.fillRect(-p.r*5,-p.r*0.3,p.r*7,p.r*0.6);
+      ctx.fillStyle=g; ctx.fillRect(-p.r*(5+gr*5),-p.r*(0.3+gr*0.3),p.r*(7+gr*5),p.r*(0.6+gr*0.6));
       ctx.fillStyle=p.couleur; ctx.fillRect(-p.r*1.8,-p.r*0.45,p.r*3.6,p.r*0.9);
+      if(gr>0.5){ ctx.fillStyle=PAL.os; ctx.globalAlpha=0.6;
+        ctx.fillRect(-p.r*1.2,-p.r*0.2,p.r*2.4,p.r*0.4); ctx.globalAlpha=1; }
       ctx.restore();
     }
   }
 
-  /* armes orbitales */
+  /* armes orbitales — plus l'arme monte en niveau, plus elle rayonne */
   for(const j of G.joueurs) for(const a of j.armes){
     if(a.def.type!=='orbite') continue;
-    const s=statArme(a,j);
+    const s=statArme(a,j), gr=(a.niveau-1)/(a.def.max-1);
     for(let k=0;k<s.nb;k++){
       const ang=j.orbAngle+k*(Math.PI*2/s.nb);
       const x=j.x+Math.cos(ang)*s.rayon+ox, y=j.y+Math.sin(ang)*s.rayon+oy;
       ombre(x,y+s.taille*0.6,s.taille*0.4,0.3);
-      ctx.fillStyle='rgba(12,10,19,.8)';
-      ctx.fillRect(x-s.taille/2-1,y-s.taille/2-1,s.taille+2,s.taille+2);
-      ctx.fillStyle=a.def.couleur; ctx.fillRect(x-s.taille/2,y-s.taille/2,s.taille,s.taille);
-      ctx.fillStyle=PAL.os; ctx.globalAlpha=0.35;
-      ctx.fillRect(x-s.taille/2,y-s.taille/2,s.taille,2); ctx.globalAlpha=1;
+      if(gr>0.3){                       // halo qui apparaît avec le niveau
+        ctx.globalAlpha=0.16+gr*0.2; ctx.fillStyle=a.def.couleur;
+        ctx.beginPath(); ctx.arc(x,y,s.taille*(1+gr*0.7),0,6.2832); ctx.fill();
+        ctx.globalAlpha=1;
+      }
+      // le cercueil est dessiné debout, orienté vers l'extérieur du cercle
+      ctx.save(); ctx.translate(x,y); ctx.rotate(ang+Math.PI/2);
+      const H=s.taille*2.1, sp=SPR.o_cercueil, La=sp.w*(H/sp.h);
+      ctx.drawImage(sp.fusion?sp.fusion[0]:sp.contour[0], -La/2, -H/2, La, H);
+      ctx.restore();
     }
   }
 
@@ -2612,6 +4127,7 @@ function rendre(dt){
     const k=1-f.t/f.duree;
     if(f.type==='foudre'){ const [px,py]=versEcran(f.x,f.y); trou(px,py,190*Z*k,0.95); }
     if(f.type==='boom'){ const [px,py]=versEcran(f.x,f.y); trou(px,py,f.r*1.7*Z*k,0.95); }
+    if(f.type==='ultime'){ const [px,py]=versEcran(f.x,f.y); trou(px,py,f.r*1.3*Z*k,1); }
     if(f.type==='aura'&&f.suit){ const [px,py]=versEcran(f.suit.x,f.suit.y); trou(px,py,f.r*1.3*Z,0.55*k); }
   }
   lx.globalAlpha=1; lx.globalCompositeOperation='source-over';
@@ -2647,6 +4163,18 @@ function rendre(dt){
       lueur(px,py,f.r*Z*0.8,f.couleur,0.22*k); }
     if(f.type==='fouet'&&f.suit){ const [px,py]=versEcran(f.suit.x+f.x,f.suit.y+f.y);
       lueur(px,py,f.w*Z*0.3,f.couleur,0.3*k); }
+    if(f.type==='ame'){ const av=f.t/f.duree;
+      const [px,py]=versEcran(f.x,f.y-av*44); lueur(px,py,9*Z,f.couleur,(1-av)*0.5); }
+    if(f.type==='etincelle'){ const [px,py]=versEcran(f.x,f.y); lueur(px,py,7*Z,f.couleur,k*0.5); }
+    if(f.type==='etoile'){ const [px,py]=versEcran(f.x,f.y); lueur(px,py,f.r*2.2*Z*k,f.couleur,0.8*k); }
+    if(f.type==='onde'){ const [px,py]=versEcran(f.x,f.y); lueur(px,py,f.r*0.5*Z,f.couleur,0.25*k); }
+    if(f.type==='laser'){
+      const [px,py]=versEcran(f.x,f.y);
+      gx2.save(); gx2.translate(px*e,py*e); gx2.rotate(f.ang);
+      gx2.globalAlpha=k*0.7; gx2.fillStyle=f.couleur;
+      gx2.fillRect(0,-f.w*Z*e,f.len*Z*e,f.w*Z*e*2);
+      gx2.restore(); gx2.globalAlpha=1;
+    }
   }
   for(const j of G.joueurs) if(!j.aterre){
     const [px,py]=versEcran(j.x,j.y);
@@ -2655,10 +4183,16 @@ function rendre(dt){
   gx2.globalAlpha=1;
   ctx.save();
   ctx.globalCompositeOperation='lighter';
-  ctx.filter='blur('+(7*DPR)+'px)';
-  ctx.drawImage(glowCv,0,0,W,H);
-  ctx.filter='none';
-  ctx.globalAlpha=0.55; ctx.drawImage(glowCv,0,0,W,H);
+  if(QUAL.bloom){
+    ctx.filter='blur('+(7*DPR)+'px)';
+    ctx.drawImage(glowCv,0,0,W,H);
+    ctx.filter='none';
+    ctx.globalAlpha=0.55; ctx.drawImage(glowCv,0,0,W,H);
+  } else {
+    // sans flou : deux passes décalées, beaucoup moins coûteux
+    ctx.globalAlpha=0.4; ctx.drawImage(glowCv,-6,-6,W+12,H+12);
+    ctx.globalAlpha=0.4; ctx.drawImage(glowCv,0,0,W,H);
+  }
   ctx.restore();
 
   /* nappes de brume qui dérivent */
@@ -2697,7 +4231,8 @@ function rendre(dt){
 
   /* particules d'ambiance */
   const P=L.particules;
-  for(const p of G.particules){
+  const nP=Math.ceil(G.particules.length*QUAL.part);
+  for(let ip=0;ip<nP;ip++){ const p=G.particules[ip];
     p.ph+=dt*2;
     p.x+=(p.vx+Math.sin(p.ph)*10)*dt; p.y+=p.vy*dt;
     if(p.y>H+8){p.y=-8;p.x=Math.random()*W;} if(p.y<-8){p.y=H+8;p.x=Math.random()*W;}
@@ -2726,12 +4261,69 @@ function rendre(dt){
   ctx.font='600 13px "IBM Plex Mono", ui-monospace, monospace'; ctx.textAlign='center';
   for(const t of G.textes){
     const a=Math.min(1,t.t*2), [px,py]=versEcran(t.x,t.y);
+    // le chiffre surgit un peu plus gros puis se pose : c'est ce sursaut qui claque
+    const age=(t.t0!==undefined?t.t0:(t.t0=t.t))-t.t;
+    const pop=(t.pop||1)*(1+Math.max(0,0.5-age*4));
+    ctx.save(); ctx.translate(px,py); ctx.scale(pop,pop);
     ctx.globalAlpha=a*0.85; ctx.fillStyle='#0c0a13';
-    ctx.fillText(t.v,px+1.5,py+1.5);
+    ctx.fillText(t.v,1.5,1.5);
     ctx.globalAlpha=a; ctx.fillStyle=t.couleur;
-    ctx.fillText(t.v,px,py);
+    ctx.fillText(t.v,0,0);
+    ctx.restore();
   }
   ctx.globalAlpha=1; ctx.textAlign='left';
+
+  /* masses de premier plan : parallaxe rapide, très sombres, hors de mise au point */
+  if(G.proche && A.pres){
+    ctx.imageSmoothingEnabled=true;
+    ctx.globalAlpha=0.30;
+    for(const o of G.proche){
+      const x=(o.x+(W/Z)/2-G.cam.x*1.45)*Z, y=(o.y+(H/Z)/2-G.cam.y*1.45)*Z;
+      const h=o.h*Z;
+      if(x<-h||x>W+h||y<-h*0.2||y>H+h) continue;
+      const sp=SPR[o.nom]; if(!sp) continue;
+      const c=teinter(sp.blanc[0],A.pres), w=c.width*(h/c.height);
+      ctx.drawImage(c,x-w/2,y-h,w,h);
+    }
+    ctx.globalAlpha=1;
+  }
+
+  /* étalonnage : filtre coloré en lumière douce, puis vignette */
+  fabriquerEtalonnage(A);
+  if(A.etal && gradeCv && QUAL.bloom){
+    ctx.globalCompositeOperation='soft-light';
+    ctx.globalAlpha=A.etal.force;
+    ctx.drawImage(gradeCv,0,0,W,H);
+  }
+  if(vigCv){
+    ctx.globalCompositeOperation='multiply';
+    ctx.globalAlpha=1;
+    ctx.drawImage(vigCv,0,0,W,H);
+  }
+  ctx.globalCompositeOperation='source-over'; ctx.globalAlpha=1;
+
+  /* colosse en cours : barre en haut de l'écran avec son nom */
+  if(G.colosse && G.colosse.pv>0){
+    const c=G.colosse, l=Math.min(W*0.72,520), x0=(W-l)/2, y0=54;
+    ctx.fillStyle='rgba(12,10,19,.72)'; ctx.fillRect(x0-2,y0-2,l+4,14);
+    ctx.fillStyle=PAL.sangS; ctx.fillRect(x0,y0,l,10);
+    ctx.fillStyle=PAL.sang; ctx.fillRect(x0,y0,l*Math.max(0,c.pv/c.pvMax),10);
+    ctx.fillStyle=PAL.ambre; ctx.fillRect(x0,y0,l*Math.max(0,c.pv/c.pvMax),2);
+    ctx.font='600 12px "IBM Plex Mono", monospace'; ctx.textAlign='center';
+    ctx.fillStyle=PAL.os; ctx.fillText(c.nom.toUpperCase(),W/2,y0-8);
+    ctx.textAlign='left';
+  }
+
+  /* annonce de chapitre */
+  if(G.annonce){
+    const k=G.annonce.t, a=k<0.4? k/0.4 : k>2.6? Math.max(0,(3.4-k)/0.8) : 1;
+    ctx.globalAlpha=a;
+    ctx.textAlign='center';
+    ctx.font='800 '+Math.round(Math.min(W*0.07,44))+'px "Bricolage Grotesque", sans-serif';
+    ctx.fillStyle='rgba(12,10,19,.8)'; ctx.fillText(G.annonce.txt,W/2+2,H*0.34+2);
+    ctx.fillStyle=PAL.os; ctx.fillText(G.annonce.txt,W/2,H*0.34);
+    ctx.globalAlpha=1; ctx.textAlign='left';
+  }
 
   /* sticks virtuels */
   for(let i=0;i<2;i++){
