@@ -24,6 +24,10 @@
     width:52px;height:52px;border:1px solid rgba(233,227,210,.3);background:rgba(10,16,22,.7);
     color:var(--os);font-family:var(--mono);font-size:11px;letter-spacing:.1em;cursor:pointer}
   body.tactile #btn-pause{display:block}
+  #btn-saut{position:absolute;right:86px;bottom:136px;pointer-events:auto;
+    width:66px;height:66px;border:2px solid var(--menthe);background:rgba(142,232,200,.14);
+    color:var(--menthe);font-size:26px;line-height:1;cursor:pointer;border-radius:50%}
+  #btn-saut.vide{opacity:.32;border-color:var(--brume);color:var(--brume)}
   #btn-ultime{position:absolute;right:12px;bottom:136px;pointer-events:auto;
     width:66px;height:66px;border:2px solid var(--ambre);background:rgba(255,210,122,.14);
     color:var(--ambre);font-size:24px;line-height:1;cursor:pointer;border-radius:50%;
@@ -102,6 +106,7 @@
   <button id="btn-pause">II</button>
   <button id="btn-son">&#9834;</button>
   <button id="btn-ultime">◈</button>
+  <button id="btn-saut">⤒</button>
 </div>
 
 <div id="menu" class="ecran"><div class="panneau">
@@ -711,6 +716,163 @@ muscle:{ cycle:[0,1,0,2],
     "....CCC.....ccccc...",
     "....kkk.....kkkkk...",
     "...OOO.....OOOOO...."]]},
+
+
+  /* ================= LE BARBU — 20 x 26, 3 images ================= */
+  barbu:{ cycle:[0,1,0,2],
+    p:{R:PAL.ambreC,r:PAL.boisS,B:PAL.sang,b:PAL.sangC,
+       S:PAL.peau,s:PAL.peauC,k:PAL.peauS,e:PAL.nuit,
+       T:PAL.menthe,C:PAL.ombre2,c:PAL.ombre,O:PAL.nuit2}, f:[[
+    ".....RRRRRRRR.......",
+    "....RRRRRRRRRr......",
+    "...RRRRRRRRRRrr.....",
+    "...RRRSSSSSSrrr.....",
+    "...RRSSeSSeSsrr.....",
+    "...RRSSSSSSSsrr.....",
+    "...RrBBBBBBBbrr.....",
+    "...RrBBBBBBBbrr.....",
+    "...rrbBBBBBbbrr.....",
+    "....rrbbbbbbbr......",
+    "..SSSs.CCCc.sSSs....",
+    ".SSTSSsCCCcsSTSSs...",
+    "SSSSSSsCCCcsSSSSSs..",
+    "SSTTSSsCCCcsSTTSSs..",
+    "SSSSSSsCCCcsSSSSSs..",
+    ".SSSSs.CCCc.sSSSs...",
+    "..kks..CCCc..skk....",
+    ".......CTTc.........",
+    "......CCCCCc........",
+    "......CCTCCc........",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "...CCCC.....cccc....",
+    "...CCCC.....cccc....",
+    "...kkkk.....kkkk....",
+    "..OOOOO....OOOOO...."],[
+    ".....RRRRRRRR.......",
+    "....RRRRRRRRRr......",
+    "...RRRRRRRRRRrr.....",
+    "...RRRSSSSSSrrr.....",
+    "...RRSSeSSeSsrr.....",
+    "...RRSSSSSSSsrr.....",
+    "...RrBBBBBBBbrr.....",
+    "...RrBBBBBBBbrr.....",
+    "...rrbBBBBBbbrr.....",
+    "....rrbbbbbbbr......",
+    "..SSSs.CCCc.sSSs....",
+    ".SSTSSsCCCcsSTSSs...",
+    "SSSSSSsCCCcsSSSSSs..",
+    "SSTTSSsCCCcsSTTSSs..",
+    "SSSSSSsCCCcsSSSSSs..",
+    ".SSSSs.CCCc.sSSSs...",
+    "..kks..CCCc..skk....",
+    ".......CTTc.........",
+    "......CCCCCc........",
+    "......CCTCCc........",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "..CCCC......cccc....",
+    "..CCCC.......ccc....",
+    "..kkkk.......kkk....",
+    ".OOOOO.......OOO...."],[
+    ".....RRRRRRRR.......",
+    "....RRRRRRRRRr......",
+    "...RRRRRRRRRRrr.....",
+    "...RRRSSSSSSrrr.....",
+    "...RRSSeSSeSsrr.....",
+    "...RRSSSSSSSsrr.....",
+    "...RrBBBBBBBbrr.....",
+    "...RrBBBBBBBbrr.....",
+    "...rrbBBBBBbbrr.....",
+    "....rrbbbbbbbr......",
+    "..SSSs.CCCc.sSSs....",
+    ".SSTSSsCCCcsSTSSs...",
+    "SSSSSSsCCCcsSSSSSs..",
+    "SSTTSSsCCCcsSTTSSs..",
+    "SSSSSSsCCCcsSSSSSs..",
+    ".SSSSs.CCCc.sSSSs...",
+    "..kks..CCCc..skk....",
+    ".......CTTc.........",
+    "......CCCCCc........",
+    "......CCTCCc........",
+    "......CCCCCc........",
+    "......CCCCCc........",
+    "....CCCC....cccc....",
+    "....CCC.....ccccc...",
+    "....kkk.....kkkkk...",
+    "...OOO.....OOOOO...."]]},
+
+  /* ================= LA PORSCHE — 26 x 22, 3 images ================= */
+  porsche:{ cycle:[0,1,0,2],
+    p:{R:PAL.sang,r:PAL.sangC,d:PAL.sangS,G:PAL.glace,g:PAL.glaceC,
+       S:PAL.peau,s:PAL.peauC,e:PAL.nuit,B:PAL.boisS,
+       N:PAL.nuit2,n:PAL.nuit,W:PAL.os,J:PAL.ambre}, f:[[
+    "..........................",
+    "..........SSSSS...........",
+    ".........SBBBBBs..........",
+    ".........SBeSeBs..........",
+    ".........SSSSSSs..........",
+    "........sSSSSSSss.........",
+    "......GGGGGGGGGGgg........",
+    ".....GGGGGGGGGGGGgg.......",
+    "....RGGGGGGGGGGGGggR......",
+    "...RRRRRRRRRRRRRRrrrr.....",
+    "..RRRRRRRRRRRRRRRRrrrrr...",
+    ".RRRRRRRRRRRRRRRRRRrrrrr..",
+    ".RRRRJRRRRRRRRRRRRrrJrrr..",
+    ".RRRRRRRRRRRRRRRRRRrrrrr..",
+    ".dddRRRRRRRRRRRRRRrrrddd..",
+    "..NNNdddddddddddddddNNN...",
+    ".NNNNNddddddddddddNNNNNN..",
+    ".NNWNNdddddddddddNNNWNNN..",
+    ".NNNNNddddddddddddNNNNNN..",
+    "..NNNdddddddddddddddNNN...",
+    "...nn...............nn....",
+    ".........................."],[
+    "..........................",
+    "..........SSSSS...........",
+    ".........SBBBBBs..........",
+    ".........SBeSeBs..........",
+    ".........SSSSSSs..........",
+    "........sSSSSSSss.........",
+    "......GGGGGGGGGGgg........",
+    ".....GGGGGGGGGGGGgg.......",
+    "....RGGGGGGGGGGGGggR......",
+    "...RRRRRRRRRRRRRRrrrr.....",
+    "..RRRRRRRRRRRRRRRRrrrrr...",
+    ".RRRRRRRRRRRRRRRRRRrrrrr..",
+    ".RRRRJRRRRRRRRRRRRrrJrrr..",
+    ".RRRRRRRRRRRRRRRRRRrrrrr..",
+    ".dddRRRRRRRRRRRRRRrrrddd..",
+    "..NNNdddddddddddddddNNN...",
+    ".NNWNNddddddddddddNNWNNN..",
+    ".NNNNNdddddddddddNNNNNNN..",
+    ".NNWNNddddddddddddNNWNNN..",
+    "..NNNdddddddddddddddNNN...",
+    "....n...............n.....",
+    ".........................."],[
+    "..........................",
+    "..........SSSSS...........",
+    ".........SBBBBBs..........",
+    ".........SBeSeBs..........",
+    ".........SSSSSSs..........",
+    "........sSSSSSSss.........",
+    "......GGGGGGGGGGgg........",
+    ".....GGGGGGGGGGGGgg.......",
+    "....RGGGGGGGGGGGGggR......",
+    "...RRRRRRRRRRRRRRrrrr.....",
+    "..RRRRRRRRRRRRRRRRrrrrr...",
+    ".RRRRRRRRRRRRRRRRRRrrrrr..",
+    ".RRRRJRRRRRRRRRRRRrrJrrr..",
+    ".RRRRRRRRRRRRRRRRRRrrrrr..",
+    ".dddRRRRRRRRRRRRRRrrrddd..",
+    "..NNNdddddddddddddddNNN...",
+    ".NNNNWddddddddddddNNNNWN..",
+    ".NNNNNdddddddddddNNNNNNN..",
+    ".NNNNWddddddddddddNNNNWN..",
+    "..NNNdddddddddddddddNNN...",
+    "...nn...............nn....",
+    ".........................."]]},
 
   /* ================= MONSTRES REDESSINÉS — 18 x 18, moitié gauche ============ */
 
@@ -1698,9 +1860,15 @@ const CFG = {
     { id:'muscle', nom:'L’Homme musclé', desc:'Croix bénite. Cogne fort, encaisse mieux.',
       sprite:'muscle', couleur:PAL.peau, pv:150, vitesse:126, arme:'croix',
       mult:{ degats:1.25, cadence:1.05, aimant:0.9, armure:1 } },
-    { id:'galerien', nom:'Le Galérien', desc:'Pistolet laser. Vif, rien à perdre.',
-      sprite:'galerien', couleur:PAL.glaceC, pv:90, vitesse:164, arme:'laser',
+    { id:'galerien', nom:'Le Galérien', desc:'Jet de bouteilles. Vif, rien à perdre.',
+      sprite:'galerien', couleur:PAL.glaceC, pv:90, vitesse:164, arme:'canettes',
       mult:{ degats:1.0, cadence:0.9, aimant:1.15, armure:0 } },
+    { id:'barbu', nom:'Le Rouquin', desc:'Lance des billets. Large, rapide, tatoué.',
+      sprite:'barbu', couleur:PAL.ambreC, pv:112, vitesse:148, arme:'billets',
+      mult:{ degats:1.0, cadence:1.15, aimant:1.1, armure:0 } },
+    { id:'porsche', nom:'Le Fromager', desc:'Au volant, balance des meules. Blindé mais lourd.',
+      sprite:'porsche', couleur:PAL.sang, pv:170, vitesse:138, arme:'fromage',
+      mult:{ degats:1.15, cadence:0.85, aimant:1.3, armure:2 } },
   ],
 
   armes: {
@@ -1725,13 +1893,25 @@ const CFG = {
                  base:{ degats:26, cadence:1.7, nb:1, rayon:34 },
                  gain:{ degats:11, cadence:-0.11, nb:0.4, rayon:2 } },
     laser:     { nom:'Pistolet laser', type:'laser', max:8, couleur:PAL.menthe,
-                 desc:'Rayon perçant vers l’ennemi le plus proche.',
-                 base:{ degats:9, cadence:0.6, nb:1, portee:340, largeur:7 },
-                 gain:{ degats:4.5, cadence:-0.035, nb:0.3, portee:22, largeur:1.4 } },
+                 desc:'Un rayon unique et perçant, qui s’épaissit avec le niveau.',
+                 base:{ degats:11, cadence:0.55, nb:1, portee:360, largeur:7 },
+                 gain:{ degats:6, cadence:-0.04, nb:0, portee:26, largeur:2.6 } },
     croix:     { nom:'Croix de fer', type:'croix', max:8, couleur:PAL.ambre,
                  desc:'Part en tournoyant, revient en fauchant.',
                  base:{ degats:16, cadence:1.3, nb:1, vitesse:330, taille:11 },
                  gain:{ degats:7, cadence:-0.07, nb:0.34, vitesse:16, taille:1.2 } },
+    canettes:  { nom:'Jet de bouteilles', type:'jet', style:'bouteille', max:8, couleur:PAL.vert,
+                 desc:'Des bouteilles de verre qui tournoient et éclatent à l’impact.',
+                 base:{ degats:12, cadence:0.7, nb:2, vitesse:300, taille:6, perce:1, portee:330 },
+                 gain:{ degats:5, cadence:-0.045, nb:0.5, vitesse:12, taille:0.5, perce:0.34, portee:16 } },
+    billets:   { nom:'Liasse de billets', type:'jet', style:'billet', max:8, couleur:PAL.vert,
+                 desc:'Une gerbe de billets, large et courte. L’argent fait mal.',
+                 base:{ degats:7, cadence:0.55, nb:5, vitesse:250, taille:5, perce:1, portee:210 },
+                 gain:{ degats:2.8, cadence:-0.03, nb:1.1, vitesse:8, taille:0.3, perce:0.2, portee:12 } },
+    fromage:   { nom:'Meule de fromage', type:'jet', style:'fromage', max:8, couleur:PAL.ambre,
+                 desc:'Une meule lourde qui traverse tout sur son passage.',
+                 base:{ degats:26, cadence:1.15, nb:1, vitesse:210, taille:12, perce:4, portee:420 },
+                 gain:{ degats:12, cadence:-0.06, nb:0.28, vitesse:9, taille:1.6, perce:0.7, portee:20 } },
     mine:      { nom:'Reliquaire', type:'mine', max:8, couleur:PAL.spectre,
                  desc:'Pose des reliques qui explosent après 2 s.',
                  base:{ degats:34, cadence:2.0, nb:1, rayon:82, delai:2 },
@@ -1880,6 +2060,9 @@ const CFG = {
     { nom:'III · Le seuil',   duree:165, teinte:0.50, colosse:'mere'      },
     { nom:'IV · Le Seigneur', duree:60,  teinte:0.26, colosse:'seigneur'  },
   ],
+
+  /* SAUT — barre espace. Pendant le bond, rien ne peut vous toucher au sol. */
+  saut: { duree:0.62, hauteur:34, recharge:1.05 },
 
   regles: {
     arene:4200, spawnBase:0.95, spawnParMinute:0.58, pvParMinute:0.26,
@@ -2397,8 +2580,17 @@ addEventListener('keydown',e=>{ keys.add(e.code);
   if(e.code==='Escape') togglePause();
   if(e.code==='KeyM') couperAudio();
   if(G.etat==='jeu'){
-    if(e.code==='Space' && G.joueurs[0]) declencherUltime(G.joueurs[0]);
-    if(e.code==='Enter' && G.joueurs[1] && !NET.actif) declencherUltime(G.joueurs[1]);
+    const moi=G.joueurs[NET.actif?NET.moi:0];
+    if(e.code==='Space'){
+      if(NET.actif && NET.role==='invite') envoyer({t:'saut'}); else sauter(moi);
+    }
+    if(e.code==='ShiftLeft'){
+      if(NET.actif && NET.role==='invite') envoyer({t:'ult'}); else declencherUltime(moi);
+    }
+    if(!NET.actif && G.joueurs[1]){
+      if(e.code==='Enter') sauter(G.joueurs[1]);
+      if(e.code==='ShiftRight') declencherUltime(G.joueurs[1]);
+    }
   }
   if(G.etat==='levelup' && ['Digit1','Digit2','Digit3'].includes(e.code)) choisir(+e.code.slice(5)-1);
 });
@@ -2411,7 +2603,13 @@ function dpad(i,b){ const p=pads()[i]; return p&&p.buttons[b]&&p.buttons[b].pres
 const RAYON_STICK=54;
 const sticks=[null,null];
 const doigts=new Map();
-function zoneDe(x){ return (nbJoueurs===2 && x>innerWidth/2) ? 1 : 0; }
+/* En réseau, chacun joue seul sur son écran : tout l'écran pilote son propre
+   personnage. Le partage en deux moitiés ne vaut que pour le jeu à deux
+   sur un même appareil. */
+function zoneDe(x){
+  if(NET.actif) return 0;
+  return (nbJoueurs===2 && x>innerWidth/2) ? 1 : 0;
+}
 function toucherDebut(e){
   if(G.etat!=='jeu') return;
   for(const t of e.changedTouches){
@@ -2535,6 +2733,10 @@ function dessineReseau(){
 
 $('btn-pause').onclick=e=>{ e.preventDefault(); togglePause(); };
 $('btn-son').onclick=e=>{ e.preventDefault(); initAudio(); couperAudio(); };
+$('btn-saut').onclick=e=>{ e.preventDefault();
+  if(NET.actif && NET.role==='invite'){ envoyer({t:'saut'}); return; }
+  sauter(G.joueurs[NET.actif?NET.moi:0]);
+};
 $('btn-ultime').onclick=e=>{ e.preventDefault();
   if(NET.actif && NET.role==='invite'){ envoyer({t:'ult'}); return; }
   const j=G.joueurs[NET.actif?NET.moi:0]; if(j) declencherUltime(j);
@@ -2562,6 +2764,7 @@ function creerJoueur(idx,persoId,x,y){
     armure:p.mult.armure, mult:{degats:p.mult.degats,cadence:p.mult.cadence,aimant:p.mult.aimant,vitesse:1,xp:1},
     armes:[nouvelleArme(p.arme)], passifs:{}, invul:0, aterre:false, revive:0,
     ultime:{ cle:idx===0?'jugement':'exsangue', charges:0, cd:0 },
+    saut:0, sautCd:0, z:0,
     vx:0, vy:0, dir:{x:0,y:1}, orbAngle:0, marche:0, flip:false, type:'joueur' };
 }
 function genererDecor(L){
@@ -2576,9 +2779,17 @@ function genererDecor(L){
     out.push(o); return o;
   };
 
-  /* 1. semis de fond, mais par bosquets plutôt qu'au hasard uniforme :
-        c'est ce qui casse l'impression de répétition. */
-  const nGroupes=Math.round(L.densite/7);
+  /* 1a. couche uniforme : garantit qu'aucune zone de la carte n'est nue.
+         C'est la trame de fond, sur laquelle les bosquets viennent se poser. */
+  const nFond=Math.round(L.densite*0.62);
+  for(let k=0;k<nFond;k++){
+    const nom=L.decor[(r()*L.decor.length)|0];
+    poser(nom, 30+r()*(A-60), 30+r()*(A-60), 1.4+r()*1.5);
+  }
+
+  /* 1b. bosquets : des regroupements par type dominant, qui donnent du
+         caractère au terrain sans laisser de trous. */
+  const nGroupes=Math.round(L.densite/9);
   for(let k=0;k<nGroupes;k++){
     const cx=r()*A, cy=r()*A, rayon=60+r()*140;
     const dominant=L.decor[(r()*L.decor.length)|0];
@@ -2593,7 +2804,7 @@ function genererDecor(L){
   /* 2. quelques pièces maîtresses, très grandes, qui servent de repères */
   const geants=['d_arbregeant','d_arche','d_obelisque','d_fontaine','d_puits']
                  .filter(n=>L.decor.includes(n));
-  if(geants.length) for(let k=0;k<14;k++)
+  if(geants.length) for(let k=0;k<30;k++)
     poser(geants[(r()*geants.length)|0], 200+r()*(A-400), 200+r()*(A-400), 3.6+r()*1.8);
 
   /* 3. salles en ruine : quatre murs, une ouverture, du butin dedans */
@@ -2664,7 +2875,7 @@ function faireMotif(L){
   /* Sol façon 16 bits : chaque univers a sa matière — dalles fissurées,
      vase et flaques, glace veinée, basalte aux veines de braise —
      avec un tramage en damier pour les dégradés, comme sur Mega Drive. */
-  const T=256, t=document.createElement('canvas'); t.width=t.height=T;
+  const T=(L.id==='gel')?384:256, t=document.createElement('canvas'); t.width=t.height=T;
   const x=t.getContext('2d'), r=alea(L.id.length*104729+11);
   const k=G.teinteCh===undefined?1:G.teinteCh;
   const F=(c)=>assombrir(c,k);
@@ -2725,20 +2936,71 @@ function faireMotif(L){
     }
   }
   else if(L.id==='gel'){
-    /* plaques de glace : veines claires en diagonale + reflets */
-    damier(F(PAL.glaceS),0.25,2);
-    for(let i=0;i<9;i++) fissure(r()*T, r()*T*0.3, 6, F('#cfe8f2'));
-    x.globalAlpha=0.5;
-    for(let i=0;i<12;i++){                     // reflets obliques
-      const gx=r()*T, gy=r()*T, len=12+r()*30;
-      x.strokeStyle=F(PAL.glace); x.beginPath();
-      x.moveTo(gx,gy); x.lineTo(gx+len,gy-len*0.5); x.stroke();
+    /* Glace prise en masse. Tout est dessiné neuf fois, décalé d'une tuile
+       dans chaque direction, pour que les formes se raccordent d'un bord à
+       l'autre : plus de couture visible, et plus aucune ligne parallèle. */
+    const enTuile=(fn)=>{ for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++){
+      x.save(); x.translate(dx*T,dy*T); fn(); x.restore(); } };
+    damier(F(PAL.glaceS),0.20,2);
+
+    // 1. plaques : des polygones irréguliers aux teintes légèrement différentes
+    for(let i=0;i<16;i++){
+      const cx=r()*T, cy=r()*T, cotes=5+((r()*3)|0), ray=34+r()*66;
+      const dep=r()*6.28, ton=0.90+r()*0.18;
+      const pts=[];
+      for(let k=0;k<cotes;k++){
+        const a=dep+k*6.2832/cotes+(r()-0.5)*0.5, d=ray*(0.62+r()*0.5);
+        pts.push([cx+Math.cos(a)*d, cy+Math.sin(a)*d]);
+      }
+      const teinte=F(assombrir('#1d3446',ton)), bord=F('#9fcbdd'), al=0.16+r()*0.16;
+      enTuile(()=>{
+        x.beginPath(); x.moveTo(pts[0][0],pts[0][1]);
+        for(const q of pts.slice(1)) x.lineTo(q[0],q[1]);
+        x.closePath();
+        x.fillStyle=teinte; x.fill();
+        x.globalAlpha=al; x.strokeStyle=bord; x.lineWidth=1; x.stroke();
+        x.globalAlpha=1;
+      });
     }
-    x.globalAlpha=1;
-    for(let i=0;i<6;i++){                      // plaques de neige
-      const cx=r()*T, cy=r()*T, rad=10+r()*20;
-      x.fillStyle='rgba(244,238,221,0.10)';
-      x.beginPath(); x.arc(cx,cy,rad,0,6.2832); x.fill();
+
+    // 2. fractures : des cassures qui changent de direction à chaque segment
+    for(let i=0;i<13;i++){
+      const seg=[]; let px=r()*T, py=r()*T, ang=r()*6.28;
+      const n=3+((r()*4)|0);
+      for(let k=0;k<n;k++){
+        seg.push([px,py]);
+        ang+=(r()-0.5)*1.9;
+        const len=16+r()*52;
+        px+=Math.cos(ang)*len; py+=Math.sin(ang)*len;
+      }
+      seg.push([px,py]);
+      const al=0.20+r()*0.30, ep=r()<0.3?1.5:1;
+      enTuile(()=>{
+        x.globalAlpha=al; x.strokeStyle=F('#cfe8f2'); x.lineWidth=ep;
+        x.beginPath(); x.moveTo(seg[0][0],seg[0][1]);
+        for(const q of seg.slice(1)) x.lineTo(q[0],q[1]);
+        x.stroke(); x.globalAlpha=1;
+      });
+    }
+
+    // 3. givre : nappes floues, sans contour net
+    for(let i=0;i<9;i++){
+      const cx=r()*T, cy=r()*T, rad=22+r()*54, al=0.05+r()*0.07;
+      enTuile(()=>{
+        const gr=x.createRadialGradient(cx,cy,0,cx,cy,rad);
+        gr.addColorStop(0,'rgba(244,248,255,'+al+')');
+        gr.addColorStop(1,'rgba(244,248,255,0)');
+        x.fillStyle=gr; x.beginPath(); x.arc(cx,cy,rad,0,6.2832); x.fill();
+      });
+    }
+
+    // 4. bulles d'air emprisonnées
+    for(let i=0;i<26;i++){
+      const cx=r()*T, cy=r()*T, rad=1+r()*2.4, al=0.18+r()*0.22;
+      enTuile(()=>{
+        x.globalAlpha=al; x.fillStyle=F(PAL.glace);
+        x.beginPath(); x.arc(cx,cy,rad,0,6.2832); x.fill(); x.globalAlpha=1;
+      });
     }
   }
   x.globalAlpha=0.16;
@@ -3017,6 +3279,7 @@ function tuer(e){
   if(e.boss) G.gel=Math.max(G.gel,0.13);
 }
 function blesser(j,d){
+  if(j.saut>0) return;              // pendant tout le bond : hors d'atteinte
   if(j.invul>0||j.aterre) return;
   const reel=Math.max(1,d-j.armure);
   j.pv-=reel; j.invul=0.72; G.shake=Math.max(G.shake,4); G.gel=Math.max(G.gel,0.05);
@@ -3119,7 +3382,7 @@ function tirer(j,a,dt,g){
           }
         }
         G.effets.push({type:'laser',x:j.x,y:j.y,ang,len:s.portee,
-          w:s.largeur,t:0,duree:0.16,couleur:a.def.couleur});
+          w:s.largeur,t:0,duree:0.16,couleur:a.def.couleur,suit:j});
       }
       break; }
     case 'croix': {
@@ -3132,6 +3395,22 @@ function tirer(j,a,dt,g){
           ux:Math.cos(ang), uy:Math.sin(ang), v:s.vitesse, dec:s.vitesse*0.72,
           r:s.taille, degats:s.degats, vie:3.4, rot:0, retour:false,
           touche:new Set(), couleur:a.def.couleur, grade:(a.niveau-1)/(a.def.max-1)});
+      }
+      break; }
+    case 'jet': {
+      const c=ennemiProche(j.x,j.y,s.portee);
+      const base=c?Math.atan2(c.y-j.y,c.x-j.x):Math.atan2(j.dir.y,j.dir.x);
+      const n=Math.round(s.nb);
+      const ecart=a.def.style==='billet' ? 0.30 : a.def.style==='bouteille' ? 0.17 : 0.11;
+      for(let k=0;k<n;k++){
+        const ang=base+(k-(n-1)/2)*ecart+(a.def.style==='billet'?rnd(-0.08,0.08):0);
+        const v=s.vitesse*(a.def.style==='billet'?rnd(0.82,1.15):1);
+        G.projs.push({type:'jet', style:a.def.style, x:j.x, y:j.y,
+          vx:Math.cos(ang)*v, vy:Math.sin(ang)*v,
+          r:s.taille, degats:s.degats, vie:s.portee/v,
+          perce:Math.round(s.perce), touche:new Set(),
+          rot:Math.random()*6.28, vrot:rnd(6,13)*(Math.random()<0.5?-1:1),
+          couleur:a.def.couleur, grade:(a.niveau-1)/(a.def.max-1)});
       }
       break; }
     case 'mine':
@@ -3148,6 +3427,24 @@ function tirer(j,a,dt,g){
           tick:0,couleur:a.def.couleur,proprio:j});
       break; }
   }
+}
+
+/* Une bouteille qui éclate : gerbe de tessons, flaque et éclat sonore. */
+function briser(p){
+  G.effets.push({type:'bris', x:p.x, y:p.y, r:p.r*3.2, t:0, duree:0.34, couleur:p.couleur,
+    tessons:Array.from({length:7},()=>({a:Math.random()*6.28, d:rnd(0.4,1),
+      rot:Math.random()*6.28, vr:rnd(-14,14), l:rnd(2,4.4)}))});
+  eclats(p.x, p.y, 9, PAL.vert, 190);
+  eclats(p.x, p.y, 4, PAL.os, 130);
+  sfx('casse');
+}
+
+/* --- saut : un bond qui passe au-dessus des créatures --- */
+function sauter(j){
+  if(!j || j.aterre || j.saut>0 || j.sautCd>0) return;
+  j.saut=CFG.saut.duree; j.sautCd=CFG.saut.duree+CFG.saut.recharge;
+  eclats(j.x, j.y+10, 7, PAL.pierreC, 120);
+  sfx('casse');
 }
 
 /* --- armes ultimes : puissantes, en réserve limitée --- */
@@ -3261,6 +3558,7 @@ function majFiches(){
     const b=$('btn-ultime');
     b.classList.toggle('vide', moi.ultime.charges<=0);
     b.innerHTML='◈<b>'+moi.ultime.charges+'</b>';
+    $('btn-saut').classList.toggle('vide', moi.sautCd>0);
   }
   const c=$('fiches'); c.innerHTML='';
   for(const j of G.joueurs){
@@ -3288,6 +3586,11 @@ function boucle(now){
       if(NET.actif && NET.role==='invite') envoyer({t:'ult'}); else declencherUltime(j);
     }
     p.__ult=g;
+    const sa=p.buttons[0]&&p.buttons[0].pressed;
+    if(sa && !p.__saut && G.etat==='jeu'){
+      if(NET.actif && NET.role==='invite') envoyer({t:'saut'}); else sauter(j);
+    }
+    p.__saut=sa;
   }
   const p0=pads()[0];
   if(p0&&p0.buttons[9]&&p0.buttons[9].pressed){ if(!startDejaPresse){ startDejaPresse=true; togglePause(); } }
@@ -3326,6 +3629,13 @@ function maj(dt){
       } else j.revive=Math.max(0,j.revive-dt*0.5);
       continue;
     }
+    if(j.sautCd>0) j.sautCd-=dt;
+    if(j.saut>0){
+      j.saut-=dt;
+      const av=1-Math.max(0,j.saut)/CFG.saut.duree;      // 0 au décollage, 1 à l'arrivée
+      j.z=Math.sin(av*Math.PI)*CFG.saut.hauteur;
+      if(j.saut<=0){ j.saut=0; j.z=0; eclats(j.x,j.y+10,9,PAL.pierreC,150); G.shake=Math.max(G.shake,2); }
+    } else j.z=0;
     const U=CFG.ultimes[j.ultime.cle];
     if(U && j.ultime.charges<U.charges){
       j.ultime.cd+=dt;
@@ -3415,6 +3725,20 @@ function maj(dt){
         for(const e of autour(g,p.x,p.y,p.r+30))
           if(dist2(p.x,p.y,e.x,e.y)<(p.r+e.r)**2) frapper(e,p.degats,p.couleur);
       }
+      continue;
+    }
+    if(p.type==='jet'){
+      p.rot+=p.vrot*dt;
+      if(p.style==='billet'){ p.vx*=0.975; p.vy*=0.975; }   // les billets planent
+      p.x+=p.vx*dt; p.y+=p.vy*dt;
+      for(const e of autour(g,p.x,p.y,p.r+30)){
+        if(p.touche.has(e)) continue;
+        if(dist2(p.x,p.y,e.x,e.y)<(p.r+e.r)**2){
+          p.touche.add(e); frapper(e,p.degats,p.couleur);
+          if(p.touche.size>p.perce){ if(p.style==='bouteille') briser(p); G.projs.splice(i,1); break; }
+        }
+      }
+      if(G.projs[i]===p && p.vie<=0){ if(p.style==='bouteille') briser(p); G.projs.splice(i,1); }
       continue;
     }
     if(p.type==='croix'){
@@ -3602,7 +3926,7 @@ function instantane(){
   const s={ t:'s', T:r(G.t*10)/10, L:G.lvl, X:r(G.xp), K:G.tues, E:G.etat,
     J:G.joueurs.map(j=>[r(j.x),r(j.y),r(j.pv),r(j.pvMax),
         (j.aterre?1:0)|(j.flip?2:0)|(j.invul>0?4:0)|((Math.abs(j.vx)+Math.abs(j.vy))>5?8:0),
-        r(j.revive*10)]),
+        r(j.revive*10), r(j.z||0)]),
     N:[], G:[], B:[], P:[], F:[] };
   for(const e of G.ennemis){ if(!pres(e)) continue;
     s.N.push([e.def.__i,
@@ -3634,7 +3958,7 @@ function appliquer(s){
     j.pv=d[2]; j.pvMax=d[3];
     j.aterre=!!(d[4]&1); j.flip=!!(d[4]&2);
     j.invul=(d[4]&4)?0.3:0; j.bouge=!!(d[4]&8);
-    j.revive=d[5]/10;
+    j.revive=d[5]/10; j.z=d[6]||0;
   });
 
   const anciens=new Map(G.ennemis.map(e=>[e.k,e]));
@@ -3671,6 +3995,8 @@ function recevoir(brut){
   if(m.t==='pong'){ NET.ping=Math.round(performance.now()-m.h); return; }
   if(m.t==='s'){ appliquer(m); return; }
   if(m.t==='i'){ NET.entree.x=m.x; NET.entree.y=m.y; return; }
+  if(m.t==='ult'){  const j=G.joueurs[1]; if(j) declencherUltime(j); return; }
+  if(m.t==='saut'){ const j=G.joueurs[1]; if(j) sauter(j); return; }
   if(m.t==='go'){                                   // l'hôte lance la partie
     $('menu').classList.add('cache'); $('reseau').classList.add('cache');
     choixNiveau=CLES_NIVEAUX[m.n]; choixDiff=CLES_DIFF[m.d];
@@ -3874,14 +4200,15 @@ function rendre(dt){
         ctx.strokeStyle=PAL.menthe; ctx.lineWidth=2.5;
         ctx.beginPath(); ctx.arc(x,y,22,-1.57,-1.57+6.2832*(o.revive/CFG.regles.reviveDuree)); ctx.stroke();
       } else {
-        ombre(x+4,y+haut*0.42,12,0.42);
+        const kz=1-(o.z||0)/CFG.saut.hauteur*0.55;
+        ombre(x+4+(o.z||0)*0.12, y+haut*0.42, 12*kz, 0.42*kz);
         ctx.strokeStyle=o.idx===0?'rgba(244,238,221,.30)':'rgba(255,210,122,.45)';
         ctx.lineWidth=1.5; ctx.beginPath(); ctx.ellipse(x,y+haut*0.42,13,4.5,0,0,6.2832); ctx.stroke();
         const bob=Math.sin(o.marche*2)*1.2;
         const bouge=(Math.abs(o.vx)+Math.abs(o.vy))>5;
         const img=bouge?imageCycle(o.perso.sprite,o.marche):0;
         const al=(o.invul>0 && Math.floor(o.invul*18)%2)?0.45:1;
-        poserSprite(o.perso.sprite, img, x, y+bob, haut, o.flip, al);
+        poserSprite(o.perso.sprite, img, x, y+bob-(o.z||0), haut, o.flip, al);
       }
     }
   }
@@ -3961,6 +4288,28 @@ function rendre(dt){
       ctx.beginPath(); ctx.arc(x,y+5,1.6,0,6.2832); ctx.fill();
       ctx.globalAlpha=1;
     }
+    else if(f.type==='bris'){
+      const x=f.x+ox, y=f.y+oy, av=1-k;              // av : 0 au départ, 1 à la fin
+      // flaque qui s'étale et s'efface
+      ctx.globalAlpha=k*0.30; ctx.fillStyle=f.couleur;
+      ctx.beginPath(); ctx.ellipse(x,y+2,f.r*(0.3+av*0.8),f.r*(0.14+av*0.34),0,0,6.2832); ctx.fill();
+      // tessons projetés, qui tournoient
+      for(const t of f.tessons){
+        const d=f.r*t.d*av, tx=x+Math.cos(t.a)*d, ty=y+Math.sin(t.a)*d*0.6+av*av*5;
+        ctx.save(); ctx.translate(tx,ty); ctx.rotate(t.rot+t.vr*f.t);
+        ctx.globalAlpha=k; ctx.fillStyle=f.couleur;
+        ctx.fillRect(-t.l/2,-t.l/3,t.l,t.l*0.66);
+        ctx.globalAlpha=k*0.8; ctx.fillStyle=PAL.os;
+        ctx.fillRect(-t.l/2,-t.l/3,t.l*0.4,t.l*0.3);
+        ctx.restore();
+      }
+      // éclair blanc bref au moment du choc
+      if(av<0.35){
+        ctx.globalAlpha=(1-av/0.35)*0.8; ctx.fillStyle=PAL.os;
+        ctx.beginPath(); ctx.arc(x,y,f.r*0.30*(1-av),0,6.2832); ctx.fill();
+      }
+      ctx.globalAlpha=1;
+    }
     else if(f.type==='onde'){
       const x=f.x+ox, y=f.y+oy, r=f.r*(1-k*0.85);
       ctx.globalAlpha=k*0.7; ctx.strokeStyle=f.couleur; ctx.lineWidth=1+k*3;
@@ -3968,14 +4317,31 @@ function rendre(dt){
       ctx.globalAlpha=1;
     }
     else if(f.type==='laser'){
-      const x0=f.x+ox, y0=f.y+oy;
+      // le rayon part du canon et s'affine vers la pointe
+      const src=f.suit||f, x0=src.x+ox, y0=src.y+oy-(src.z||0);
+      const L2=f.len, w0=f.w*(0.55+k*0.45);
       ctx.save(); ctx.translate(x0,y0); ctx.rotate(f.ang);
-      ctx.globalAlpha=k;
-      ctx.fillStyle=f.couleur; ctx.fillRect(0,-f.w*0.5,f.len,f.w);
-      ctx.globalAlpha=k*0.9; ctx.fillStyle=PAL.os;
-      ctx.fillRect(0,-f.w*0.18,f.len,f.w*0.36);
-      ctx.globalAlpha=k*0.3; ctx.fillStyle=f.couleur;
-      ctx.fillRect(0,-f.w*1.1,f.len,f.w*2.2);
+      const g=ctx.createLinearGradient(0,0,L2,0);
+      g.addColorStop(0,   f.couleur);
+      g.addColorStop(0.7, f.couleur);
+      g.addColorStop(1,   'rgba(0,0,0,0)');
+      ctx.globalAlpha=k*0.45; ctx.fillStyle=g;              // halo unique
+      ctx.beginPath();
+      ctx.moveTo(0,-w0*1.05); ctx.lineTo(L2,-w0*0.18);
+      ctx.lineTo(L2, w0*0.18); ctx.lineTo(0, w0*1.05);
+      ctx.closePath(); ctx.fill();
+      ctx.globalAlpha=k; ctx.fillStyle=g;                    // corps du rayon
+      ctx.beginPath();
+      ctx.moveTo(0,-w0*0.5); ctx.lineTo(L2,-w0*0.09);
+      ctx.lineTo(L2, w0*0.09); ctx.lineTo(0, w0*0.5);
+      ctx.closePath(); ctx.fill();
+      ctx.globalAlpha=k*0.95; ctx.fillStyle=PAL.os;          // cœur blanc
+      ctx.beginPath();
+      ctx.moveTo(0,-w0*0.17); ctx.lineTo(L2*0.92,-w0*0.035);
+      ctx.lineTo(L2*0.92, w0*0.035); ctx.lineTo(0, w0*0.17);
+      ctx.closePath(); ctx.fill();
+      ctx.globalAlpha=k*0.8;                                 // éclat au canon
+      ctx.beginPath(); ctx.arc(0,0,w0*0.75,0,6.2832); ctx.fill();
       ctx.restore(); ctx.globalAlpha=1;
     }
     else if(f.type==='ultime'){
@@ -4011,6 +4377,53 @@ function rendre(dt){
       ctx.beginPath(); ctx.arc(x,y,p.r,0,6.2832); ctx.fill();
       ctx.globalAlpha=1; ctx.fillStyle=PAL.os;
       ctx.beginPath(); ctx.arc(x-1.5,y-1.5,1.6,0,6.2832); ctx.fill();
+    } else if(p.type==='jet'){
+      const R=p.r, gr=p.grade||0;
+      ctx.save(); ctx.translate(x,y); ctx.rotate(p.rot);
+      if(p.style==='bouteille'){
+        const w=R*1.2, h=R*2.4, wg=w*0.42;          // corps et goulot
+        ctx.fillStyle='rgba(12,10,19,.7)';
+        ctx.fillRect(-wg/2-1,-h/2-1,wg+2,h*0.34+2);
+        ctx.fillRect(-w/2-1,-h*0.18-1,w+2,h*0.68+2);
+        ctx.fillStyle=p.couleur;                     // verre vert
+        ctx.fillRect(-wg/2,-h/2,wg,h*0.34);
+        ctx.fillRect(-w/2,-h*0.18,w,h*0.68);
+        ctx.fillStyle=PAL.vertS;                     // fond plus sombre
+        ctx.fillRect(-w/2,h*0.36,w,h*0.14);
+        ctx.fillStyle=PAL.osC;                       // étiquette claire
+        ctx.fillRect(-w/2,h*0.02,w,h*0.2);
+        ctx.fillStyle=PAL.os; ctx.globalAlpha=0.55;  // reflet vertical sur le verre
+        ctx.fillRect(-w/2+w*0.12,-h*0.16,w*0.2,h*0.62);
+        ctx.fillRect(-wg/2+wg*0.2,-h*0.46,wg*0.26,h*0.28);
+        ctx.globalAlpha=1;
+      } else if(p.style==='billet'){
+        // le billet ondule : sa largeur respire pendant qu'il tourne
+        const w=R*2.6*(0.35+0.65*Math.abs(Math.cos(p.rot*1.6))), h=R*1.25;
+        ctx.fillStyle='rgba(12,10,19,.6)'; ctx.fillRect(-w/2-1,-h/2-1,w+2,h+2);
+        ctx.fillStyle=p.couleur; ctx.fillRect(-w/2,-h/2,w,h);
+        ctx.fillStyle=PAL.vertS; ctx.fillRect(-w/2,-h/2,w,1);
+        ctx.fillStyle=PAL.os; ctx.globalAlpha=0.65;
+        ctx.beginPath(); ctx.arc(0,0,Math.min(h*0.3,w*0.3),0,6.2832); ctx.fill();
+        ctx.globalAlpha=1;
+      } else {
+        // meule de fromage : un coin percé de trous
+        ctx.fillStyle='rgba(12,10,19,.75)';
+        ctx.beginPath(); ctx.moveTo(0,-R-1); ctx.lineTo(R+1,R*0.7); ctx.lineTo(-R-1,R*0.7);
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle=p.couleur;
+        ctx.beginPath(); ctx.moveTo(0,-R); ctx.lineTo(R*0.9,R*0.6); ctx.lineTo(-R*0.9,R*0.6);
+        ctx.closePath(); ctx.fill();
+        ctx.fillStyle=PAL.ambreS;
+        for(const [tx,ty,tr] of [[0,R*0.05,R*0.22],[-R*0.36,R*0.4,R*0.15],[R*0.34,R*0.38,R*0.13]]){
+          ctx.beginPath(); ctx.arc(tx,ty,tr,0,6.2832); ctx.fill();
+        }
+        ctx.fillStyle=PAL.os; ctx.globalAlpha=0.4;
+        ctx.beginPath(); ctx.moveTo(0,-R); ctx.lineTo(R*0.25,-R*0.4); ctx.lineTo(-R*0.25,-R*0.4);
+        ctx.closePath(); ctx.fill(); ctx.globalAlpha=1;
+      }
+      if(gr>0.45){ ctx.globalAlpha=0.16+gr*0.2; ctx.fillStyle=p.couleur;
+        ctx.beginPath(); ctx.arc(0,0,R*1.9,0,6.2832); ctx.fill(); ctx.globalAlpha=1; }
+      ctx.restore();
     } else if(p.type==='croix'){
       const gr=p.grade||0, L2=p.r*2.4, l=p.r*0.55;
       if(gr>0.4){ ctx.globalAlpha=0.2+gr*0.2; ctx.fillStyle=p.couleur;
@@ -4142,11 +4555,13 @@ function rendre(dt){
     if(f.type==='ame'){ const av=f.t/f.duree;
       const [px,py]=versEcran(f.x,f.y-av*44); lueur(px,py,9*Z,f.couleur,(1-av)*0.5); }
     if(f.type==='etincelle'){ const [px,py]=versEcran(f.x,f.y); lueur(px,py,7*Z,f.couleur,k*0.5); }
+    if(f.type==='bris'){ const [px,py]=versEcran(f.x,f.y); lueur(px,py,f.r*0.9*Z,f.couleur,k*0.6); }
     if(f.type==='laser'){
-      const [px,py]=versEcran(f.x,f.y);
-      gx2.save(); gx2.translate(px*e,py*e); gx2.rotate(f.ang);
-      gx2.globalAlpha=k*0.7; gx2.fillStyle=f.couleur;
-      gx2.fillRect(0,-f.w*Z*e,f.len*Z*e,f.w*Z*e*2);
+      const src=f.suit||f;
+      const [px,py]=versEcran(src.x,src.y-(src.z||0));
+      gx2.save(); gx2.translate(px,py); gx2.rotate(f.ang);
+      gx2.globalAlpha=k*0.55; gx2.fillStyle=f.couleur;
+      gx2.fillRect(0,-f.w*Z*0.7,f.len*Z,f.w*Z*1.4);
       gx2.restore(); gx2.globalAlpha=1;
     }
   }
