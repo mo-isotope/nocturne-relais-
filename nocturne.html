@@ -1433,6 +1433,48 @@ muscle:{ cycle:[0,1,0,2],
     ".ccccc.....ddddd",
     ".cccc......ddddd"]]},
 
+
+  /* Le Rôdeur : surgit de nulle part, frappe une fois, s'effondre. */
+  s_vampire:{ miroir:true,
+    p:{C:PAL.nuit2,c:PAL.ombre,k:PAL.ombre2,S:PAL.os,s:PAL.osC,e:PAL.sang,r:PAL.sangC}, f:[[
+    ".........",
+    "....ccCCC",
+    "...cCSSSS",
+    "..cCSSSSS",
+    "..cCSeeSS",
+    "..cCSSSSS",
+    "..cCSsrrS",
+    "..cCCSSSS",
+    ".ccCCCCCC",
+    "ccCCCCCCC",
+    "cCCCCCCCC",
+    "cCCCkCCCC",
+    "cCCCCCCCC",
+    ".cCCCCCCC",
+    "..cCCCCCC",
+    "...cCCCCC",
+    "....kkkkk",
+    "........."],[
+    ".........",
+    "....ccCCC",
+    "...cCSSSS",
+    "..cCSSSSS",
+    "..cCSeeSS",
+    "..cCSSSSS",
+    "..cCSsrrS",
+    ".ccCCSSSS",
+    "ccCCCCCCC",
+    "cCCCCCCCC",
+    "CCCCCCCCC",
+    "CCCCkCCCC",
+    "cCCCCCCCC",
+    "cCCCCCCCC",
+    ".cCCCCCCC",
+    "..ccCCCCC",
+    "...kkkkkk",
+    "........."]]},
+
+
   /* ================= DÉCORS — image unique ================= */
 
   d_tombe:{ p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS,m:PAL.vertC}, f:[[
@@ -1886,8 +1928,8 @@ const CFG = {
                  gain:{ degats:9, cadence:-0.06, portee:14, largeur:6, nb:0.25 } },
     aura:      { nom:'Encensoir', type:'aura', max:8, couleur:PAL.ambre,
                  desc:'Brûle en continu tout ce qui vous colle.',
-                 base:{ degats:7, cadence:0.55, rayon:96 },
-                 gain:{ degats:3.5, cadence:-0.03, rayon:11 } },
+                 base:{ degats:6, cadence:0.62, rayon:90 },
+                 gain:{ degats:2.7, cadence:-0.024, rayon:9 } },
     foudre:    { nom:'Fulgur', type:'foudre', max:8, couleur:PAL.menthe,
                  desc:'Frappe des ennemis au hasard à l’écran.',
                  base:{ degats:26, cadence:1.7, nb:1, rayon:34 },
@@ -1914,8 +1956,8 @@ const CFG = {
                  gain:{ degats:12, cadence:-0.06, nb:0.28, vitesse:9, taille:1.6, perce:0.7, portee:20 } },
     mine:      { nom:'Reliquaire', type:'mine', max:8, couleur:PAL.spectre,
                  desc:'Pose des reliques qui explosent après 2 s.',
-                 base:{ degats:34, cadence:2.0, nb:1, rayon:82, delai:2 },
-                 gain:{ degats:15, cadence:-0.1, nb:0.34, rayon:7 } },
+                 base:{ degats:30, cadence:2.5, nb:1, rayon:78, delai:2 },
+                 gain:{ degats:11, cadence:-0.075, nb:0.24, rayon:6 } },
     boomerang: { nom:'Faucille', type:'boomerang', max:8, couleur:PAL.glace,
                  desc:'Part loin, transperce, et revient.',
                  base:{ degats:15, cadence:1.4, nb:1, vitesse:330, portee:300, taille:9 },
@@ -1939,6 +1981,8 @@ const CFG = {
     gargouille:{ nom:'Gargouille',    sprite:'s_gargouille', pv:120, vitesse:42,  degats:16, taille:19, xp:5 },
     spectre:   { nom:'Spectre',       sprite:'s_spectre',    pv:46,  vitesse:82,  degats:11, taille:13, xp:2, traverse:1, vole:1 },
     ver:       { nom:'Ver',           sprite:'s_ver',        pv:9,   vitesse:118, degats:5,  taille:7,  xp:1 },
+    vampire:   { nom:'Le Rôdeur',     sprite:'s_vampire',    pv:26,  vitesse:250, degats:0,  taille:11, xp:6,
+                 furtif:1, rapide:1, degatsPct:0.5, vole:1 },
     brute:     { nom:'La Masse',      sprite:'s_brute',      pv:260, vitesse:34,  degats:24, taille:16, xp:7 },
     goule:     { nom:'Goule',         sprite:'s_goule',      pv:64,  vitesse:70,  degats:13, taille:15, xp:3 },
   },
@@ -1961,10 +2005,10 @@ const CFG = {
      Touche Espace (ou bouton à l'écran) pour le joueur 1,
      Entrée pour le joueur 2. Manette : gâchette droite.                      */
   ultimes:{
-    jugement:{ nom:'Jugement', couleur:PAL.ambre, charges:3, recharge:26,
+    jugement:{ nom:'Jugement', couleur:PAL.ambre, charges:2, recharge:40,
       desc:'Une colonne de feu balaye tout l’écran.',
       degats:340, rayon:330 },
-    exsangue:{ nom:'Exsangue', couleur:PAL.sang, charges:2, recharge:34,
+    exsangue:{ nom:'Exsangue', couleur:PAL.sang, charges:2, recharge:46,
       desc:'Draine la vie de tout ce qui vous entoure et vous soigne.',
       degats:210, rayon:250, soin:0.5 },
   },
@@ -1996,17 +2040,20 @@ const CFG = {
   /* difficultés — multiplicateurs appliqués au lancement */
   difficultes:[
     { id:'tranquille', nom:'Veillée', desc:'Pour découvrir, ou jouer détendu.',
-      spawn:0.72, pv:0.72, degats:0.65, xp:1.3 },
+      spawn:0.78, pv:0.80, degats:0.80, xp:1.25 },
     { id:'normal', nom:'Nocturne', desc:'L’équilibre voulu. Exigeant sans être injuste.',
-      spawn:1, pv:1, degats:1, xp:1 },
+      spawn:1.18, pv:1.25, degats:1.25, xp:1 },
     { id:'cauchemar', nom:'Cauchemar', desc:'Elles arrivent plus vite et frappent plus fort.',
-      spawn:1.4, pv:1.4, degats:1.3, xp:0.9 },
+      spawn:1.6, pv:1.8, degats:1.7, xp:0.9 },
+    { id:'damnation', nom:'Damnation', desc:'Aucune pitié. Une seule erreur suffit.',
+      spawn:2.0, pv:2.4, degats:2.1, xp:0.85 },
   ],
 
   /* niveaux — decor : sprites posés au sol, densite : combien sur la carte
      particules : poussiere | spores | neige | braises                      */
   niveaux: [
     { id:'crypte', nom:'La Crypte oubliée', desc:'Terrain d’apprentissage. Rien de vicieux.',
+      piste:'musique_crypte.mp3',
       sol:'#1a1626', grains:[PAL.nuit,PAL.pierreS], teinte:PAL.spectreC, modif:null, duree:900,
       decor:['d_tombe','d_colonne','d_ossements','d_chandelier','d_statue','d_arche','d_sarcophage','d_obelisque','d_gravats','d_puits','d_autel'], densite:420,
       particules:{type:'poussiere', couleur:PAL.pierre},
@@ -2015,9 +2062,10 @@ const CFG = {
       ambiance:{ obscurite:0.66, nuit:PAL.nuit, rim:PAL.spectre, brume:PAL.spectreS, brumeN:5,
         etal:{haut:'#43307a',bas:'#0c2438',force:0.5}, loin:'#151126', pres:'#080614' },
       vagues:[ {t:0,e:'rampant'}, {t:60,e:'chauve'}, {t:180,e:'spectre'},
-               {t:300,e:'gargouille'}, {t:420,e:'goule'}, {t:220,e:'brute'} ] },
+               {t:300,e:'gargouille'}, {t:420,e:'goule'}, {t:220,e:'brute'}, {t:130,e:'vampire'} ] },
 
     { id:'marais', nom:'Le Marais aux cierges', desc:'Brume épaisse : vous ne voyez pas venir.',
+      piste:'musique_marais.mp3',
       sol:'#16241d', grains:[PAL.nuit,PAL.vertC], teinte:PAL.vertC, modif:'brume', duree:900,
       decor:['d_arbre','d_champignon','d_ossements','d_tombe','d_chandelier','d_arbregeant','d_gravats','d_cage','d_puits','d_sarcophage'], densite:520,
       particules:{type:'spores', couleur:PAL.menthe},
@@ -2027,7 +2075,7 @@ const CFG = {
         etal:{haut:'#1f4a38',bas:'#0a1f2c',force:0.55}, loin:'#0c1914', pres:'#050c0a' },
       meteo:'pluie',
       vagues:[ {t:0,e:'rampant'}, {t:45,e:'ver'}, {t:150,e:'goule'},
-               {t:300,e:'spectre'}, {t:450,e:'gargouille'}, {t:220,e:'brute'} ] },
+               {t:300,e:'spectre'}, {t:450,e:'gargouille'}, {t:220,e:'brute'}, {t:150,e:'vampire'} ] },
 
     { id:'gel', nom:'Le Cloître gelé', desc:'Sol verglacé : vous glissez à chaque virage.',
       sol:'#141c2b', grains:[PAL.ombre2,PAL.glaceS], teinte:PAL.glaceC, modif:'verglas', duree:900,
@@ -2038,9 +2086,10 @@ const CFG = {
       ambiance:{ obscurite:0.58, nuit:PAL.nuit, rim:PAL.glace, brume:PAL.glaceS, brumeN:6,
         etal:{haut:'#33557c',bas:'#101a2e',force:0.45}, loin:'#101d2c', pres:'#070d16' },
       vagues:[ {t:0,e:'chauve'}, {t:40,e:'ver'}, {t:120,e:'rampant'},
-               {t:240,e:'goule'}, {t:360,e:'gargouille'}, {t:480,e:'spectre'}, {t:220,e:'brute'} ] },
+               {t:240,e:'goule'}, {t:360,e:'gargouille'}, {t:480,e:'spectre'}, {t:220,e:'brute'}, {t:150,e:'vampire'} ] },
 
     { id:'brasier', nom:'Le Brasier', desc:'Horde permanente. Pour tester une build.',
+      piste:'musique_brasier.mp3',
       sol:'#20141a', grains:[PAL.sangS,PAL.ombre], teinte:PAL.sangC, modif:'horde', duree:900,
       decor:['d_brasier','d_ossements','d_colonne','d_statue','d_gravats','d_cage','d_arche','d_sarcophage','d_autel','d_obelisque'], densite:380,
       particules:{type:'braises', couleur:PAL.ambre},
@@ -2049,7 +2098,7 @@ const CFG = {
       ambiance:{ obscurite:0.74, nuit:PAL.nuit, rim:PAL.ambre, brume:PAL.sangS, brumeN:7,
         etal:{haut:'#6e3014',bas:'#230810',force:0.55}, loin:'#1e0d10', pres:'#0d0407' },
       vagues:[ {t:0,e:'rampant'}, {t:20,e:'ver'}, {t:60,e:'chauve'},
-               {t:120,e:'goule'}, {t:200,e:'spectre'}, {t:300,e:'gargouille'}, {t:220,e:'brute'} ] },
+               {t:120,e:'goule'}, {t:200,e:'spectre'}, {t:300,e:'gargouille'}, {t:220,e:'brute'}, {t:150,e:'vampire'} ] },
   ],
 
   /* CHAPITRES — chaque terrain se traverse en trois actes, chacun avec sa
@@ -2062,11 +2111,11 @@ const CFG = {
   ],
 
   /* SAUT — barre espace. Pendant le bond, rien ne peut vous toucher au sol. */
-  saut: { duree:0.62, hauteur:34, recharge:1.05 },
+  saut: { duree:0.55, hauteur:36, recharge:2.2 },
 
   regles: {
-    arene:4200, spawnBase:0.95, spawnParMinute:0.58, pvParMinute:0.26,
-    ennemisMax:420, bossToutesLes:110, reviveDuree:3,
+    arene:4200, spawnBase:1.30, spawnParMinute:1.05, pvParMinute:0.38,
+    ennemisMax:500, bossToutesLes:110, reviveDuree:3.6,
     xpNiveau:n=>Math.floor(5 + n*n*1.35 + n*3),
   }
 };
@@ -2083,7 +2132,7 @@ const GAMMES = {
 
 const AUDIO={ ctx:null, actif:true, master:null, verb:null, envoi:null, echo:null,
   pas:0, prochain:0, timer:null, M:null, intensite:0,
-  nappe:[], nappeOsc:[], nappeGain:null };
+  nappe:[], nappeOsc:[], nappeGain:null, piste:null };
 
 function initAudio(){
   if(AUDIO.ctx) return;
@@ -2306,7 +2355,52 @@ function planifier(){
   }
 }
 
+/* --- Pistes enregistrées : un fichier MP3 posé à côté de nocturne.html.
+       Si le fichier manque ou refuse de se lire, on retombe automatiquement
+       sur la musique de synthèse : le jeu reste toujours sonore. --- */
+const PISTES={};
+function arreterPistes(){
+  for(const k in PISTES){ const a=PISTES[k]; if(a){ try{ a.pause(); }catch(e){} } }
+  AUDIO.piste=null;
+}
+function jouerPiste(L){
+  if(!L.piste || typeof Audio==='undefined') return false;
+  let a=PISTES[L.piste];
+  if(a===null) return false;                       // déjà connue comme absente
+  if(!a){
+    try{ a=new Audio(L.piste); }catch(e){ PISTES[L.piste]=null; return false; }
+    a.loop=true; a.preload='auto';
+    a.addEventListener('error',()=>{               // fichier absent : on bascule
+      PISTES[L.piste]=null; AUDIO.piste=null;
+      if(G.niveau===L && G.etat!=='menu') musiqueSynthese(L);
+    });
+    PISTES[L.piste]=a;
+  }
+  arreterPistes(); arreterNappe(); clearInterval(AUDIO.timer);
+  a.volume=AUDIO.actif?0.75:0;
+  try{ a.currentTime=0; }catch(e){}
+  const p=a.play();
+  if(p && p.catch) p.catch(()=>{ PISTES[L.piste]=null; AUDIO.piste=null; musiqueSynthese(L); });
+  AUDIO.piste=a;
+  return true;
+}
+
 function musiqueNiveau(L){
+  initAudio();
+  arreterPistes();                                 // aucune piste ne survit au changement
+  AUDIO.M=L.musique;                               // les bruitages en ont besoin
+  if(jouerPiste(L)){
+    if(AUDIO.ctx && AUDIO.ctx.state==='suspended') AUDIO.ctx.resume();
+    if(AUDIO.master){                              // on ne garde que les bruitages
+      AUDIO.master.gain.cancelScheduledValues(AUDIO.ctx.currentTime);
+      AUDIO.master.gain.setValueAtTime(AUDIO.actif?0.75:0, AUDIO.ctx.currentTime);
+    }
+    return;
+  }
+  musiqueSynthese(L);
+}
+
+function musiqueSynthese(L){
   initAudio(); const c=AUDIO.ctx; if(!c) return;
   if(c.state==='suspended') c.resume();
   AUDIO.M=L.musique; AUDIO.pas=0; AUDIO.prochain=c.currentTime+0.1; AUDIO.intensite=0;
@@ -2324,13 +2418,15 @@ function musiqueNiveau(L){
 
 function musiqueChapitre(){
   if(!AUDIO.M) return;
+  if(AUDIO.piste){ sfx('boss'); return; }
   // À chaque chapitre, l'intensité monte brutalement, la musique s'énerve
   AUDIO.intensite=Math.min(1,AUDIO.intensite+0.35);
   if(AUDIO.ctx) sfx('boss');
 }
 
 function volumeAudio(v){
-  if(!AUDIO.ctx) return;
+  if(AUDIO.piste) AUDIO.piste.volume = AUDIO.actif ? Math.min(1, v+0.1) : 0;
+  if(!AUDIO.ctx || !AUDIO.master) return;
   AUDIO.master.gain.cancelScheduledValues(AUDIO.ctx.currentTime);
   AUDIO.master.gain.setTargetAtTime(AUDIO.actif?v:0, AUDIO.ctx.currentTime, 0.3);
 }
@@ -2745,7 +2841,7 @@ $('btn-rejouer').onclick=()=>{
   $('fin').classList.add('cache'); $('hud').classList.add('cache');
   if(NET.actif && NET.role==='invite'){ majReseauUI('En attente de l’hôte…'); G.etat='menu'; return; }
   $('menu').classList.remove('cache'); G.etat='menu';
-  arreterNappe(); clearInterval(AUDIO.timer); volumeAudio(0);
+  arreterNappe(); arreterPistes(); clearInterval(AUDIO.timer); volumeAudio(0);
 };
 
 /* --- création --- */
@@ -3095,13 +3191,22 @@ function spawnEnnemi(boss){
   if(G.ennemis.length>=CFG.regles.ennemisMax) return;
   const types=G.niveau.vagues.filter(v=>G.t>=v.t).map(v=>v.e); if(!types.length) return;
   const def=CFG.ennemis[types[(Math.random()*types.length)|0]];
-  const ang=Math.random()*Math.PI*2, d=Math.max(W,H)*0.62/ZOOM+80;
+  const furtif=!!def.furtif;
+  if(furtif){
+    // jamais en nuée : au plus deux à la fois, et pas à chaque vague
+    let dejaLa=0; for(const e of G.ennemis) if(e.def.furtif) dejaLa++;
+    if(dejaLa>=2 || Math.random()>0.10) return;
+  }
+  const ang=Math.random()*Math.PI*2;
+  const d=furtif ? rnd(230,330) : Math.max(W,H)*0.62/ZOOM+80;
+  const viseur=G.joueurs.find(j=>!j.aterre)||G.joueurs[0];
   const horde=G.niveau.modif==='horde';
   const D=G.diff||{pv:1,degats:1};
   const pv=def.pv*(1+(G.t/60)*CFG.regles.pvParMinute)*(horde?0.6:1)*D.pv;
   G.ennemis.push({ type:'ennemi', def,
-    x:clamp(G.cam.x+Math.cos(ang)*d,20,CFG.regles.arene-20),
-    y:clamp(G.cam.y+Math.sin(ang)*d,20,CFG.regles.arene-20),
+    x:clamp((furtif?viseur.x:G.cam.x)+Math.cos(ang)*d,20,CFG.regles.arene-20),
+    y:clamp((furtif?viseur.y:G.cam.y)+Math.sin(ang)*d,20,CFG.regles.arene-20),
+    apparition: furtif?0.95:0,
     pv, pvMax:pv, r:def.taille, vitesse:def.vitesse*rnd(0.9,1.1),
     degats:def.degats*D.degats, xp:def.xp, boss:false,
     flash:0, phase:Math.random()*6.28, flip:false, anim:Math.random()*10 });
@@ -3279,7 +3384,7 @@ function tuer(e){
   if(e.boss) G.gel=Math.max(G.gel,0.13);
 }
 function blesser(j,d){
-  if(j.saut>0) return;              // pendant tout le bond : hors d'atteinte
+  if(j.z>CFG.saut.hauteur*0.30) return;   // seulement au sommet du bond
   if(j.invul>0||j.aterre) return;
   const reel=Math.max(1,d-j.armure);
   j.pv-=reel; j.invul=0.72; G.shake=Math.max(G.shake,4); G.gel=Math.max(G.gel,0.05);
@@ -3675,6 +3780,12 @@ function maj(dt){
   for(const e of G.ennemis){
     e.flash=Math.max(0,e.flash-dt); e.phase+=dt; e.anim+=dt*6;
     if(e.squash) e.squash=Math.max(0,e.squash-dt*5);
+    if(e.apparition>0){
+      e.apparition-=dt;
+      if(e.apparition<=0){ sfx('mal'); eclats(e.x,e.y,10,PAL.sang,150); }
+      continue;                       // immobile et inoffensif tant qu'il se forme
+    }
+    if(e.def.rapide && Math.random()<0.5) eclats(e.x,e.y,1,PAL.sangC,40);
     let cible=vivants[0], bd=Infinity;
     for(const j of vivants){ const d=dist2(e.x,e.y,j.x,j.y); if(d<bd){bd=d;cible=j;} }
     let ax=cible.x-e.x, ay=cible.y-e.y; const m=Math.hypot(ax,ay)||1; ax/=m; ay/=m;
@@ -3691,14 +3802,23 @@ function maj(dt){
     // Une créature ordinaire ne doit jamais distancer sa proie : on la
     // plafonne juste en dessous de la vitesse réelle du joueur visé.
     let vit=e.vitesse;
-    if(!e.colosse){
+    if(!e.colosse && !e.def.rapide){
       const vMax=cible.vitesse*cible.mult.vitesse*0.93;
       if(vit>vMax) vit=vMax;
     }
     e.x+=ax/n*vit*dt; e.y+=ay/n*vit*dt;
     if(!e.def.vole && !e.colosse) decoincer(e, e.r*0.7);
     if(e.colosse) majColosse(e,dt,vivants);
-    for(const j of vivants) if(dist2(e.x,e.y,j.x,j.y)<(e.r+j.r)**2) blesser(j,e.degats);
+    for(const j of vivants) if(dist2(e.x,e.y,j.x,j.y)<(e.r+j.r)**2){
+      if(e.def.degatsPct){
+        if(j.z>CFG.saut.hauteur*0.30 || j.invul>0) continue;   // esquivé au sommet du bond
+        blesser(j, Math.round(j.pvMax*e.def.degatsPct)+j.armure);
+        G.gel=Math.max(G.gel,0.12); G.shake=Math.max(G.shake,10);
+        tuer(e);                                    // il se consume après avoir mordu
+        break;
+      }
+      blesser(j,e.degats);
+    }
   }
 
   for(let i=G.projs.length-1;i>=0;i--){
@@ -4182,6 +4302,14 @@ function rendre(dt){
       }
       const sq=o.squash||0, dx=1+sq*0.26, dy=1-sq*0.20;
       ombre(x+haut*0.13,y+haut*0.40,o.r*0.8,0.4);
+      if(o.apparition>0){
+        // il se matérialise : un cercle rouge prévient avant qu'il ne bondisse
+        const av=1-o.apparition/0.95;
+        ctx.globalAlpha=0.30+av*0.45; ctx.strokeStyle=PAL.sang; ctx.lineWidth=2;
+        ctx.beginPath(); ctx.arc(x,y,o.r*(3.4-av*2.2),0,6.2832); ctx.stroke();
+        ctx.globalAlpha=1;
+        poserSprite(o.def.sprite,frame,x,y,haut,o.flip,0.18+av*0.6,null,dx,dy);
+      } else
       poserSprite(o.def.sprite,frame,x,y+haut*0.10*sq,haut,o.flip,1,null,dx,dy);
       if(o.colosse){                       // les colosses accrochent une lumière dorée
         const sauve=TEINTE_RIM; TEINTE_RIM=PAL.ambre;
