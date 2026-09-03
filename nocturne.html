@@ -1475,6 +1475,77 @@ muscle:{ cycle:[0,1,0,2],
     "........."]]},
 
 
+
+  /* Le Rôdeur — 32 x 32, moitié gauche seulement (miroir).
+     Cape triangulaire ouverte sur une doublure rouge, col relevé, griffes. */
+  s_rodeur:{ miroir:true,
+    p:{N:PAL.nuit,K:PAL.spectreC,C:PAL.spectreS,c:PAL.ombre2,
+       d:PAL.sangC,D:PAL.sang,S:PAL.os,s:PAL.osC,e:PAL.sang,B:PAL.sangS,k:PAL.nuit2}, f:[[
+    "..........NNNNNN",
+    ".........NNNNNNN",
+    ".........NSSSSSS",
+    ".........SSSSSSS",
+    ".........SSeeeSS",
+    ".........SSeeeSS",
+    ".........sSSSSSS",
+    "..........SBBBSS",
+    "..........sSSSSs",
+    ".......KKKKkkkkk",
+    ".....KKKKKKKKKKK",
+    "...KKKKKKCCCCddd",
+    "..KKCCCCCCCCCdDd",
+    ".KCCCCCCCCCCCdDd",
+    "SKCCCCCCCCCCCdDd",
+    "SCCCCCCCCCCCCdDd",
+    "sCCCCCCCCCCCCdDd",
+    "kcCCCCCCCCCCCdDd",
+    ".cCCCCCCCCCCCdDd",
+    ".ccCCCCCCCCCCdDd",
+    "..ccCCCCCCCCCdDd",
+    "...ccCCCCCCCCdDd",
+    "....ccCCCCCCCdDd",
+    ".....ccCCCCCCdDd",
+    "......ccCCCCCdDd",
+    ".......ccCCCCddd",
+    "........ccCCCCCd",
+    ".........ccCCCCC",
+    "..........cCCCCC",
+    "..........kkkkkk",
+    "...........kkkkk",
+    "................"],[
+    "..........NNNNNN",
+    ".........NNNNNNN",
+    ".........NSSSSSS",
+    ".........SSSSSSS",
+    ".........SSeeeSS",
+    ".........SSeeeSS",
+    ".........sSSSSSS",
+    "..........SBBBSS",
+    "..........sSSSSs",
+    "......KKKKKkkkkk",
+    "....KKKKKKKKKKKK",
+    "..KKKKKKKCCCCddd",
+    ".KKCCCCCCCCCCdDd",
+    "KCCCCCCCCCCCCdDd",
+    "SCCCCCCCCCCCCdDd",
+    "SCCCCCCCCCCCCdDd",
+    "sCCCCCCCCCCCCdDd",
+    "cCCCCCCCCCCCCdDd",
+    "cCCCCCCCCCCCCdDd",
+    ".cCCCCCCCCCCCdDd",
+    "..cCCCCCCCCCCdDd",
+    "..ccCCCCCCCCCdDd",
+    "...ccCCCCCCCCdDd",
+    "....ccCCCCCCCdDd",
+    ".....ccCCCCCCdDd",
+    "......ccCCCCCddd",
+    ".......ccCCCCCCd",
+    "........ccCCCCCC",
+    ".........cCCCCCC",
+    ".........kkkkkkk",
+    "..........kkkkkk",
+    "................"]]},
+
   /* ================= DÉCORS — image unique ================= */
 
   d_tombe:{ p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS,m:PAL.vertC}, f:[[
@@ -1981,7 +2052,7 @@ const CFG = {
     gargouille:{ nom:'Gargouille',    sprite:'s_gargouille', pv:120, vitesse:42,  degats:16, taille:19, xp:5 },
     spectre:   { nom:'Spectre',       sprite:'s_spectre',    pv:46,  vitesse:82,  degats:11, taille:13, xp:2, traverse:1, vole:1 },
     ver:       { nom:'Ver',           sprite:'s_ver',        pv:9,   vitesse:118, degats:5,  taille:7,  xp:1 },
-    vampire:   { nom:'Le Rôdeur',     sprite:'s_vampire',    pv:26,  vitesse:250, degats:0,  taille:11, xp:6,
+    vampire:   { nom:'Le Rôdeur',     sprite:'s_rodeur',     pv:70,  vitesse:250, degats:0,  taille:48, xp:16,
                  furtif:1, rapide:1, degatsPct:0.5, vole:1 },
     brute:     { nom:'La Masse',      sprite:'s_brute',      pv:260, vitesse:34,  degats:24, taille:16, xp:7 },
     goule:     { nom:'Goule',         sprite:'s_goule',      pv:64,  vitesse:70,  degats:13, taille:15, xp:3 },
@@ -2358,6 +2429,9 @@ function planifier(){
 /* --- Pistes enregistrées : un fichier MP3 posé à côté de nocturne.html.
        Si le fichier manque ou refuse de se lire, on retombe automatiquement
        sur la musique de synthèse : le jeu reste toujours sonore. --- */
+/* Équilibre du mélange quand une piste enregistrée tourne :
+   la musique passe dessous, les effets restent nets au-dessus. */
+const MIX={ musique:0.55, effets:0.9 };
 const PISTES={};
 function arreterPistes(){
   for(const k in PISTES){ const a=PISTES[k]; if(a){ try{ a.pause(); }catch(e){} } }
@@ -2377,7 +2451,7 @@ function jouerPiste(L){
     PISTES[L.piste]=a;
   }
   arreterPistes(); arreterNappe(); clearInterval(AUDIO.timer);
-  a.volume=AUDIO.actif?0.75:0;
+  a.volume=AUDIO.actif?MIX.musique:0;
   try{ a.currentTime=0; }catch(e){}
   const p=a.play();
   if(p && p.catch) p.catch(()=>{ PISTES[L.piste]=null; AUDIO.piste=null; musiqueSynthese(L); });
@@ -2391,9 +2465,9 @@ function musiqueNiveau(L){
   AUDIO.M=L.musique;                               // les bruitages en ont besoin
   if(jouerPiste(L)){
     if(AUDIO.ctx && AUDIO.ctx.state==='suspended') AUDIO.ctx.resume();
-    if(AUDIO.master){                              // on ne garde que les bruitages
+    if(AUDIO.master){                              // le master ne porte plus que les effets
       AUDIO.master.gain.cancelScheduledValues(AUDIO.ctx.currentTime);
-      AUDIO.master.gain.setValueAtTime(AUDIO.actif?0.75:0, AUDIO.ctx.currentTime);
+      AUDIO.master.gain.setValueAtTime(AUDIO.actif?MIX.effets:0, AUDIO.ctx.currentTime);
     }
     return;
   }
@@ -2425,10 +2499,14 @@ function musiqueChapitre(){
 }
 
 function volumeAudio(v){
-  if(AUDIO.piste) AUDIO.piste.volume = AUDIO.actif ? Math.min(1, v+0.1) : 0;
+  const enJeu = (v>0.5);            // valeur basse = pause ou menu : on baisse tout
+  if(AUDIO.piste)
+    AUDIO.piste.volume = AUDIO.actif ? (enJeu ? MIX.musique : v*0.5) : 0;
   if(!AUDIO.ctx || !AUDIO.master) return;
+  // quand une piste tourne, le master ne porte que les effets : il garde son niveau
+  const cible = AUDIO.piste ? (enJeu ? MIX.effets : v) : v;
   AUDIO.master.gain.cancelScheduledValues(AUDIO.ctx.currentTime);
-  AUDIO.master.gain.setTargetAtTime(AUDIO.actif?v:0, AUDIO.ctx.currentTime, 0.3);
+  AUDIO.master.gain.setTargetAtTime(AUDIO.actif?cible:0, AUDIO.ctx.currentTime, 0.3);
 }
 
 function couperAudio(){
@@ -2459,9 +2537,67 @@ function synthNote(t, f, vol, timbre='piano', duree=0.8){
    o.start(t); o.stop(t+duree*1.5);
 }
 
+/* --- Sons d'armes ---------------------------------------------------------
+   Les armes tirent très souvent : sans garde-fou on empilerait des centaines
+   d'oscillateurs par seconde. Chaque arme a donc son propre délai minimum,
+   et un plafond global limite le nombre de sons simultanés.               */
+const CADENCE_SFX={};
+let sfxRecents=[];
+function placeLibre(t, plafond){
+  sfxRecents=sfxRecents.filter(x=>t-x<0.12);
+  if(sfxRecents.length>=(plafond||7)) return false;
+  sfxRecents.push(t); return true;
+}
+function sfxArme(a){
+  if(!AUDIO.ctx||!AUDIO.actif||!AUDIO.M) return;
+  const t=AUDIO.ctx.currentTime, M=AUDIO.M;
+  const cle=a.def.style||a.def.type;
+  const ecart={laser:0.10, croix:0.14, boomerang:0.13, bouteille:0.09, billet:0.16,
+               fromage:0.20, projectile:0.09, fouet:0.14, foudre:0.12,
+               mine:0.18, orbite:0.30, aura:0.30}[cle] || 0.12;
+  if(CADENCE_SFX[cle] && t-CADENCE_SFX[cle] < ecart) return;
+  if(!placeLibre(t)) return;
+  CADENCE_SFX[cle]=t;
+
+  switch(cle){
+    case 'projectile':                                   // dague : sifflement bref
+      souffle(t, 0.05, 0.055, 2700); break;
+    case 'laser':                                        // rayon : décharge nette
+      souffle(t, 0.07, 0.05, 1900);
+      instrumSolo(t, freq(M.tonique, 31), 0.05, 'cuivre', 0.10); break;
+    case 'croix':                                        // fer qui tournoie
+      souffle(t, 0.13, 0.045, 780);
+      instrumSolo(t, freq(M.tonique, 19), 0.05, 'cloche', 0.5); break;
+    case 'bouteille':                                    // verre lancé
+      souffle(t, 0.05, 0.05, 1250); break;
+    case 'billet':                                       // froissement de papier
+      souffle(t, 0.045, 0.04, 3400); break;
+    case 'fromage':                                      // meule lourde
+      instrumSolo(t, freq(M.tonique, -5), 0.09, 'cuivre', 0.22);
+      souffle(t, 0.09, 0.035, 420); break;
+    case 'fouet':                                        // claquement
+      souffle(t, 0.10, 0.06, 1100); break;
+    case 'foudre':                                       // crépitement aigu
+      souffle(t, 0.06, 0.05, 4200);
+      instrumSolo(t, freq(M.tonique, 36), 0.05, 'piano', 0.3); break;
+    case 'boomerang':                                    // lame qui part en tournant
+      souffle(t, 0.11, 0.05, 1500);
+      instrumSolo(t, freq(M.tonique, 26), 0.045, 'piano', 0.25); break;
+    case 'mine':                                         // dépôt sourd
+      instrumSolo(t, freq(M.tonique, 5), 0.06, 'piano', 0.35); break;
+    case 'orbite':                                       // bois qui grince
+      instrumSolo(t, freq(M.tonique, -12), 0.045, 'cuivre', 0.3); break;
+    case 'aura':                                         // pulsation grave
+      instrumSolo(t, freq(M.tonique, -17), 0.05, 'cuivre', 0.45); break;
+  }
+}
+
 function sfx(nom){
   if(!AUDIO.ctx||!AUDIO.actif||!AUDIO.M) return;
   const t=AUDIO.ctx.currentTime, M=AUDIO.M;
+  // 'mal' et 'casse' partent en rafale dans une mêlée : on les limite.
+  // Les sons qui portent une information importante passent toujours.
+  if((nom==='mal'||nom==='casse') && !placeLibre(t,10)) return;
   if(nom==='niveau') {
       // Accord majestueux
       [0,7,12,16].forEach((d,i)=>celestaMystique(t+i*0.08, freq(M.tonique,12+d), 0.15));
@@ -3198,7 +3334,7 @@ function spawnEnnemi(boss){
     if(dejaLa>=2 || Math.random()>0.10) return;
   }
   const ang=Math.random()*Math.PI*2;
-  const d=furtif ? rnd(230,330) : Math.max(W,H)*0.62/ZOOM+80;
+  const d=furtif ? rnd(300,420) : Math.max(W,H)*0.62/ZOOM+80;
   const viseur=G.joueurs.find(j=>!j.aterre)||G.joueurs[0];
   const horde=G.niveau.modif==='horde';
   const D=G.diff||{pv:1,degats:1};
@@ -3415,7 +3551,7 @@ function tirer(j,a,dt,g){
   const s=statArme(a,j);
   if(a.def.type==='orbite'){
     a.cd-=dt;
-    if(a.cd<=0){ a.cd=s.cadence; 
+    if(a.cd<=0){ a.cd=s.cadence; sfxArme(a);
       for(let k=0;k<s.nb;k++){
         const ang=j.orbAngle+k*(Math.PI*2/s.nb);
         const ox=j.x+Math.cos(ang)*s.rayon, oy=j.y+Math.sin(ang)*s.rayon;
@@ -3427,7 +3563,7 @@ function tirer(j,a,dt,g){
   }
   if(a.def.type==='aura'){
     a.cd-=dt;
-    if(a.cd<=0){ a.cd=s.cadence; 
+    if(a.cd<=0){ a.cd=s.cadence; sfxArme(a);
       for(const e of autour(g,j.x,j.y,s.rayon+30))
         if(dist2(j.x,j.y,e.x,e.y)<(s.rayon+e.r)**2) frapper(e,s.degats,a.def.couleur);
       G.effets.push({type:'aura',x:0,y:0,r:s.rayon,t:0,duree:0.3,couleur:a.def.couleur,suit:j});
@@ -3435,6 +3571,7 @@ function tirer(j,a,dt,g){
     return;
   }
   a.cd-=dt; if(a.cd>0) return; a.cd=s.cadence;
+  sfxArme(a);
   switch(a.def.type){
     case 'projectile': {
       const c=ennemiProche(j.x,j.y,s.portee);
