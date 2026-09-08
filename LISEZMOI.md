@@ -67,6 +67,48 @@ entrent le même code se retrouvent ensemble. Il n'y a pas de mot de passe : si
 vous voulez éviter qu'un inconnu tombe sur votre partie, changez simplement de
 code, ou allongez-le dans `codeSalon()` côté jeu.
 
+## Tableau des scores
+
+Le serveur expose deux adresses :
+
+- `GET /scores` renvoie les cinquante meilleurs, en JSON
+- `POST /scores` enregistre une partie
+
+Le score est **recalculé par le serveur**, jamais repris du client : éliminations,
+temps de survie, niveau, chapitre atteint, victoire, plus un bonus proportionnel
+à la difficulté. Les noms sont nettoyés (16 caractères maximum, balises retirées)
+et un même appareil ne peut envoyer qu'un score toutes les trois secondes.
+
+### Rendre les scores durables
+
+Par défaut, les scores sont écrits dans `scores.json`, à côté du serveur. Sur
+un hébergement gratuit, **ce fichier ne survit pas** : le conteneur est détruit
+à chaque mise en veille ou redéploiement.
+
+Pour des scores permanents, il suffit de renseigner la variable
+d'environnement `DATABASE_URL` avec l'adresse d'une base PostgreSQL. Le serveur
+la détecte au démarrage, crée sa table tout seul, et bascule dessus. Aucune
+autre modification n'est nécessaire.
+
+**Attention au piège :** la base Postgres gratuite de Render **expire 30 jours
+après sa création**, puis est supprimée après un délai de grâce de deux
+semaines. Ce n'est pas une offre gratuite durable, c'est un essai. Préférez un
+hébergeur dont l'offre gratuite n'a pas de date de fin :
+
+| Service  | Offre gratuite | À savoir |
+| -------- | -------------- | -------- |
+| Neon     | Postgres, sans expiration | se met en veille après 5 min d'inactivité, se réveille à la première requête |
+| Supabase | Postgres, sans expiration | se met en pause après une semaine sans activité, à relancer d'un clic |
+| Aiven    | Postgres, sans expiration | s'éteint après une inactivité prolongée, rallumage manuel |
+
+La marche à suivre est la même pour les trois : créez la base, copiez la chaîne
+de connexion, et collez-la dans Render sous « Environment » → « Add Environment
+Variable », avec pour nom `DATABASE_URL`. Au redémarrage, le journal doit
+afficher « Scores : base PostgreSQL ».
+
+Tant que `DATABASE_URL` est absent, le serveur affiche un avertissement au
+démarrage pour rappeler que les scores ne sont pas conservés.
+
 ## Consommation
 
 Mesurée sur le scénario le plus chargé du jeu (Brasier en Cauchemar, une

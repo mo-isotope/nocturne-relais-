@@ -47,6 +47,51 @@ const serveur = http.createServer((req, res) => {
     }));
   }
 
+  // --- tableau des scores ---
+  if (url === '/scores' && req.method === 'GET') {
+    return stock.meilleurs(50).then((liste) => {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8',
+                           'Cache-Control': 'no-store' });
+      res.end(JSON.stringify(liste));
+    }).catch((e) => {
+      res.writeHead(503, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ erreur: 'stockage indisponible' }));
+    });
+  }
+  if (url === '/scores' && req.method === 'POST') {
+    const cle = req.socket.remoteAddress || '?';
+    const now = Date.now();
+    if (now - (derniersEnvois.get(cle) || 0) < 3000) {
+      res.writeHead(429, { 'Content-Type': 'application/json' });
+      return res.end('{"erreur":"trop rapide"}');
+    }
+    return lireCorps(req).then((c) => {
+      const borne = (v, min, max) => Math.max(min, Math.min(max, Number(v) || 0));
+      const p = {
+        nom:        nettoyer(c.nom, 16) || 'Anonyme',
+        perso:      nettoyer(c.perso, 20),
+        terrain:    nettoyer(c.terrain, 24),
+        temps:      borne(c.temps, 0, 7200),
+        tues:       borne(c.tues, 0, 100000),
+        niveau:     borne(c.niveau, 1, 200),
+        chapitre:   borne(c.chapitre, 1, 4),
+        victoire:   !!c.victoire,
+        difficulte: Math.max(0, RANGS_DIFF.indexOf(nettoyer(c.difficulte, 12))),
+      };
+      p.score = calculerScore(p);
+      p.date = new Date().toISOString().slice(0, 10);
+      derniersEnvois.set(cle, now);
+
+      return stock.ajouter(p).then((r) => {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ score: p.score, rang: r.rang, total: r.total }));
+      });
+    }).catch(() => {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end('{"erreur":"donnees invalides"}');
+    });
+  }
+
   // la racine renvoie le jeu
   const nom = url === '/' ? '/nocturne.html' : url;
   const fichier = path.join(__dirname, path.normalize(nom).replace(/^(\.\.[/\\])+/, ''));
@@ -66,6 +111,53 @@ const serveur = http.createServer((req, res) => {
     res.end(contenu);
   });
 });
+
+/* ============================================================================
+   TABLEAU DES SCORES
+   Le stockage est choisi automatiquement (voir stockage.js) : base PostgreSQL
+   si DATABASE_URL est défini, sinon simple fichier JSON.
+   ========================================================================== */
+const { creerStockage } = require('./stockage');
+const stock = creerStockage();
+
+stock.demarrer()
+  .then((n) => {
+    console.log(`Scores : ${stock.nom} — ${n} enregistrement(s).`);
+    if (!stock.durable) console.log(
+      'ATTENTION : stockage non durable. Sur un hébergement gratuit, les scores\n' +
+      '  disparaîtront au premier redémarrage. Renseignez DATABASE_URL pour les garder.');
+  })
+  .catch((e) => console.log('Stockage des scores indisponible :', e.message));
+
+/* Le score est recalculé ICI, jamais repris du client. */
+function calculerScore(p) {
+  return Math.round(
+      p.tues * 10
+    + p.temps * 2
+    + p.niveau * 60
+    + p.chapitre * 600
+    + (p.victoire ? 2500 : 0)
+    + p.difficulte * 0.25 * (p.tues * 10 + p.temps * 2)
+  );
+}
+
+const RANGS_DIFF = ['veillee', 'normal', 'cauchemar', 'damnation'];
+const derniersEnvois = new Map();               // un score / 3 s / adresse
+
+function nettoyer(txt, max) {
+  return String(txt == null ? '' : txt)
+    .replace(/[\x00-\x1f<>&"']/g, '')
+    .trim().slice(0, max);
+}
+
+function lireCorps(req) {
+  return new Promise((res, rej) => {
+    let d = '';
+    req.on('data', (c) => { d += c; if (d.length > 4096) req.destroy(); });
+    req.on('end', () => { try { res(JSON.parse(d || '{}')); } catch (e) { rej(e); } });
+    req.on('error', rej);
+  });
+}
 
 const wss = new WebSocketServer({ server: serveur });
 
