@@ -2867,7 +2867,6 @@ const CFG = {
      particules : poussiere | spores | neige | braises                      */
   niveaux: [
     { id:'crypte', nom:'La Crypte oubliée', desc:'Terrain d’apprentissage. Rien de vicieux.',
-      piste:'musique_crypte.mp3',
       sol:'#1a1626', grains:[PAL.nuit,PAL.pierreS], teinte:PAL.spectreC, modif:null, duree:900,
       decor:['d_tombe','d_colonne','d_ossements','d_chandelier','d_statue','d_arche','d_sarcophage','d_obelisque','d_gravats','d_puits','d_autel'], densite:420,
       particules:{type:'poussiere', couleur:PAL.pierre},
@@ -2879,7 +2878,6 @@ const CFG = {
                {t:300,e:'gargouille'}, {t:420,e:'goule'}, {t:220,e:'brute'}, {t:130,e:'vampire'} ] },
 
     { id:'marais', nom:'Le Marais aux cierges', desc:'Brume épaisse : vous ne voyez pas venir.',
-      piste:'musique_marais.mp3',
       sol:'#16241d', grains:[PAL.nuit,PAL.vertC], teinte:PAL.vertC, modif:'brume', duree:900,
       decor:['d_arbre','d_champignon','d_ossements','d_tombe','d_chandelier','d_arbregeant','d_gravats','d_cage','d_puits','d_sarcophage'], densite:520,
       particules:{type:'spores', couleur:PAL.menthe},
@@ -2892,7 +2890,6 @@ const CFG = {
                {t:300,e:'spectre'}, {t:450,e:'gargouille'}, {t:220,e:'brute'}, {t:150,e:'vampire'} ] },
 
     { id:'gel', nom:'Le Cloître d’aube', desc:'La lumière revient. Le sol reste glissant.',
-      piste:'musique_gel.mp3',
       sol:'#3d4f68', grains:[PAL.glaceC,PAL.os], teinte:PAL.ambre, modif:'verglas', duree:900,
       decor:['d_colonne','d_glace','d_statue','d_arbre','d_arche','d_fontaine','d_obelisque','d_gravats','d_cage','d_autel'], densite:400,
       particules:{type:'neige', couleur:PAL.ambre},
@@ -2904,7 +2901,6 @@ const CFG = {
                {t:240,e:'goule'}, {t:360,e:'gargouille'}, {t:480,e:'spectre'}, {t:220,e:'brute'}, {t:150,e:'vampire'} ] },
 
     { id:'brasier', nom:'Le Brasier', desc:'Horde permanente. Pour tester une build.',
-      piste:'musique_brasier.mp3',
       sol:'#20141a', grains:[PAL.sangS,PAL.ombre], teinte:PAL.sangC, modif:'horde', duree:900,
       decor:['d_brasier','d_ossements','d_colonne','d_statue','d_gravats','d_cage','d_arche','d_sarcophage','d_autel','d_obelisque'], densite:380,
       particules:{type:'braises', couleur:PAL.ambre},
@@ -2947,7 +2943,7 @@ const GAMMES = {
 
 const AUDIO={ ctx:null, actif:true, master:null, verb:null, envoi:null, echo:null,
   pas:0, prochain:0, timer:null, M:null, intensite:0,
-  nappe:[], nappeOsc:[], nappeGain:null, piste:null };
+  nappe:[], nappeOsc:[], nappeGain:null, piste:null, derniere:null };
 
 function initAudio(){
   if(AUDIO.ctx) return;
@@ -3176,30 +3172,58 @@ function planifier(){
 /* Équilibre du mélange quand une piste enregistrée tourne :
    la musique passe dessous, les effets restent nets au-dessus. */
 const MIX={ musique:0.55, effets:0.9 };
+/* Toutes les pistes sont jouées au hasard, sur n'importe quel terrain.
+   Elles s'enchaînent : quand l'une se termine, une autre démarre.
+   Ajouter un morceau = déposer le fichier à côté du jeu et l'ajouter ici. */
+const LISTE_PISTES=[
+  'musique_crypte.mp3', 'musique_marais.mp3', 'musique_brasier.mp3',
+  'musique_gel.mp3',    'piste_pain.mp3',     'piste_front.mp3',
+  'piste_apalon.mp3',   'piste_sad.mp3',      'piste_groza.mp3',
+  'piste_freestyle.mp3',
+];
 const PISTES={};
 function arreterPistes(){
   for(const k in PISTES){ const a=PISTES[k]; if(a){ try{ a.pause(); }catch(e){} } }
   AUDIO.piste=null;
 }
-function jouerPiste(L){
-  if(!L.piste || typeof Audio==='undefined') return false;
-  let a=PISTES[L.piste];
+/* Choisit un morceau au hasard parmi ceux qui n'ont pas échoué,
+   en évitant de rejouer celui qui vient de passer. */
+function tirerPiste(){
+  const dispo=LISTE_PISTES.filter(n=>PISTES[n]!==null);
+  if(!dispo.length) return null;
+  const autres=dispo.filter(n=>n!==AUDIO.derniere);
+  const choix=(autres.length?autres:dispo);
+  return choix[(Math.random()*choix.length)|0];
+}
+
+function jouerPiste(L, nom){
+  if(typeof Audio==='undefined') return false;
+  const src=nom||tirerPiste();
+  if(!src) return false;
+  let a=PISTES[src];
   if(a===null) return false;                       // déjà connue comme absente
   if(!a){
-    try{ a=new Audio(L.piste); }catch(e){ PISTES[L.piste]=null; return false; }
-    a.loop=true; a.preload='auto';
-    a.addEventListener('error',()=>{               // fichier absent : on bascule
-      PISTES[L.piste]=null; AUDIO.piste=null;
-      if(G.niveau===L && G.etat!=='menu') musiqueSynthese(L);
+    try{ a=new Audio(src); }catch(e){ PISTES[src]=null; return false; }
+    a.preload='auto';
+    a.addEventListener('error',()=>{               // fichier absent : on l'écarte
+      PISTES[src]=null;
+      if(AUDIO.piste===a){ AUDIO.piste=null; if(!jouerPiste(L)) musiqueSynthese(L); }
     });
-    PISTES[L.piste]=a;
+    a.addEventListener('ended',()=>{               // enchaînement sur un autre
+      if(AUDIO.piste===a && G.etat!=='menu') jouerPiste(G.niveau||L);
+    });
+    PISTES[src]=a;
   }
   arreterPistes(); arreterNappe(); clearInterval(AUDIO.timer);
+  a.loop=false;
   a.volume=AUDIO.actif?MIX.musique:0;
   try{ a.currentTime=0; }catch(e){}
   const p=a.play();
-  if(p && p.catch) p.catch(()=>{ PISTES[L.piste]=null; AUDIO.piste=null; musiqueSynthese(L); });
-  AUDIO.piste=a;
+  if(p && p.catch) p.catch(()=>{
+    PISTES[src]=null; AUDIO.piste=null;
+    if(!jouerPiste(L)) musiqueSynthese(L);
+  });
+  AUDIO.piste=a; AUDIO.derniere=src;
   return true;
 }
 
