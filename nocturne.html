@@ -38,20 +38,22 @@
     width:52px;height:52px;border:1px solid rgba(233,227,210,.3);background:rgba(10,16,22,.7);
     color:var(--os);font-family:var(--mono);font-size:16px;cursor:pointer}
   body.tactile .note .clavier{display:none}
-  .ecran{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;
+  .ecran{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    padding:clamp(10px,3vw,24px);
     background:radial-gradient(ellipse at 50% 40%, rgba(18,30,40,.92), rgba(6,10,14,.98));backdrop-filter:blur(3px);z-index:10}
   .cache{display:none !important}
-  .panneau{width:min(780px,100%);max-height:100%;overflow-y:auto}
+  .panneau{width:min(780px,100%);max-height:100%;overflow-y:auto;overflow-x:hidden}
   h1{font-size:clamp(38px,9vw,76px);font-weight:800;letter-spacing:-.04em;line-height:.9}
   h1 .sub{display:block;font-family:var(--mono);font-size:12px;font-weight:400;letter-spacing:.34em;
     color:var(--brume);margin-top:14px;text-transform:uppercase}
   .titre-bloc{font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--brume);
     text-transform:uppercase;margin:26px 0 10px;border-bottom:1px solid rgba(233,227,210,.14);padding-bottom:6px}
-  .grille{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
-  .opt .vg{image-rendering:pixelated;flex:0 0 auto;align-self:center}
-  .opt{border:1px solid rgba(233,227,210,.18);background:rgba(233,227,210,.03);padding:12px 13px;
+  .grille{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(216px,1fr))}
+  .opt .vg{image-rendering:pixelated;flex:0 0 auto;align-self:center;max-width:50px;height:auto}
+  .opt{border:1px solid rgba(233,227,210,.18);background:rgba(233,227,210,.03);padding:11px 12px;
     cursor:pointer;text-align:left;color:var(--os);font-family:var(--display);transition:.12s;
-    display:flex;gap:10px;align-items:flex-start}
+    display:flex;gap:10px;align-items:center;overflow:hidden}
+  .opt>div{min-width:0;flex:1 1 auto;overflow-wrap:anywhere}
   .opt:hover{background:rgba(233,227,210,.09);border-color:rgba(233,227,210,.4)}
   .opt:focus-visible{outline:2px solid var(--menthe);outline-offset:2px}
   .opt.on{border-color:var(--sang);background:rgba(194,69,63,.14)}
@@ -78,9 +80,18 @@
   .fiche .armes{font-family:var(--mono);font-size:10px;color:var(--brume);margin-top:5px;line-height:1.5}
   .table-scores{max-height:52vh;overflow-y:auto;font-family:var(--mono);font-size:12px;
     border:1px solid rgba(233,227,210,.14);background:rgba(12,10,19,.45)}
-  .table-scores .lg{display:grid;grid-template-columns:30px 1fr 76px 46px 50px 62px;
-    gap:6px;padding:5px 8px;border-bottom:1px solid rgba(233,227,210,.07);
+  .table-scores .lg{display:grid;grid-template-columns:28px minmax(60px,1fr) 72px 44px 46px 58px;
+    gap:5px;padding:5px 7px;border-bottom:1px solid rgba(233,227,210,.07);
     align-items:center;cursor:pointer}
+  .table-scores .lg>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* sur un écran étroit, on retire les colonnes secondaires plutôt que de déborder */
+  @media (max-width:520px){
+    .table-scores .lg{grid-template-columns:26px minmax(50px,1fr) 44px 56px}
+    .table-scores .lg>span:nth-child(3),
+    .table-scores .lg>span:nth-child(5){display:none}
+    .table-scores .detail{padding-left:26px}
+    .table-scores .dt{grid-template-columns:86px 1fr}
+  }
   .table-scores .lg[data-i]:hover{background:rgba(233,227,210,.06)}
   .table-scores .detail{display:none;padding:7px 10px 10px 40px;
     background:rgba(12,10,19,.5);border-bottom:1px solid rgba(233,227,210,.07)}
@@ -93,11 +104,11 @@
   .table-scores .lg:nth-child(2){color:var(--ambre)}
   .table-scores .pts{text-align:right;color:var(--os);font-weight:600}
   .table-scores .pt{text-align:right;color:var(--brume)}
-  .zone{width:100%;height:96px;background:rgba(12,10,19,.6);color:var(--os);
+  .zone{width:100%;box-sizing:border-box;height:96px;background:rgba(12,10,19,.6);color:var(--os);
     border:1px solid rgba(233,227,210,.2);font-family:var(--mono);font-size:10px;
     padding:8px;resize:none;word-break:break-all}
   .cartes{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-top:6px}
-  .carte{border:1px solid rgba(233,227,210,.22);background:linear-gradient(180deg,rgba(233,227,210,.06),rgba(233,227,210,.01));
+  .carte{overflow-wrap:anywhere;border:1px solid rgba(233,227,210,.22);background:linear-gradient(180deg,rgba(233,227,210,.06),rgba(233,227,210,.01));
     padding:16px 15px 18px;cursor:pointer;text-align:left;color:var(--os);font-family:var(--display);
     position:relative;transition:.12s}
   .carte:hover{border-color:var(--ambre);transform:translateY(-3px)}
@@ -2267,6 +2278,219 @@ const SPRITES = {
     "........................",
     "........................"]]},
 
+
+  /* ============ USINE CHIMIQUE ET SAVANE : ENNEMIS ============ */
+
+  s_rat:{ p:{C:PAL.pierreC,c:PAL.pierreS,d:PAL.ombre,e:PAL.sang,R:PAL.peauC,o:PAL.os}, f:[[
+    "..................",
+    "..................",
+    "..................",
+    "....dd......dd....",
+    "...dCCd....dCCd...",
+    "..ddCCCddddCCCdd..",
+    ".dCCCCCCCCCCCCCd..",
+    "dCCCeCCCCCCCeCCCd.",
+    "dCCCCCCCCCCCCCCCd.",
+    "dCCCCCoooooCCCCCd.",
+    ".dCCCCCCCCCCCCCd..",
+    "..dcccccccccccd...",
+    "RR..cc.cc.cc.cc...",
+    "R...cc.cc.cc.cc...",
+    "..................",
+    "..................",
+    "..................",
+    ".................."]]},
+
+  s_fauve:{ p:{C:PAL.ambreC,c:PAL.boisC,d:PAL.boisS,e:PAL.sang,o:PAL.os,n:PAL.nuit2}, f:[[
+    "..................",
+    "..................",
+    "...dd.......dd....",
+    "..dCCd.....dCCd...",
+    "..dCCCdddddCCCd...",
+    ".dCCCCCCCCCCCCCd..",
+    ".dCCeCCCCCCCeCCd..",
+    ".dCCCCCCCCCCCCCd..",
+    ".dCCCCooooooCCCd..",
+    "ddCCCCCCCCCCCCCdd.",
+    "dCCCCCCCCCCCCCCCd.",
+    "dCCCddCCCCddCCCCd.",
+    ".dCCd..dCCd..dCCd.",
+    "..nn....nn....nn..",
+    "..................",
+    "..................",
+    "..................",
+    ".................."],[
+    "..................",
+    "...dd.......dd....",
+    "..dCCd.....dCCd...",
+    "..dCCCdddddCCCd...",
+    ".dCCCCCCCCCCCCCd..",
+    ".dCCeCCCCCCCeCCd..",
+    ".dCCCCCCCCCCCCCd..",
+    ".dCCCCooooooCCCd..",
+    "ddCCCCCCCCCCCCCdd.",
+    "dCCCCCCCCCCCCCCCd.",
+    "dCCCddCCCCddCCCCd.",
+    ".dCCd..dCCd..dCCd.",
+    "...nn....nn....nn.",
+    "..................",
+    "..................",
+    "..................",
+    "..................",
+    ".................."]]},
+
+  s_traqueur:{ p:{H:PAL.boisC,h:PAL.boisS,S:PAL.peau,s:PAL.peauC,e:PAL.nuit,
+                  C:PAL.vertC,c:PAL.vertS,M:PAL.pierreC,m:PAL.ombre2,n:PAL.nuit2}, f:[[
+    "......HHHHHH......",
+    ".....HHHHHHHh.....",
+    ".....hhhhhhhh.....",
+    "......SSSSSs......",
+    "......SeSSes......",
+    "......SSSSSs......",
+    "....CCCCCCCCcc....",
+    "...CCCCCCCCCCcc...",
+    "..CCCCCCCCCCCcMMMM",
+    "..CCCCCCCCCCCcMMMm",
+    "..CCCCCCCCCCCcmmm.",
+    "...CCCCCCCCCcc....",
+    "...CCCCCCCCCcc....",
+    "...CCCC..cccc.....",
+    "...CCCC..cccc.....",
+    "...nnnn..nnnn.....",
+    "..................",
+    ".................."],[
+    "......HHHHHH......",
+    ".....HHHHHHHh.....",
+    ".....hhhhhhhh.....",
+    "......SSSSSs......",
+    "......SeSSes......",
+    "......SSSSSs......",
+    "....CCCCCCCCcc....",
+    "...CCCCCCCCCCcc...",
+    "..CCCCCCCCCCCcMMMM",
+    "..CCCCCCCCCCCcMMMm",
+    "..CCCCCCCCCCCcmmm.",
+    "...CCCCCCCCCcc....",
+    "...CCCCCCCCCcc....",
+    "..CCCC....cccc....",
+    "..CCCC.....ccc....",
+    "..nnnn.....nnn....",
+    "..................",
+    ".................."]]},
+
+  /* ============ DÉCORS DE L'USINE ============ */
+
+  d_cuve:{ miroir:true, p:{M:PAL.pierre,m:PAL.pierreC,d:PAL.pierreS,V:PAL.vert,v:PAL.vertC}, f:[[
+    "........",
+    "..MMMMMM",
+    ".MMMMMMM",
+    "MMMMMMMM",
+    "Mddddddd",
+    "MVVVVVVV",
+    "MVVVVVVV",
+    "MvvvvvvV",
+    "MMMMMMMM",
+    "MMMMMMMM",
+    "MMMMMMMM",
+    "Mddddddd",
+    "MMMMMMMM",
+    "MMMMMMMM",
+    "mmmmmmmm",
+    "dddddddd",
+    "........"]]},
+
+  d_baril:{ miroir:true, p:{J:PAL.ambre,j:PAL.ambreC,d:PAL.boisS,V:PAL.vert,n:PAL.nuit2}, f:[[
+    "......",
+    "..JJJJ",
+    ".JJJJJ",
+    "JJJJJJ",
+    "JddddJ",
+    "JVVVVV",
+    "JVVVVV",
+    "JddddJ",
+    "JJJJJJ",
+    "JJJJJJ",
+    "jjjjjj",
+    "dddddd",
+    "......"]]},
+
+  d_tuyau:{ p:{M:PAL.pierreC,m:PAL.pierreS,d:PAL.ombre2,V:PAL.vert}, f:[[
+    "....................",
+    "MMMMMMMMMMMMMMMMMMMM",
+    "MMMMMMMMMMMMMMMMMMMM",
+    "mmmmmmmmmmmmmmmmmmmm",
+    "dddMdddddddMddddddMd",
+    "...M.......M......M.",
+    "...M.......M......M.",
+    "...d.......V......d.",
+    "...................."]]},
+
+  d_mare:{ miroir:true, p:{V:PAL.vert,v:PAL.vertC,d:PAL.vertS,o:PAL.menthe}, f:[[
+    "..........",
+    ".....ddvvv",
+    "...dvvVVVV",
+    "..dvVVVVVV",
+    ".dvVVVVVVo",
+    ".dvVVVVooo",
+    ".dvVVVVVVo",
+    "..dvVVVVVV",
+    "...dvvVVVV",
+    ".....ddvvv",
+    ".........."]]},
+
+  /* ============ DÉCORS DE LA SAVANE ============ */
+
+  d_acacia:{ miroir:true, p:{T:PAL.boisC,t:PAL.boisS,V:PAL.vertC,v:PAL.vertS,b:PAL.nuit2}, f:[[
+    "..........",
+    ".....VVVVV",
+    "...VVVVVVV",
+    "..VVVVVVVV",
+    ".VVVVVVVVV",
+    "VVVVVVVVVV",
+    "vvvvvvvvvv",
+    "......TTtt",
+    "......TTtt",
+    "......TTtt",
+    "......TTtt",
+    ".....TTTtt",
+    ".....TTTtt",
+    "....TTTTtt",
+    "...bbbbbbb",
+    ".........."]]},
+
+  d_herbes:{ p:{V:PAL.ambreC,v:PAL.boisC,d:PAL.boisS}, f:[[
+    "................",
+    "..V....V...V....",
+    ".VV.V.VV..VV.V..",
+    ".VV.V.VV..VV.VV.",
+    "vVVvVvVVvvVVvVV.",
+    "vvvvvvvvvvvvvvv.",
+    ".ddddddddddddd..",
+    "................"]]},
+
+  d_rocher:{ miroir:true, p:{M:PAL.pierre,m:PAL.pierreC,d:PAL.pierreS}, f:[[
+    "........",
+    "...MMMMM",
+    ".MMMMMMM",
+    "MMMMMMMM",
+    "MMMmmmmM",
+    "MMmmmmmm",
+    "mmmmmmmm",
+    "dddddddd",
+    "........"]]},
+
+  d_crane:{ miroir:true, p:{O:PAL.os,o:PAL.osC,d:PAL.osS,e:PAL.nuit}, f:[[
+    "......",
+    "..OOOO",
+    ".OOOOO",
+    "OOeeOO",
+    "OOeeOO",
+    "OOOOOO",
+    ".OoooO",
+    ".OdodO",
+    "..oooo",
+    "......"]]},
+
   /* ================= DÉCORS — image unique ================= */
 
   d_tombe:{ p:{S:PAL.pierre,s:PAL.pierreC,d:PAL.pierreS,m:PAL.vertC}, f:[[
@@ -2797,6 +3021,10 @@ const CFG = {
     ver:       { nom:'Ver',           sprite:'s_ver',        pv:9,   vitesse:118, degats:5,  taille:7,  xp:1 },
     vampire:   { nom:'Le Rôdeur',     sprite:'s_rodeur',     pv:70,  vitesse:250, degats:0,  taille:48, xp:16,
                  furtif:1, rapide:1, degatsPct:0.5, vole:1 },
+    rat:       { nom:'Rat',           sprite:'s_rat',        pv:12,  vitesse:118, degats:5,  taille:8,  xp:1, erratique:1 },
+    fauve:     { nom:'Fauve',         sprite:'s_fauve',      pv:38,  vitesse:132, degats:14, taille:13, xp:3 },
+    traqueur:  { nom:'Traqueur',      sprite:'s_traqueur',   pv:54,  vitesse:66,  degats:9,  taille:12, xp:4,
+                 tire:{ cadence:2.6, vitesse:340, degats:13, portee:520 } },
     brute:     { nom:'La Masse',      sprite:'s_brute',      pv:260, vitesse:34,  degats:24, taille:16, xp:7 },
     goule:     { nom:'Goule',         sprite:'s_goule',      pv:64,  vitesse:70,  degats:13, taille:15, xp:3 },
   },
@@ -2840,6 +3068,10 @@ const CFG = {
     d_gravats:    {pv:12, butin:'xp'},
     d_cage:       {pv:20, butin:'soin'},
     d_coffre:     {pv:30, butin:'charge'},
+    d_baril:      {pv:18, butin:'xp'},
+    d_herbes:     {pv:8,  butin:'xp'},
+    d_crane:      {pv:12, butin:'soin'},
+    d_rocher:     {pv:34, butin:'xp'},
   },
 
   /* objets ramassables */
@@ -2899,6 +3131,28 @@ const CFG = {
         etal:{haut:'#ffe6b0',bas:'#4a6a92',force:0.22}, loin:'#5a7396', pres:'#2b3b55' },
       vagues:[ {t:0,e:'chauve'}, {t:40,e:'ver'}, {t:120,e:'rampant'},
                {t:240,e:'goule'}, {t:360,e:'gargouille'}, {t:480,e:'spectre'}, {t:220,e:'brute'}, {t:150,e:'vampire'} ] },
+
+    { id:'usine', nom:'L’Usine chimique', desc:'Aube blafarde. Les mares rongent : ne marchez pas dedans.',
+      sol:'#4a5148', grains:[PAL.vertS,PAL.pierreC], teinte:PAL.vert, modif:null, duree:900,
+      decor:['d_cuve','d_baril','d_tuyau','d_mare','d_gravats','d_colonne','d_cage','d_ossements'], densite:430,
+      particules:{type:'braises', couleur:PAL.menthe},
+      musique:{ tonique:58.27, gamme:'dorien', tempo:72, timbre:'cuivre', prog:[0,3,4,3],
+        motif:[[0,4],[3,2],[2,2],[0,4],[4,4],[2,8],[0,8]] },
+      ambiance:{ obscurite:0.18, nuit:PAL.vertS, rim:PAL.menthe, brume:PAL.vert, brumeN:6,
+        etal:{haut:'#d8e6b4',bas:'#3c4a3a',force:0.24}, loin:'#67775e', pres:'#33402f' },
+      vagues:[ {t:0,e:'rat'}, {t:60,e:'rampant'}, {t:130,e:'ver'},
+               {t:210,e:'goule'}, {t:300,e:'brute'}, {t:400,e:'gargouille'} ] },
+
+    { id:'savane', nom:'La Savane infernale', desc:'Aube rouge. Les bêtes chargent, les traqueurs tirent sans prévenir.',
+      sol:'#7a6242', grains:[PAL.boisS,PAL.ambreC], teinte:PAL.ambre, modif:'horde', duree:900,
+      decor:['d_acacia','d_herbes','d_rocher','d_crane','d_ossements','d_gravats','d_arbregeant','d_cage'], densite:410,
+      particules:{type:'braises', couleur:PAL.ambreC},
+      musique:{ tonique:65.41, gamme:'phrygien', tempo:92, timbre:'cuivre', prog:[0,4,1,4],
+        motif:[[0,2],[2,2],[4,4],[2,2],[0,2],[-3,8],[0,8]] },
+      ambiance:{ obscurite:0.14, nuit:PAL.boisS, rim:PAL.ambre, brume:PAL.ambreC, brumeN:5,
+        etal:{haut:'#ffd9a0',bas:'#6b4a2c',force:0.26}, loin:'#a07a4e', pres:'#5c432a' },
+      vagues:[ {t:0,e:'rat'}, {t:55,e:'fauve'}, {t:130,e:'traqueur'},
+               {t:220,e:'brute'}, {t:320,e:'gargouille'} ] },
 
     { id:'brasier', nom:'Le Brasier', desc:'Horde permanente. Pour tester une build.',
       sol:'#20141a', grains:[PAL.sangS,PAL.ombre], teinte:PAL.sangC, modif:'horde', duree:900,
@@ -3462,6 +3716,8 @@ const LUMIERES={
   d_brasier:{r:210,c:PAL.ambre,i:1},
   d_chandelier:{r:150,c:PAL.ambre,i:0.85},
   d_champignon:{r:95,c:PAL.menthe,i:0.6},
+  d_mare:{r:92,c:PAL.vert,i:0.42},
+  d_cuve:{r:110,c:PAL.vert,i:0.5},
   d_glace:{r:88,c:PAL.glace,i:0.5},
 };
 
@@ -3709,22 +3965,29 @@ function dirJoueur(idx){
 /* --- état --- */
 const G={ etat:'menu', t:0, joueurs:[], ennemis:[], projs:[], gemmes:[], effets:[], textes:[],
   eclats:[], decor:[], brisables:[], butins:[], particules:[], motif:null, niveau:null,
-  diff:null, gel:0, decals:[], lampes:[], chapitre:0, finChapitre:0, colosse:null, annonce:null,
+  diff:null, gel:0, decals:[], lampes:[], mares:[], chapitre:0, finChapitre:0, colosse:null, annonce:null,
   brume:[], gouttes:[], eclabous:[], xp:0, lvl:1, niveauxDus:0, tues:0, spawnAcc:0,
   prochainBoss:CFG.regles.bossToutesLes, cam:{x:0,y:0}, shake:0, choix:[], flash:0, rendu:[] };
 
 /* --- menu --- */
 let nbJoueurs=2, choixPerso=['chasseur','veuve'], choixNiveau='crypte', choixDiff='normal';
-function vignette(nom,haut){
-  const s=SPR[nom], c=document.createElement('canvas');
-  const ech=haut/s.h; c.width=Math.round(s.contour[0].width*ech); c.height=Math.round(s.contour[0].height*ech);
+/* Le portrait doit tenir dans une boîte fixe SANS être déformé : on prend
+   la plus petite des deux échelles. Sinon un sprite large comme la Porsche
+   déborde de sa carte et écrase le texte. */
+function vignette(nom, boiteH, boiteL){
+  const s=SPR[nom], src=s.contour[0];
+  const maxH=boiteH||64, maxL=boiteL||Math.round(maxH*0.78);
+  const ech=Math.min(maxH/src.height, maxL/src.width);
+  const c=document.createElement('canvas');
+  c.width=Math.max(1,Math.round(src.width*ech));
+  c.height=Math.max(1,Math.round(src.height*ech));
   c.className='vg';
   const x=c.getContext('2d'); x.imageSmoothingEnabled=false;
-  x.drawImage(s.contour[0],0,0,c.width,c.height); return c;
+  x.drawImage(src,0,0,c.width,c.height); return c;
 }
 function bouton(parent,{titre,desc,couleur,sprite,actif,onClick}){
   const b=document.createElement('button'); b.className='opt'+(actif?' on':'');
-  if(sprite) b.appendChild(vignette(sprite,96));
+  if(sprite) b.appendChild(vignette(sprite,64,50));
   const d=document.createElement('div');
   d.innerHTML=`<span class="n">${(!sprite&&couleur)?`<i class="pastille" style="background:${couleur}"></i>`:''}${titre}</span>`+
               (desc?`<span class="d">${desc}</span>`:'');
@@ -3830,6 +4093,8 @@ function genererDecor(L){
   const r=alea(L.id.length*7919+1337), A=CFG.regles.arene, out=[];
   let id=0;
   const poser=(nom,x,y,ech,extra)=>{
+    // une flaque doit être franchement plus large qu'un objet de décor
+    if(nom==='d_mare') ech=7+r()*5;
     const h=SPR[nom].h*(ech||1.9+r()*1.1);
     const o={ type:'decor', id:id++, nom, x, y, h, flip:r()>0.5, ph:r()*6.28, flash:0 };
     const br=CFG.brisables[nom];
@@ -4122,6 +4387,9 @@ function demarrer(){
   G.decor=genererDecor(L); G.brisables=G.decor.filter(o=>o.brisable && !o.mur);
   indexerMurs();
   // les décors lumineux sont fixes : on les recense une fois pour toutes
+  // les mares rongent quiconque s'y attarde : on les recense une fois
+  G.mares=G.decor.filter(o=>o.nom==='d_mare')
+                 .map(o=>({x:o.x, y:o.y+o.h*0.12, r:o.h*0.46}));
   G.lampes=G.decor.filter(o=>LUMIERES[o.nom])
                   .map(o=>({o, x:o.x, y:o.y-o.h*0.4, l:LUMIERES[o.nom]}));
   /* deux plans de profondeur : des silhouettes floues d'arrière-plan qui
@@ -4779,6 +5047,20 @@ function maj(dt){
     else { j.vx=d.x*v; j.vy=d.y*v; }
     j.x=clamp(j.x+j.vx*dt,16,R.arene-16); j.y=clamp(j.y+j.vy*dt,16,R.arene-16);
     decoincer(j, j.r);
+    // flaques corrosives : on y perd de la vie tant qu'on y reste
+    if(G.mares.length && j.saut<=0){
+      let dedans=false;
+      for(const m of G.mares) if(dist2(j.x,j.y,m.x,m.y)<(m.r+j.r*0.5)**2){ dedans=true; break; }
+      j.bain = dedans ? (j.bain||0)+dt : 0;
+      if(dedans && j.bain>0.35){
+        j.bain=0;
+        const av=j.invul; j.invul=0;                 // la corrosion ignore l'invulnérabilité
+        blesser(j, Math.max(1, Math.round(j.pvMax*0.035)) + j.armure);
+        j.invul=Math.min(av, 0.12);                  // mais ne rend pas intouchable
+        G.textes.push({x:j.x,y:j.y-30,v:'corrosif',t:0.7,couleur:PAL.vert});
+        eclats(j.x,j.y+6,4,PAL.vert,90);
+      }
+    }
     if(d.x||d.y){ j.dir=d; j.marche+=dt*7; if(Math.abs(d.x)>0.15) j.flip=d.x<0; }
     j.orbAngle+=dt*2.1;
   }
@@ -4856,6 +5138,21 @@ function maj(dt){
     e.x+=ax/n*vit*dt; e.y+=ay/n*vit*dt;
     if(!e.def.vole && !e.colosse) decoincer(e, e.r*0.7);
     if(e.colosse) majColosse(e,dt,vivants);
+    // tireurs : ils visent dès qu'ils vous ont en ligne de mire
+    if(e.def.tire){
+      e.recharge=(e.recharge===undefined? Math.random()*e.def.tire.cadence : e.recharge-dt);
+      if(e.recharge<=0){
+        const c2=cible;
+        if(c2 && dist2(e.x,e.y,c2.x,c2.y) < e.def.tire.portee**2){
+          e.recharge=e.def.tire.cadence*(0.75+Math.random()*0.5);
+          const a2=Math.atan2(c2.y-e.y, c2.x-e.x);
+          G.projs.push({type:'ennemi', hostile:true, x:e.x, y:e.y,
+            vx:Math.cos(a2)*e.def.tire.vitesse, vy:Math.sin(a2)*e.def.tire.vitesse,
+            r:5, degats:e.def.tire.degats*(G.diff?G.diff.degats:1), vie:2.2, couleur:PAL.ambre});
+          G.effets.push({type:'etincelle',x:e.x,y:e.y,t:0,duree:0.1,couleur:PAL.ambre});
+        } else e.recharge=0.4;
+      }
+    }
     for(const j of vivants) if(dist2(e.x,e.y,j.x,j.y)<(e.r+j.r)**2){
       if(e.def.degatsPct){
         if(j.z>CFG.saut.hauteur*0.30 || j.invul>0) continue;   // esquivé au sommet du bond
@@ -5522,8 +5819,14 @@ function rendre(dt){
     const x=o.x+ox, y=o.y+oy;
     if(o.type==='decor'){
       const trem=o.flash>0?rnd(-1.5,1.5):0;
-      ombre(x+o.h*0.10,y,o.h*0.24,0.4);
-      poserSprite(o.nom,0,x+trem,y-o.h/2,o.h,o.flip);
+      if(o.nom==='d_mare'){                    // une flaque : pas d'ombre, pas de cerne
+        ctx.globalAlpha=0.85;
+        poserSprite(o.nom,0,x+trem,y-o.h/2,o.h,o.flip,0.85,'nu');
+        ctx.globalAlpha=1;
+      } else {
+        ombre(x+o.h*0.10,y,o.h*0.24,0.4);
+        poserSprite(o.nom,0,x+trem,y-o.h/2,o.h,o.flip);
+      }
       if(o.flash>0) poserSprite(o.nom,0,x+trem,y-o.h/2,o.h,o.flip,Math.min(1,o.flash*9),'blanc');
       else if(o.brisable && o.pv<o.pvMax){        // fêlé : on le montre entamé
         ctx.globalAlpha=0.35; ctx.fillStyle=PAL.nuit;
