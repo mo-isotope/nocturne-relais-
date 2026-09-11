@@ -78,10 +78,18 @@
   .fiche .armes{font-family:var(--mono);font-size:10px;color:var(--brume);margin-top:5px;line-height:1.5}
   .table-scores{max-height:52vh;overflow-y:auto;font-family:var(--mono);font-size:12px;
     border:1px solid rgba(233,227,210,.14);background:rgba(12,10,19,.45)}
-  .table-scores .lg{display:grid;grid-template-columns:34px 1fr 62px 52px 60px;
-    gap:6px;padding:5px 8px;border-bottom:1px solid rgba(233,227,210,.07);align-items:center}
+  .table-scores .lg{display:grid;grid-template-columns:30px 1fr 76px 46px 50px 62px;
+    gap:6px;padding:5px 8px;border-bottom:1px solid rgba(233,227,210,.07);
+    align-items:center;cursor:pointer}
+  .table-scores .lg[data-i]:hover{background:rgba(233,227,210,.06)}
+  .table-scores .detail{display:none;padding:7px 10px 10px 40px;
+    background:rgba(12,10,19,.5);border-bottom:1px solid rgba(233,227,210,.07)}
+  .table-scores .detail.ouvert{display:block}
+  .table-scores .dt{display:grid;grid-template-columns:96px 1fr;gap:8px;padding:2px 0;
+    font-size:11px;color:var(--os)}
+  .table-scores .dt b{color:var(--brume);font-weight:400}
   .table-scores .lg.tete{color:var(--brume);position:sticky;top:0;background:#141120;font-size:10px;
-    text-transform:uppercase;letter-spacing:.08em}
+    text-transform:uppercase;letter-spacing:.08em;cursor:default}
   .table-scores .lg:nth-child(2){color:var(--ambre)}
   .table-scores .pts{text-align:right;color:var(--os);font-weight:600}
   .table-scores .pt{text-align:right;color:var(--brume)}
@@ -5271,16 +5279,40 @@ async function chargerScores(){
     const r=await fetch(baseServeur()+'/scores',{cache:'no-store'});
     const liste=await r.json();
     if(!liste.length){ c.textContent='Aucun score enregistré pour l’instant.'; return; }
-    const echap=(t)=>String(t).replace(/[<>&]/g,'');
+    const echap=(t)=>String(t==null?'':t).replace(/[<>&]/g,'');
+    const DIFF=['Veillée','Nocturne','Cauchemar','Damnation'];
+    const CHAP=['I','II','III','IV'];
+    const duree=(t)=>Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
     c.innerHTML='<div class="lg tete"><span>#</span><span>Joueur</span><span>Perso</span>'
-      +'<span class="pt">Temps</span><span class="pts">Score</span></div>'
+      +'<span>Diff.</span><span class="pt">Temps</span><span class="pts">Score</span></div>'
       + liste.map((s,i)=>{
-          const m=Math.floor(s.temps/60), sec=Math.floor(s.temps%60);
-          return `<div class="lg"><span>${i+1}</span><span>${echap(s.nom)}</span>`
-            +`<span>${echap(s.perso||'')}</span>`
-            +`<span class="pt">${m}:${String(sec).padStart(2,'0')}</span>`
-            +`<span class="pts">${s.score}</span></div>`;
+          const detail=[
+            ['Terrain',   echap(s.terrain)],
+            ['Difficulté',DIFF[s.difficulte]||'?'],
+            ['Chapitre',  (CHAP[(s.chapitre||1)-1]||'?')+(s.victoire?' — victoire':'')],
+            ['Niveau',    s.niveau],
+            ['Éliminations', s.tues],
+            ['Armes',     echap(s.armes)||'—'],
+            ['Passifs',   echap(s.passifs)||'—'],
+            ['Date',      echap(s.date)],
+          ].map(([k,v])=>`<div class="dt"><b>${k}</b><span>${v}</span></div>`).join('');
+          return `<div class="lg" data-i="${i}"><span>${i+1}</span>`
+            +`<span>${echap(s.nom)}${s.victoire?' ★':''}</span>`
+            +`<span>${echap(s.perso)}</span>`
+            +`<span class="pt">${(DIFF[s.difficulte]||'').slice(0,4)}</span>`
+            +`<span class="pt">${duree(s.temps)}</span>`
+            +`<span class="pts">${s.score}</span></div>`
+            +`<div class="detail" id="det-${i}">${detail}</div>`;
         }).join('');
+    // une ligne se déplie au clic
+    c.querySelectorAll('.lg[data-i]').forEach(l=>{
+      l.onclick=()=>{
+        const d=$('det-'+l.dataset.i);
+        const ouvert=d.classList.contains('ouvert');
+        c.querySelectorAll('.detail').forEach(x=>x.classList.remove('ouvert'));
+        if(!ouvert) d.classList.add('ouvert');
+      };
+    });
   }catch(e){
     c.textContent='Tableau injoignable. Le serveur est-il démarré ?';
   }
@@ -5298,7 +5330,11 @@ async function envoyerScore(){
         perso: (G.joueurs[0]&&G.joueurs[0].perso.nom)||'',
         terrain: G.niveau?G.niveau.nom:'',
         temps: Math.round(G.t), tues: G.tues, niveau: G.lvl,
-        chapitre: G.chapitre+1, difficulte: choixDiff, victoire: G.victoire===true })
+        chapitre: G.chapitre+1, difficulte: choixDiff, victoire: G.victoire===true,
+        armes: (G.joueurs[0]?G.joueurs[0].armes:[])
+                 .map(a=>a.def.nom+' '+a.niveau).join(', '),
+        passifs: Object.entries((G.joueurs[0]&&G.joueurs[0].passifs)||{})
+                 .map(([k,n])=>(CFG.passifs[k]?CFG.passifs[k].nom:k)+' '+n).join(', ') })
     });
     const d=await r.json();
     if(d.erreur){ $('fin-rang').textContent='Refusé : '+d.erreur; b.disabled=false; return; }

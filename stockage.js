@@ -67,8 +67,13 @@ function stockagePostgres(url, pg) {
         victoire BOOLEAN NOT NULL,
         difficulte INTEGER NOT NULL,
         score INTEGER NOT NULL,
-        date TEXT NOT NULL
+        date TEXT NOT NULL,
+        armes TEXT,
+        passifs TEXT
       )`);
+      // bases créées avant l'ajout du détail : on complète sans rien perdre
+      await pool.query('ALTER TABLE scores ADD COLUMN IF NOT EXISTS armes TEXT');
+      await pool.query('ALTER TABLE scores ADD COLUMN IF NOT EXISTS passifs TEXT');
       await pool.query('CREATE INDEX IF NOT EXISTS scores_tri ON scores (score DESC)');
       const r = await pool.query('SELECT COUNT(*)::int AS n FROM scores');
       return r.rows[0].n;
@@ -76,17 +81,17 @@ function stockagePostgres(url, pg) {
     async meilleurs(n) {
       const r = await pool.query(
         `SELECT nom, perso, terrain, temps, tues, niveau, chapitre, victoire,
-                difficulte, score, date
+                difficulte, score, date, armes, passifs
            FROM scores ORDER BY score DESC, id ASC LIMIT $1`, [n]);
       return r.rows;
     },
     async ajouter(p) {
       await pool.query(
         `INSERT INTO scores (nom,perso,terrain,temps,tues,niveau,chapitre,
-                             victoire,difficulte,score,date)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
+                             victoire,difficulte,score,date,armes,passifs)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
         [p.nom, p.perso, p.terrain, p.temps, p.tues, p.niveau, p.chapitre,
-         p.victoire, p.difficulte, p.score, p.date]);
+         p.victoire, p.difficulte, p.score, p.date, p.armes, p.passifs]);
       const r = await pool.query(
         'SELECT COUNT(*)::int AS mieux FROM scores WHERE score > $1', [p.score]);
       const t = await pool.query('SELECT COUNT(*)::int AS n FROM scores');

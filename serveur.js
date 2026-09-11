@@ -77,6 +77,8 @@ const serveur = http.createServer((req, res) => {
         chapitre:   borne(c.chapitre, 1, 4),
         victoire:   !!c.victoire,
         difficulte: Math.max(0, RANGS_DIFF.indexOf(nettoyer(c.difficulte, 12))),
+        armes:      nettoyer(c.armes, 220),
+        passifs:    nettoyer(c.passifs, 160),
       };
       p.score = calculerScore(p);
       p.date = new Date().toISOString().slice(0, 10);
