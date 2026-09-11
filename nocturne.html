@@ -198,6 +198,9 @@
 <div id="pause" class="ecran cache"><div class="panneau" style="text-align:center">
   <h1 style="font-size:clamp(30px,7vw,54px)">PAUSE</h1>
   <p class="note">Échap ou Start pour reprendre.</p>
+  <button class="jouer" id="btn-reprendre" style="margin-top:18px">REPRENDRE</button>
+  <button class="opt" id="btn-quitter" style="width:100%;justify-content:center;margin-top:10px">
+    <span class="n">Abandonner et revenir au menu</span></button>
 </div></div>
 
 <div id="scores" class="ecran cache"><div class="panneau">
@@ -254,6 +257,15 @@ const PAL={
    mieux vaut garder toutes les lignes d'un sprite à la même longueur.
    -------------------------------------------------------------------------- */
 const SPRITES = {
+
+
+
+
+
+
+
+
+
 
 
 
@@ -380,116 +392,116 @@ const SPRITES = {
     ".........OOO.....OOOOO......",
     ".........OOO.....OOOOO......"]]},
 
-  fossoyeur:{ cycle:[0,1,0,2],
-    p:{H:PAL.pierre,h:PAL.pierreC,k:PAL.pierreS,S:PAL.peau,s:PAL.peauC,e:PAL.nuit,C:PAL.pierreC,c:PAL.pierreS,n:PAL.ombre,B:PAL.ombre2,O:PAL.nuit2}, f:[[
-    "...........HHHHHH...........",
-    ".........HHHHHHHHHH.........",
-    "........HHHHHHHHHHHh........",
-    ".......HHHHHHHHHHHHhh.......",
-    "......HHHHHHHHHHHHHhhh......",
-    "......HHHh.........hhhh.....",
-    "......HHh....SSSs...hhh.....",
-    "......HHh...SSeeSs..hhh.....",
-    "......HHh...SSSSSs..hhh.....",
-    "......HHh....SSSs...hhh.....",
-    ".......HHhh........hhh......",
-    "........HHhhhhhhhhhh........",
-    ".........hhhhhhhhh..........",
+  marie:{ cycle:[0,1,0,2],
+    p:{H:PAL.ambre,h:PAL.ambreC,k:PAL.peauS,S:PAL.peau,s:PAL.peauC,e:PAL.nuit,R:PAL.sang,C:PAL.sang,c:PAL.sangC,n:PAL.sangS,B:PAL.os,O:PAL.osC}, f:[[
+    "........HHHHHHHHHHHH........",
+    "......HHHHHHHHHHHHHHHH......",
+    ".....HHHHHHHHHHHHHHHHHH.....",
+    ".....HHHHHHHHHHHHHHHHHH.....",
+    ".....HHHSSSSSSSSSSSSHHH.....",
+    ".....HHHSSeeSSSSeeSSHHH.....",
+    ".....HHHSSSSSSSSSSSSHHH.....",
+    ".....HHHsSSSRRRRSSSsHHH.....",
+    ".....HHHHsSSSSSSSSsHHHH.....",
+    ".....HHHHHsSSSSSShHHHHH.....",
+    ".....HHHHHHHHHHHHHHHHHH.....",
+    "......hhhhhhhhhhhhhhhh......",
+    "........BBBBBBBBBBBB........",
     "........BBBBBBBBBBBB........",
     "........CCCCCCCCCCCC........",
     "......SSCCCCCCCCCCCCss......",
     "......SSCCCCCCCCCCCCss......",
-    "......SSCCCCCCCCCCCCss......",
     "......kkCCCCCCCCCCCCkk......",
-    ".......CCCCCCCCCCCCCC.......",
     ".......CCCBBBBBBBBCCC.......",
     ".......CCCCCCCCCCCCCC.......",
+    ".......CCCCCCCCCCCCCC.......",
     "......CCCCCCCCCCCCCCCC......",
     "......CCCCCCCCCCCCCCCC......",
     ".....CCCCCCCCCCCCCCCCCC.....",
     ".....CCCCCCCCCCCCCCCCCC.....",
     "....CCCCCCCCCCCCCCCCCCCC....",
     "....CCCCCCCCCCCCCCCCCCCC....",
-    "....CCCCCCCCCCCCCCCCCCCC....",
-    ".....CCCCCCCCCCCCCCCCCC.....",
-    "......nnnnnnnnnnnnnnnn......",
-    ".......nnnnnnnnnnnnnn.......",
+    "...CCCCCCCCCCCCCCCCCCCCCC...",
+    "...CCCCCCCCCCCCCCCCCCCCCC...",
+    "..CCCCCCCCCCCCCCCCCCCCCCCC..",
+    "..nnnnnnnnnnnnnnnnnnnnnnnn..",
+    "...nnnnnnnnnnnnnnnnnnnnnn...",
     "........CCCC....cccc........",
     "........CCCC....cccc........",
     "........CCCC....cccc........",
     "........nnnn....nnnn........",
     ".......OOOOO...OOOOO........",
     ".......OOOOO...OOOOO........"],[
-    "...........HHHHHH...........",
-    ".........HHHHHHHHHH.........",
-    "........HHHHHHHHHHHh........",
-    ".......HHHHHHHHHHHHhh.......",
-    "......HHHHHHHHHHHHHhhh......",
-    "......HHHh.........hhhh.....",
-    "......HHh....SSSs...hhh.....",
-    "......HHh...SSeeSs..hhh.....",
-    "......HHh...SSSSSs..hhh.....",
-    "......HHh....SSSs...hhh.....",
-    ".......HHhh........hhh......",
-    "........HHhhhhhhhhhh........",
-    ".........hhhhhhhhh..........",
+    "........HHHHHHHHHHHH........",
+    "......HHHHHHHHHHHHHHHH......",
+    ".....HHHHHHHHHHHHHHHHHH.....",
+    ".....HHHHHHHHHHHHHHHHHH.....",
+    ".....HHHSSSSSSSSSSSSHHH.....",
+    ".....HHHSSeeSSSSeeSSHHH.....",
+    ".....HHHSSSSSSSSSSSSHHH.....",
+    ".....HHHsSSSRRRRSSSsHHH.....",
+    ".....HHHHsSSSSSSSSsHHHH.....",
+    ".....HHHHHsSSSSSShHHHHH.....",
+    ".....HHHHHHHHHHHHHHHHHH.....",
+    "......hhhhhhhhhhhhhhhh......",
+    "........BBBBBBBBBBBB........",
     "........BBBBBBBBBBBB........",
     "........CCCCCCCCCCCC........",
     "......SSCCCCCCCCCCCCss......",
     "......SSCCCCCCCCCCCCss......",
-    "......SSCCCCCCCCCCCCss......",
     "......kkCCCCCCCCCCCCkk......",
-    ".......CCCCCCCCCCCCCC.......",
     ".......CCCBBBBBBBBCCC.......",
     ".......CCCCCCCCCCCCCC.......",
+    ".......CCCCCCCCCCCCCC.......",
     "......CCCCCCCCCCCCCCCC......",
     "......CCCCCCCCCCCCCCCC......",
     ".....CCCCCCCCCCCCCCCCCC.....",
     ".....CCCCCCCCCCCCCCCCCC.....",
     "....CCCCCCCCCCCCCCCCCCCC....",
     "....CCCCCCCCCCCCCCCCCCCC....",
-    "....CCCCCCCCCCCCCCCCCCCC....",
-    ".....CCCCCCCCCCCCCCCCCC.....",
-    "......nnnnnnnnnnnnnnnn......",
-    ".......nnnnnnnnnnnnnn.......",
+    "...CCCCCCCCCCCCCCCCCCCCCC...",
+    "...CCCCCCCCCCCCCCCCCCCCCC...",
+    "..CCCCCCCCCCCCCCCCCCCCCCCC..",
+    "..nnnnnnnnnnnnnnnnnnnnnnnn..",
+    "...nnnnnnnnnnnnnnnnnnnnnn...",
     "......CCCC......cccc........",
     "......CCCC.......ccc........",
     "......CCCC.......ccc........",
     "......nnnn.......nnn........",
     ".....OOOOO.......OOO........",
     ".....OOOOO.......OOO........"],[
-    "...........HHHHHH...........",
-    ".........HHHHHHHHHH.........",
-    "........HHHHHHHHHHHh........",
-    ".......HHHHHHHHHHHHhh.......",
-    "......HHHHHHHHHHHHHhhh......",
-    "......HHHh.........hhhh.....",
-    "......HHh....SSSs...hhh.....",
-    "......HHh...SSeeSs..hhh.....",
-    "......HHh...SSSSSs..hhh.....",
-    "......HHh....SSSs...hhh.....",
-    ".......HHhh........hhh......",
-    "........HHhhhhhhhhhh........",
-    ".........hhhhhhhhh..........",
+    "........HHHHHHHHHHHH........",
+    "......HHHHHHHHHHHHHHHH......",
+    ".....HHHHHHHHHHHHHHHHHH.....",
+    ".....HHHHHHHHHHHHHHHHHH.....",
+    ".....HHHSSSSSSSSSSSSHHH.....",
+    ".....HHHSSeeSSSSeeSSHHH.....",
+    ".....HHHSSSSSSSSSSSSHHH.....",
+    ".....HHHsSSSRRRRSSSsHHH.....",
+    ".....HHHHsSSSSSSSSsHHHH.....",
+    ".....HHHHHsSSSSSShHHHHH.....",
+    ".....HHHHHHHHHHHHHHHHHH.....",
+    "......hhhhhhhhhhhhhhhh......",
+    "........BBBBBBBBBBBB........",
     "........BBBBBBBBBBBB........",
     "........CCCCCCCCCCCC........",
     "......SSCCCCCCCCCCCCss......",
     "......SSCCCCCCCCCCCCss......",
-    "......SSCCCCCCCCCCCCss......",
     "......kkCCCCCCCCCCCCkk......",
-    ".......CCCCCCCCCCCCCC.......",
     ".......CCCBBBBBBBBCCC.......",
     ".......CCCCCCCCCCCCCC.......",
+    ".......CCCCCCCCCCCCCC.......",
     "......CCCCCCCCCCCCCCCC......",
     "......CCCCCCCCCCCCCCCC......",
     ".....CCCCCCCCCCCCCCCCCC.....",
     ".....CCCCCCCCCCCCCCCCCC.....",
     "....CCCCCCCCCCCCCCCCCCCC....",
     "....CCCCCCCCCCCCCCCCCCCC....",
-    "....CCCCCCCCCCCCCCCCCCCC....",
-    ".....CCCCCCCCCCCCCCCCCC.....",
-    "......nnnnnnnnnnnnnnnn......",
-    ".......nnnnnnnnnnnnnn.......",
+    "...CCCCCCCCCCCCCCCCCCCCCC...",
+    "...CCCCCCCCCCCCCCCCCCCCCC...",
+    "..CCCCCCCCCCCCCCCCCCCCCCCC..",
+    "..nnnnnnnnnnnnnnnnnnnnnnnn..",
+    "...nnnnnnnnnnnnnnnnnnnnnn...",
     "..........CCCC....cccc......",
     "..........CCC.....cccc......",
     "..........CCC.....cccc......",
@@ -2670,8 +2682,8 @@ const CFG = {
     { id:'chasseur', nom:'Le Chasseur', desc:'Dague rapide. Polyvalent, sans faiblesse.',
       sprite:'chasseur', couleur:PAL.bois, pv:110, vitesse:158, arme:'dague',
       mult:{ degats:1.0, cadence:1.0, aimant:1.0, armure:0 } },
-    { id:'fossoyeur', nom:'Le Fossoyeur', desc:'Cercueils orbitants. Lent, encaisse tout.',
-      sprite:'fossoyeur', couleur:PAL.pierre, pv:165, vitesse:132, arme:'orbite',
+    { id:'fossoyeur', nom:'Marie ♥', desc:'Des cœurs tournent autour d’elle. Solide et sereine.',
+      sprite:'marie', couleur:PAL.sang, pv:150, vitesse:140, arme:'coeurs',
       mult:{ degats:1.05, cadence:1.0, aimant:0.9, armure:2 } },
     { id:'veuve', nom:'Anab', desc:'Enfume les ennemis. Fragile mais très vive.',
       sprite:'anab', couleur:PAL.spectre, pv:80, vitesse:170, arme:'fumee',
@@ -2740,6 +2752,10 @@ const CFG = {
                  desc:'Une meule lourde qui traverse tout sur son passage.',
                  base:{ degats:26, cadence:1.15, nb:1, vitesse:210, taille:12, perce:4, portee:420 },
                  gain:{ degats:12, cadence:-0.06, nb:0.28, vitesse:9, taille:1.6, perce:0.7, portee:20 } },
+    coeurs:    { nom:'Cœurs', type:'orbite', max:8, couleur:PAL.sang,
+                 desc:'Des cœurs tournent autour de vous et frappent qui s’approche.',
+                 base:{ degats:15, cadence:0.42, nb:2, rayon:46, taille:16 },
+                 gain:{ degats:6, cadence:-0.024, nb:0.42, rayon:4, taille:1.3 } },
     mitraillette:{ nom:'Mitraillette', type:'rafale', max:8, couleur:PAL.ambre,
                  desc:'Rafales serrées. Peu de dégâts par balle, mais sans répit.',
                  base:{ degats:6, cadence:0.30, nb:3, vitesse:520, taille:3, perce:1, portee:320 },
@@ -2875,14 +2891,15 @@ const CFG = {
       vagues:[ {t:0,e:'rampant'}, {t:45,e:'ver'}, {t:150,e:'goule'},
                {t:300,e:'spectre'}, {t:450,e:'gargouille'}, {t:220,e:'brute'}, {t:150,e:'vampire'} ] },
 
-    { id:'gel', nom:'Le Cloître gelé', desc:'Sol verglacé : vous glissez à chaque virage.',
-      sol:'#141c2b', grains:[PAL.ombre2,PAL.glaceS], teinte:PAL.glaceC, modif:'verglas', duree:900,
+    { id:'gel', nom:'Le Cloître d’aube', desc:'La lumière revient. Le sol reste glissant.',
+      piste:'musique_gel.mp3',
+      sol:'#3d4f68', grains:[PAL.glaceC,PAL.os], teinte:PAL.ambre, modif:'verglas', duree:900,
       decor:['d_colonne','d_glace','d_statue','d_arbre','d_arche','d_fontaine','d_obelisque','d_gravats','d_cage','d_autel'], densite:400,
-      particules:{type:'neige', couleur:PAL.glace},
+      particules:{type:'neige', couleur:PAL.ambre},
       musique:{ tonique:61.74, gamme:'harmonique', tempo:66, timbre:'cristal', prog:[0,5,1,4],
         motif:[[4,4],[6,2],[4,2],[2,4],[0,4],[2,4],[4,4],[6,8],[4,8]] },
-      ambiance:{ obscurite:0.58, nuit:PAL.nuit, rim:PAL.glace, brume:PAL.glaceS, brumeN:6,
-        etal:{haut:'#33557c',bas:'#101a2e',force:0.45}, loin:'#101d2c', pres:'#070d16' },
+      ambiance:{ obscurite:0.16, nuit:PAL.glaceS, rim:PAL.ambre, brume:PAL.os, brumeN:4,
+        etal:{haut:'#ffe6b0',bas:'#4a6a92',force:0.22}, loin:'#5a7396', pres:'#2b3b55' },
       vagues:[ {t:0,e:'chauve'}, {t:40,e:'ver'}, {t:120,e:'rampant'},
                {t:240,e:'goule'}, {t:360,e:'gargouille'}, {t:480,e:'spectre'}, {t:220,e:'brute'}, {t:150,e:'vampire'} ] },
 
@@ -2909,7 +2926,7 @@ const CFG = {
   ],
 
   /* SAUT — barre espace. Pendant le bond, rien ne peut vous toucher au sol. */
-  saut: { duree:0.55, hauteur:36, recharge:2.2 },
+  saut: { duree:0.55, hauteur:36, recharge:2.2, elan:3, garde:0.30 },
 
   regles: {
     arene:4200, spawnBase:1.30, spawnParMinute:1.05, pvParMinute:0.38,
@@ -3742,6 +3759,14 @@ function dessineReseau(){
 }
 
 $('btn-pause').onclick=e=>{ e.preventDefault(); togglePause(); };
+$('btn-reprendre').onclick=()=>togglePause();
+$('btn-quitter').onclick=()=>{
+  $('pause').classList.add('cache'); $('hud').classList.add('cache');
+  G.etat='menu';
+  arreterNappe(); arreterPistes(); clearInterval(AUDIO.timer); volumeAudio(0);
+  if(NET.actif && NET.role==='invite'){ majReseauUI('Partie quittée.'); return; }
+  $('menu').classList.remove('cache'); dessineMenu();
+};
 $('btn-son').onclick=e=>{ e.preventDefault(); initAudio(); couperAudio(); };
 $('btn-saut').onclick=e=>{ e.preventDefault();
   if(NET.actif && NET.role==='invite'){ envoyer({t:'saut'}); return; }
@@ -3770,7 +3795,7 @@ function statArme(a,j){
 }
 function creerJoueur(idx,persoId,x,y){
   const p=CFG.personnages.find(c=>c.id===persoId);
-  return { idx, perso:p, x, y, r:12, pv:p.pv, pvMax:p.pv, vitesse:p.vitesse,
+  return { idx, perso:p, x, y, r:18, pv:p.pv, pvMax:p.pv, vitesse:p.vitesse,
     armure:p.mult.armure, mult:{degats:p.mult.degats,cadence:p.mult.cadence,aimant:p.mult.aimant,vitesse:1,xp:1},
     armes:[nouvelleArme(p.arme)], passifs:{}, invul:0, aterre:false, revive:0,
     ultime:{ cle:idx===0?'jugement':'exsangue', charges:0, cd:0 },
@@ -3830,13 +3855,15 @@ function genererDecor(L){
       o.mur=true;
       if(!brise) G.murs.push({x:cx, y:cy-T*0.35, w:T, h:T*0.85});
     };
+    // l'ouverture fait deux blocs de large : on passe sans se coincer
+    const ouvert=(i)=>i===trou||i===trou+1;
     for(let i=0;i<larg;i++){
-      if(!(cote===0 && i===trou)) mur(x0+i*T, y0);
-      if(!(cote===1 && i===trou)) mur(x0+i*T, y0+(haut-1)*T);
+      if(!(cote===0 && ouvert(i))) mur(x0+i*T, y0);
+      if(!(cote===1 && ouvert(i))) mur(x0+i*T, y0+(haut-1)*T);
     }
     for(let j=1;j<haut-1;j++){
-      if(!(cote===2 && j===trou)) mur(x0, y0+j*T);
-      if(!(cote===3 && j===trou)) mur(x0+(larg-1)*T, y0+j*T);
+      if(!(cote===2 && ouvert(j))) mur(x0, y0+j*T);
+      if(!(cote===3 && ouvert(j))) mur(x0+(larg-1)*T, y0+j*T);
     }
     // contenu : un coffre au centre, et quelques brisables autour
     const cx=x0+larg*T/2, cy=y0+haut*T/2;
@@ -3962,7 +3989,7 @@ function faireMotif(L){
         const a=dep+k*6.2832/cotes+(r()-0.5)*0.5, d=ray*(0.62+r()*0.5);
         pts.push([cx+Math.cos(a)*d, cy+Math.sin(a)*d]);
       }
-      const teinte=F(assombrir('#1d3446',ton)), bord=F('#9fcbdd'), al=0.16+r()*0.16;
+      const teinte=F(assombrir('#6d89ad',ton)), bord=F('#eaf4ff'), al=0.20+r()*0.18;
       enTuile(()=>{
         x.beginPath(); x.moveTo(pts[0][0],pts[0][1]);
         for(const q of pts.slice(1)) x.lineTo(q[0],q[1]);
@@ -3986,7 +4013,7 @@ function faireMotif(L){
       seg.push([px,py]);
       const al=0.20+r()*0.30, ep=r()<0.3?1.5:1;
       enTuile(()=>{
-        x.globalAlpha=al; x.strokeStyle=F('#cfe8f2'); x.lineWidth=ep;
+        x.globalAlpha=al; x.strokeStyle=F('#f6fbff'); x.lineWidth=ep;
         x.beginPath(); x.moveTo(seg[0][0],seg[0][1]);
         for(const q of seg.slice(1)) x.lineTo(q[0],q[1]);
         x.stroke(); x.globalAlpha=1;
@@ -4721,7 +4748,9 @@ function maj(dt){
       j.ultime.cd+=dt;
       if(j.ultime.cd>=U.recharge){ j.ultime.cd=0; j.ultime.charges++; majFiches(); }
     }
-    const d=dirJoueur(j.idx), v=j.vitesse*j.mult.vitesse;
+    const d=dirJoueur(j.idx);
+    let v=j.vitesse*j.mult.vitesse;
+    if(j.saut>0) v*=CFG.saut.elan;          // on couvre trois fois plus de terrain
     if(mod==='verglas'){ j.vx+=(d.x*v-j.vx)*Math.min(1,dt*2.2); j.vy+=(d.y*v-j.vy)*Math.min(1,dt*2.2); }
     else { j.vx=d.x*v; j.vy=d.y*v; }
     j.x=clamp(j.x+j.vx*dt,16,R.arene-16); j.y=clamp(j.y+j.vy*dt,16,R.arene-16);
@@ -5224,7 +5253,9 @@ function lisser(dt){
      pour se voir bouger. L'hôte reste seul juge : ses instantanés servent
      à corriger doucement la dérive. */
   if(moi && !moi.aterre && G.etat==='jeu'){
-    const d=dirJoueur(0), v=moi.vitesse*moi.mult.vitesse;
+    const d=dirJoueur(0);
+    let v=moi.vitesse*moi.mult.vitesse;
+    if(moi.saut>0) v*=CFG.saut.elan;
     if(mod==='verglas'){ moi.vx+=(d.x*v-moi.vx)*Math.min(1,dt*2.2);
                          moi.vy+=(d.y*v-moi.vy)*Math.min(1,dt*2.2); }
     else { moi.vx=d.x*v; moi.vy=d.y*v; }
@@ -5505,7 +5536,7 @@ function rendre(dt){
       if(o.flash>0) poserSprite(o.def.sprite,frame,x,y+haut*0.10*sq,haut,o.flip,
                                 Math.min(1,o.flash*9),'blanc',dx,dy);
     } else {
-      const haut=38;
+      const haut=Math.round(38*1.7);        // 65 px : demandé à x1,7
       if(o.aterre){
         ombre(x,y+10,16,0.34);
         ctx.save(); ctx.translate(x,y+8); ctx.rotate(1.35);
@@ -5814,11 +5845,29 @@ function rendre(dt){
         ctx.beginPath(); ctx.arc(x,y,s.taille*(1+gr*0.7),0,6.2832); ctx.fill();
         ctx.globalAlpha=1;
       }
-      // le cercueil est dessiné debout, orienté vers l'extérieur du cercle
-      ctx.save(); ctx.translate(x,y); ctx.rotate(ang+Math.PI/2);
-      const H=s.taille*2.1, sp=SPR.o_cercueil, La=sp.w*(H/sp.h);
-      ctx.drawImage(sp.fusion?sp.fusion[0]:sp.contour[0], -La/2, -H/2, La, H);
-      ctx.restore();
+      if(a.def.type==='orbite' && a.id==='coeurs'){
+        // un cœur, qui bat légèrement au fil de sa course
+        const bat=1+Math.sin(G.t*6+ang)*0.08, R=s.taille*0.95*bat;
+        ctx.save(); ctx.translate(x,y); ctx.rotate(Math.sin(ang)*0.25);
+        const coeur=(ech,couleur)=>{
+          ctx.fillStyle=couleur; ctx.beginPath();
+          ctx.moveTo(0, R*0.72*ech);
+          ctx.bezierCurveTo(-R*1.25*ech, -R*0.15*ech, -R*0.55*ech, -R*1.05*ech, 0, -R*0.38*ech);
+          ctx.bezierCurveTo( R*0.55*ech, -R*1.05*ech,  R*1.25*ech, -R*0.15*ech, 0, R*0.72*ech);
+          ctx.closePath(); ctx.fill();
+        };
+        coeur(1.18,'rgba(12,10,19,.75)');            // contour sombre
+        coeur(1,    a.def.couleur);
+        ctx.globalAlpha=0.55; coeur(0.34, PAL.os);   // reflet
+        ctx.globalAlpha=1;
+        ctx.restore();
+      } else {
+        // le cercueil est dessiné debout, orienté vers l'extérieur du cercle
+        ctx.save(); ctx.translate(x,y); ctx.rotate(ang+Math.PI/2);
+        const H=s.taille*2.1, sp=SPR.o_cercueil, La=sp.w*(H/sp.h);
+        ctx.drawImage(sp.fusion?sp.fusion[0]:sp.contour[0], -La/2, -H/2, La, H);
+        ctx.restore();
+      }
     }
   }
 
